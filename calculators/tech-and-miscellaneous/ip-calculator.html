@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Subnet Calculator - CalcHub</title>
+    <meta name="description" content="Calculate IP subnet information, network addresses, broadcast addresses, and host ranges for IPv4 networks.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: monospace;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--error-color);
+            box-shadow: 0 0 0 3px rgb(239 68 68 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .input-group .form-input {
+            flex: 1;
+        }
+
+        .input-group span {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-primary);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .result-group h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .result-value {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-family: monospace;
+            font-size: 0.875rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            transition: var(--transition);
+        }
+
+        .result-value:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .subnet-table {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+
+        .subnet-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .subnet-table th,
+        .subnet-table td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-family: monospace;
+        }
+
+        .subnet-table th {
+            background-color: var(--bg-card);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .subnet-table td {
+            color: var(--text-secondary);
+        }
+
+        .binary-display {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            word-break: break-all;
+        }
+
+        .binary-octet {
+            display: inline-block;
+            margin-right: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .network-class {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .class-a {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .class-b {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .class-c {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .class-d {
+            background-color: #fce7f3;
+            color: #be185d;
+        }
+
+        .class-e {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        [data-theme="dark"] .class-a {
+            background-color: #1e3a8a;
+            color: #bfdbfe;
+        }
+
+        [data-theme="dark"] .class-b {
+            background-color: #14532d;
+            color: #bbf7d0;
+        }
+
+        [data-theme="dark"] .class-c {
+            background-color: #78350f;
+            color: #fde68a;
+        }
+
+        [data-theme="dark"] .class-d {
+            background-color: #831843;
+            color: #fbb6ce;
+        }
+
+        [data-theme="dark"] .class-e {
+            background-color: #1f2937;
+            color: #d1d5db;
+        }
+
+        .error-message {
+            background-color: var(--error-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .subnet-table {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .binary-display {
+                font-size: 0.65rem;
+            }
+            
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-network-wired"></i>
+                    IP Subnet Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate IP subnet information, network addresses, broadcast addresses, and host ranges for IPv4 networks.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <!-- Input Section -->
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-edit"></i>
+                        Network Configuration
+                    </h3>
+
+                    <div class="error-message" id="errorMessage"></div>
+
+                    <div class="form-group">
+                        <label class="form-label">IP Address</label>
+                        <input type="text" class="form-input" id="ipAddress" placeholder="192.168.1.1" value="192.168.1.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Subnet Mask</label>
+                        <div class="input-group">
+                            <input type="text" class="form-input" id="subnetMask" placeholder="255.255.255.0" value="255.255.255.0">
+                            <span>/</span>
+                            <input type="number" class="form-input" id="cidrNotation" placeholder="24" min="1" max="30" value="24" style="max-width: 80px;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Calculation Mode</label>
+                        <select class="form-select" id="calculationMode">
+                            <option value="subnet">Subnet Information</option>
+                            <option value="supernet">Supernet/VLSM</option>
+                            <option value="wildcard">Wildcard Mask</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" id="calculateBtn">
+                        <i class="fas fa-calculator"></i>
+                        Calculate Subnet
+                    </button>
+
+                    <button class="btn btn-secondary" id="clearBtn" style="margin-top: 0.5rem;">
+                        <i class="fas fa-eraser"></i>
+                        Clear All
+                    </button>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-line"></i>
+                        Subnet Information
+                    </h3>
+
+                    <div id="resultsContainer" style="display: none;">
+                        <!-- Network Information -->
+                        <div class="result-group">
+                            <h4>
+                                <i class="fas fa-info-circle"></i>
+                                Network Details
+                            </h4>
+                            <div class="result-item">
+                                <span class="result-label">Network Address:</span>
+                                <span class="result-value" id="networkAddress" onclick="copyToClipboard(this)">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Broadcast Address:</span>
+                                <span class="result-value" id="broadcastAddress" onclick="copyToClipboard(this)">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">First Host:</span>
+                                <span class="result-value" id="firstHost" onclick="copyToClipboard(this)">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Last Host:</span>
+                                <span class="result-value" id="lastHost" onclick="copyToClipboard(this)">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Network Class:</span>
+                                <span class="result-value" id="networkClass">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Subnet Information -->
+                        <div class="result-group">
+                            <h4>
+                                <i class="fas fa-sitemap"></i>
+                                Subnet Details
+                            </h4>
+                            <div class="result-item">
+                                <span class="result-label">Subnet Mask:</span>
+                                <span class="result-value" id="subnetMaskResult" onclick="copyToClipboard(this)">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">CIDR Notation:</span>
+                                <span class="result-value" id="cidrResult" onclick="copyToClipboard(this)">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Wildcard Mask:</span>
+                                <span class="result-value" id="wildcardMask" onclick="copyToClipboard(this)">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Total Hosts:</span>
+                                <span class="result-value" id="totalHosts">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Usable Hosts:</span>
+                                <span class="result-value" id="usableHosts">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Binary Representation -->
+                        <div class="result-group">
+                            <h4>
+                                <i class="fas fa-code"></i>
+                                Binary Representation
+                            </h4>
+                            <div class="result-item">
+                                <span class="result-label">IP Address:</span>
+                            </div>
+                            <div class="binary-display" id="ipBinary">-</div>
+                            
+                            <div class="result-item">
+                                <span class="result-label">Subnet Mask:</span>
+                            </div>
+                            <div class="binary-display" id="maskBinary">-</div>
+                            
+                            <div class="result-item">
+                                <span class="result-label">Network Address:</span>
+                            </div>
+                            <div class="binary-display" id="networkBinary">-</div>
+                        </div>
+                    </div>
+
+                    <div id="placeholderMessage" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        <i class="fas fa-network-wired" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>Enter an IP address and subnet mask to calculate network information</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subnet Table -->
+            <div class="info-section" id="subnetTableSection" style="display: none;">
+                <h3>
+                    <i class="fas fa-table"></i>
+                    Subnet Breakdown
+                </h3>
+                <div class="subnet-table">
+                    <table id="subnetTable">
+                        <thead>
+                            <tr>
+                                <th>Subnet</th>
+                                <th>Network Address</th>
+                                <th>Broadcast Address</th>
+                                <th>First Host</th>
+                                <th>Last Host</th>
+                                <th>Hosts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subnetTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Subnet Calculator Guide
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>CIDR Notation</h4>
+                        <p>CIDR (Classless Inter-Domain Routing) notation uses a slash followed by a number to indicate the number of network bits. For example, /24 means the first 24 bits are the network portion.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Subnet Mask</h4>
+                        <p>A subnet mask determines which portion of an IP address is the network and which is the host. Common masks include 255.255.255.0 (/24) and 255.255.0.0 (/16).</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Network Classes</h4>
+                        <p>Class A: 1.0.0.0 to 126.255.255.255<br>
+                           Class B: 128.0.0.0 to 191.255.255.255<br>
+                           Class C: 192.0.0.0 to 223.255.255.255</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Wildcard Mask</h4>
+                        <p>The inverse of a subnet mask, used in access control lists (ACLs). It indicates which bits should be ignored when matching addresses.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Private IP Ranges</h4>
+                        <p>Class A: 10.0.0.0/8<br>
+                           Class B: 172.16.0.0/12<br>
+                           Class C: 192.168.0.0/16</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Subnetting Benefits</h4>
+                        <p>Subnetting improves network performance, security, and organization by dividing large networks into smaller, manageable segments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme()
+            {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // IP Subnet Calculator Class
+        class IPSubnetCalculator {
+            constructor() {
+                this.initializeElements();
+                this.setupEventListeners();
+            }
+
+            initializeElements() {
+                this.ipAddress = document.getElementById('ipAddress');
+                this.subnetMask = document.getElementById('subnetMask');
+                this.cidrNotation = document.getElementById('cidrNotation');
+                this.calculationMode = document.getElementById('calculationMode');
+                this.calculateBtn = document.getElementById('calculateBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.resultsContainer = document.getElementById('resultsContainer');
+                this.placeholderMessage = document.getElementById('placeholderMessage');
+                this.subnetTableSection = document.getElementById('subnetTableSection');
+            }
+
+            setupEventListeners() {
+                this.calculateBtn.addEventListener('click', () => this.calculateSubnet());
+                this.clearBtn.addEventListener('click', () => this.clearAll());
+
+                // Auto-sync CIDR and subnet mask
+                this.cidrNotation.addEventListener('input', () => this.updateSubnetMaskFromCIDR());
+                this.subnetMask.addEventListener('input', () => this.updateCIDRFromSubnetMask());
+
+                // Real-time validation
+                this.ipAddress.addEventListener('input', () => this.validateIP());
+                this.subnetMask.addEventListener('input', () => this.validateSubnetMask());
+
+                // Auto-calculate on Enter
+                [this.ipAddress, this.subnetMask, this.cidrNotation].forEach(input => {
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.calculateSubnet();
+                        }
+                    });
+                });
+            }
+
+            validateIP() {
+                const ip = this.ipAddress.value.trim();
+                const isValid = this.isValidIPAddress(ip);
+                
+                if (ip && !isValid) {
+                    this.ipAddress.classList.add('error');
+                } else {
+                    this.ipAddress.classList.remove('error');
+                }
+                
+                return isValid;
+            }
+
+            validateSubnetMask() {
+                const mask = this.subnetMask.value.trim();
+                const isValid = this.isValidSubnetMask(mask);
+                
+                if (mask && !isValid) {
+                    this.subnetMask.classList.add('error');
+                } else {
+                    this.subnetMask.classList.remove('error');
+                }
+                
+                return isValid;
+            }
+
+            isValidIPAddress(ip) {
+                const pattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+                const match = ip.match(pattern);
+                
+                if (!match) return false;
+                
+                return match.slice(1).every(octet => {
+                    const num = parseInt(octet);
+                    return num >= 0 && num <= 255;
+                });
+            }
+
+            isValidSubnetMask(mask) {
+                if (!this.isValidIPAddress(mask)) return false;
+                
+                const binary = this.ipToBinary(mask).replace(/\./g, '');
+                
+                // Check if it's a valid subnet mask (contiguous 1s followed by 0s)
+                const pattern = /^1*0*$/;
+                return pattern.test(binary) && binary.includes('1');
+            }
+
+            updateSubnetMaskFromCIDR() {
+                const cidr = parseInt(this.cidrNotation.value);
+                if (cidr >= 1 && cidr <= 30) {
+                    const mask = this.cidrToSubnetMask(cidr);
+                    this.subnetMask.value = mask;
+                }
+            }
+
+            updateCIDRFromSubnetMask() {
+                const mask = this.subnetMask.value.trim();
+                if (this.isValidSubnetMask(mask)) {
+                    const cidr = this.subnetMaskToCIDR(mask);
+                    this.cidrNotation.value = cidr;
+                }
+            }
+
+            cidrToSubnetMask(cidr) {
+                const mask = [];
+                for (let i = 0; i < 4; i++) {
+                    const bits = Math.max(0, Math.min(8, cidr - i * 8));
+                    let octet = 0;
+                    for (let j = 0; j < bits; j++) {
+                        octet |= (1 << (7 - j));
+                    }
+                    mask.push(octet);
+                }
+                return mask.join('.');
+            }
+
+            subnetMaskToCIDR(mask) {
+                const binary = this.ipToBinary(mask).replace(/\./g, '');
+                return binary.split('1').length - 1;
+            }
+
+            ipToBinary(ip) {
+                return ip.split('.').map(octet => {
+                    return parseInt(octet).toString(2).padStart(8, '0');
+                }).join('.');
+            }
+
+            binaryToIP(binary) {
+                const octets = binary.match(/.{8}/g);
+                return octets.map(octet => parseInt(octet, 2)).join('.');
+            }
+
+            ipToNumber(ip) {
+                return ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet), 0) >>> 0;
+            }
+
+            numberToIP(num) {
+                return [
+                    (num >>> 24) & 255,
+                    (num >>> 16) & 255,
+                    (num >>> 8) & 255,
+                    num & 255
+                ].join('.');
+            }
+
+            getNetworkClass(ip) {
+                const firstOctet = parseInt(ip.split('.')[0]);
+                
+                if (firstOctet >= 1 && firstOctet <= 126) {
+                    return { class: 'A', range: '1.0.0.0 - 126.255.255.255' };
+                } else if (firstOctet >= 128 && firstOctet <= 191) {
+                    return { class: 'B', range: '128.0.0.0 - 191.255.255.255' };
+                } else if (firstOctet >= 192 && firstOctet <= 223) {
+                    return { class: 'C', range: '192.0.0.0 - 223.255.255.255' };
+                } else if (firstOctet >= 224 && firstOctet <= 239) {
+                    return { class: 'D', range: '224.0.0.0 - 239.255.255.255 (Multicast)' };
+                } else if (firstOctet >= 240 && firstOctet <= 255) {
+                    return { class: 'E', range: '240.0.0.0 - 255.255.255.255 (Reserved)' };
+                }
+                
+                return { class: 'Unknown', range: 'Invalid range' };
+            }
+
+            calculateSubnet() {
+                this.hideError();
+
+                const ip = this.ipAddress.value.trim();
+                const mask = this.subnetMask.value.trim();
+
+                if (!ip || !mask) {
+                    this.showError('Please enter both IP address and subnet mask');
+                    return;
+                }
+
+                if (!this.validateIP() || !this.validateSubnetMask()) {
+                    this.showError('Please enter valid IP address and subnet mask');
+                    return;
+                }
+
+                try {
+                    const results = this.performCalculation(ip, mask);
+                    this.displayResults(results);
+                    this.showToast('Subnet calculated successfully!', 'success');
+                } catch (error) {
+                    this.showError('Error calculating subnet: ' + error.message);
+                }
+            }
+
+            performCalculation(ip, mask) {
+                const ipNum = this.ipToNumber(ip);
+                const maskNum = this.ipToNumber(mask);
+                const wildcardNum = ~maskNum >>> 0;
+
+                // Calculate network and broadcast addresses
+                const networkNum = ipNum & maskNum;
+                const broadcastNum = networkNum | wildcardNum;
+
+                // Calculate host range
+                const firstHostNum = networkNum + 1;
+                const lastHostNum = broadcastNum - 1;
+
+                // Calculate host counts
+                const totalHosts = Math.pow(2, 32 - this.subnetMaskToCIDR(mask));
+                const usableHosts = Math.max(0, totalHosts - 2);
+
+                // Get network class
+                const networkClass = this.getNetworkClass(ip);
+
+                return {
+                    ip: ip,
+                    mask: mask,
+                    cidr: this.subnetMaskToCIDR(mask),
+                    networkAddress: this.numberToIP(networkNum),
+                    broadcastAddress: this.numberToIP(broadcastNum),
+                    firstHost: this.numberToIP(firstHostNum),
+                    lastHost: this.numberToIP(lastHostNum),
+                    wildcardMask: this.numberToIP(wildcardNum),
+                    totalHosts: totalHosts,
+                    usableHosts: usableHosts,
+                    networkClass: networkClass,
+                    binary: {
+                        ip: this.ipToBinary(ip),
+                        mask: this.ipToBinary(mask),
+                        network: this.ipToBinary(this.numberToIP(networkNum))
+                    }
+                };
+            }
+
+            displayResults(results) {
+                // Update result values
+                document.getElementById('networkAddress').textContent = results.networkAddress;
+                document.getElementById('broadcastAddress').textContent = results.broadcastAddress;
+                document.getElementById('firstHost').textContent = results.firstHost;
+                document.getElementById('lastHost').textContent = results.lastHost;
+                document.getElementById('subnetMaskResult').textContent = results.mask;
+                document.getElementById('cidrResult').textContent = `/${results.cidr}`;
+                document.getElementById('wildcardMask').textContent = results.wildcardMask;
+                document.getElementById('totalHosts').textContent = results.totalHosts.toLocaleString();
+                document.getElementById('usableHosts').textContent = results.usableHosts.toLocaleString();
+
+                // Update network class
+                const networkClassElement = document.getElementById('networkClass');
+                networkClassElement.innerHTML = `Class ${results.networkClass.class} <span class="network-class class-${results.networkClass.class.toLowerCase()}">${results.networkClass.range}</span>`;
+
+                // Update binary representations
+                document.getElementById('ipBinary').innerHTML = this.formatBinary(results.binary.ip);
+                document.getElementById('maskBinary').innerHTML = this.formatBinary(results.binary.mask);
+                document.getElementById('networkBinary').innerHTML = this.formatBinary(results.binary.network);
+
+                // Show results
+                this.placeholderMessage.style.display = 'none';
+                this.resultsContainer.style.display = 'block';
+
+                // Generate subnet table if applicable
+                if (results.cidr < 30 && results.totalHosts <= 1024) {
+                    this.generateSubnetTable(results);
+                }
+            }
+
+            formatBinary(binary) {
+                return binary.split('.').map((octet, index) => 
+                    `<span class="binary-octet">${octet}</span>`
+                ).join('');
+            }
+
+            generateSubnetTable(results) {
+                const tableBody = document.getElementById('subnetTableBody');
+                tableBody.innerHTML = '';
+
+                const cidr = results.cidr;
+                const subnetSize = Math.pow(2, 32 - cidr);
+                const networkNum = this.ipToNumber(results.networkAddress);
+                
+                // Generate up to 16 subnets for display
+                const maxSubnets = Math.min(16, Math.floor(subnetSize / 4));
+                
+                for (let i = 0; i < maxSubnets; i++) {
+                    const subnetNetworkNum = networkNum + (i * subnetSize);
+                    const subnetBroadcastNum = subnetNetworkNum + subnetSize - 1;
+                    const subnetFirstHostNum = subnetNetworkNum + 1;
+                    const subnetLastHostNum = subnetBroadcastNum - 1;
+
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${i + 1}</td>
+                        <td>${this.numberToIP(subnetNetworkNum)}</td>
+                        <td>${this.numberToIP(subnetBroadcastNum)}</td>
+                        <td>${this.numberToIP(subnetFirstHostNum)}</td>
+                        <td>${this.numberToIP(subnetLastHostNum)}</td>
+                        <td>${(subnetSize - 2).toLocaleString()}</td>
+                    `;
+                }
+
+                this.subnetTableSection.style.display = 'block';
+            }
+
+            clearAll() {
+                this.ipAddress.value = '';
+                this.subnetMask.value = '';
+                this.cidrNotation.value = '';
+                this.ipAddress.classList.remove('error');
+                this.subnetMask.classList.remove('error');
+                this.hideError();
+                this.resultsContainer.style.display = 'none';
+                this.placeholderMessage.style.display = 'block';
+                this.subnetTableSection.style.display = 'none';
+            }
+
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+            }
+
+            hideError() {
+                this.errorMessage.style.display = 'none';
+            }
+
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.textContent = message;
+                
+                const colors = {
+                    success: 'var(--success-color)',
+                    error: 'var(--error-color)',
+                    warning: 'var(--warning-color)',
+                    info: 'var(--info-color)'
+                };
+
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${colors[type] || colors.info};
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: var(--radius);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 1000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(toast)) {
+                            document.body.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Utility Functions
+        function copyToClipboard(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback
+                const originalBg = element.style.backgroundColor;
+                element.style.backgroundColor = 'var(--success-color)';
+                element.style.color = 'white';
+                
+                setTimeout(() => {
+                    element.style.backgroundColor = originalBg;
+                    element.style.color = '';
+                }, 200);
+
+                // Show toast
+                showToast('Copied to clipboard!', 'success');
+            }).catch(() => {
+                showToast('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            
+            const colors = {
+                success: 'var(--success-color)',
+                error: 'var(--error-color)',
+                warning: 'var(--warning-color)',
+                info: 'var(--info-color)'
+            };
+
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type] || colors.info};
+                color: white;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Preset Functions
+        function usePreset(type) {
+            const ipInput = document.getElementById('ipAddress');
+            const maskInput = document.getElementById('subnetMask');
+            const cidrInput = document.getElementById('cidrNotation');
+
+            switch (type) {
+                case 'class-a':
+                    ipInput.value = '10.0.0.1';
+                    maskInput.value = '255.0.0.0';
+                    cidrInput.value = '8';
+                    break;
+                case 'class-b':
+                    ipInput.value = '172.16.0.1';
+                    maskInput.value = '255.255.0.0';
+                    cidrInput.value = '16';
+                    break;
+                case 'class-c':
+                    ipInput.value = '192.168.1.1';
+                    maskInput.value = '255.255.255.0';
+                    cidrInput.value = '24';
+                    break;
+                case 'small-subnet':
+                    ipInput.value = '192.168.1.1';
+                    maskInput.value = '255.255.255.240';
+                    cidrInput.value = '28';
+                    break;
+                case 'point-to-point':
+                    ipInput.value = '10.0.0.1';
+                    maskInput.value = '255.255.255.252';
+                    cidrInput.value = '30';
+                    break;
+            }
+
+            // Auto-calculate after setting preset
+            setTimeout(() => {
+                window.ipCalculator.calculateSubnet();
+            }, 100);
+        }
+
+        // Add preset buttons to the input section
+        function addPresetButtons() {
+            const inputSection = document.querySelector('.input-section');
+            const presetContainer = document.createElement('div');
+            presetContainer.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Quick Presets</label>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem;">
+                        <button type="button" class="btn btn-secondary" onclick="usePreset('class-a')" style="padding: 0.5rem; font-size: 0.8rem;">
+                            Class A (/8)
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="usePreset('class-b')" style="padding: 0.5rem; font-size: 0.8rem;">
+                            Class B (/16)
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="usePreset('class-c')" style="padding: 0.5rem; font-size: 0.8rem;">
+                            Class C (/24)
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="usePreset('small-subnet')" style="padding: 0.5rem; font-size: 0.8rem;">
+                            Small (/28)
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="usePreset('point-to-point')" style="padding: 0.5rem; font-size: 0.8rem;">
+                            P2P (/30)
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Insert before the calculate button
+            const calculateBtn = document.getElementById('calculateBtn');
+            inputSection.insertBefore(presetContainer, calculateBtn);
+        }
+
+        // VLSM Calculator Functions
+        function calculateVLSM() {
+            const requirements = [
+                { name: 'Sales Department', hosts: 50 },
+                { name: 'Engineering', hosts: 25 },
+                { name: 'HR Department', hosts: 10 },
+                { name: 'Point-to-Point Links', hosts: 2 }
+            ];
+
+            const baseNetwork = '192.168.1.0';
+            const baseCIDR = 24;
+
+            let currentNetwork = window.ipCalculator.ipToNumber(baseNetwork);
+            const vlsmResults = [];
+
+            // Sort requirements by host count (descending)
+            requirements.sort((a, b) => b.hosts - a.hosts);
+
+            requirements.forEach(req => {
+                // Calculate required subnet size
+                const requiredHosts = req.hosts + 2; // Add network and broadcast
+                const subnetBits = Math.ceil(Math.log2(requiredHosts));
+                const subnetCIDR = 32 - subnetBits;
+                const subnetSize = Math.pow(2, subnetBits);
+
+                const networkAddress = window.ipCalculator.numberToIP(currentNetwork);
+                const broadcastAddress = window.ipCalculator.numberToIP(currentNetwork + subnetSize - 1);
+                const firstHost = window.ipCalculator.numberToIP(currentNetwork + 1);
+                const lastHost = window.ipCalculator.numberToIP(currentNetwork + subnetSize - 2);
+
+                vlsmResults.push({
+                    name: req.name,
+                    requiredHosts: req.hosts,
+                    allocatedHosts: subnetSize - 2,
+                    networkAddress: networkAddress,
+                    broadcastAddress: broadcastAddress,
+                    firstHost: firstHost,
+                    lastHost: lastHost,
+                    subnetMask: window.ipCalculator.cidrToSubnetMask(subnetCIDR),
+                    cidr: subnetCIDR
+                });
+
+                currentNetwork += subnetSize;
+            });
+
+            displayVLSMResults(vlsmResults);
+        }
+
+        function displayVLSMResults(results) {
+            const tableBody = document.getElementById('subnetTableBody');
+            const table = document.getElementById('subnetTable');
+            
+            // Update table headers for VLSM
+            table.querySelector('thead tr').innerHTML = `
+                <th>Department</th>
+                <th>Required Hosts</th>
+                <th>Allocated Hosts</th>
+                <th>Network Address</th>
+                <th>Subnet Mask</th>
+                <th>Host Range</th>
+            `;
+
+            tableBody.innerHTML = '';
+
+            results.forEach(result => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td><strong>${result.name}</strong></td>
+                    <td>${result.requiredHosts}</td>
+                    <td>${result.allocatedHosts}</td>
+                    <td>${result.networkAddress}/${result.cidr}</td>
+                    <td>${result.subnetMask}</td>
+                    <td>${result.firstHost} - ${result.lastHost}</td>
+                `;
+            });
+
+            document.getElementById('subnetTableSection').style.display = 'block';
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        document.getElementById('calculateBtn').click();
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        document.getElementById('clearBtn').click();
+                        break;
+                    case '1':
+                        e.preventDefault();
+                        usePreset('class-a');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        usePreset('class-b');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        usePreset('class-c');
+                        break;
+                }
+            }
+        });
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            window.ipCalculator = new IPSubnetCalculator();
+            addPresetButtons();
+
+            // Add VLSM button to calculation mode
+            const calculationMode = document.getElementById('calculationMode');
+            const vlsmOption = document.createElement('option');
+            vlsmOption.value = 'vlsm';
+            vlsmOption.textContent = 'VLSM Example';
+            calculationMode.appendChild(vlsmOption);
+
+            // Handle calculation mode changes
+            calculationMode.addEventListener('change', (e) => {
+                if (e.target.value === 'vlsm') {
+                    calculateVLSM();
+                }
+            });
+
+            // Auto-calculate on page load with default values
+            setTimeout(() => {
+                window.ipCalculator.calculateSubnet();
+            }, 500);
+        });
+
+        // Handle paste events for quick IP input
+        document.addEventListener('paste', (e) => {
+            if (e.target.id === 'ipAddress') {
+                setTimeout(() => {
+                    const pastedText = e.target.value;
+                    // Check if pasted text contains CIDR notation
+                    if (pastedText.includes('/')) {
+                        const [ip, cidr] = pastedText.split('/');
+                        if (window.ipCalculator.isValidIPAddress(ip) && cidr >= 1 && cidr <= 30) {
+                            document.getElementById('ipAddress').value = ip;
+                            document.getElementById('cidrNotation').value = cidr;
+                            window.ipCalculator.updateSubnetMaskFromCIDR();
+                            
+                            // Auto-calculate
+                            setTimeout(() => {
+                                window.ipCalculator.calculateSubnet();
+                            }, 100);
+                        }
+                    }
+                }, 10);
+            }
+        });
+
+        // Add tooltips for better UX
+        function addTooltips() {
+            const tooltips = {
+                'ipAddress': 'Enter any valid IPv4 address (e.g., 192.168.1.1)',
+                'subnetMask': 'Enter subnet mask in dotted decimal notation',
+                'cidrNotation': 'Enter CIDR prefix length (1-30)',
+                'calculationMode': 'Choose calculation type or view examples'
+            };
+
+            Object.keys(tooltips).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.title = tooltips[id];
+                }
+            });
+        }
+
+        // Call addTooltips after DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            addTooltips();
+        });
+    </script>
+</body>
+</html>

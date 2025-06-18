@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Due Date Calculator - CalcHub</title>
+    <meta name="description" content="Calculate your pregnancy due date, track trimesters, and get important milestone dates. Based on last menstrual period or conception date.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+            --pink-color: #ec4899;
+            --purple-color: #8b5cf6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--pink-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .calculation-method {
+            display: flex;
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .method-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: calc(var(--radius) - 0.5rem);
+            transition: var(--transition);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .method-btn.active {
+            background-color: var(--pink-color);
+            color: white;
+        }
+
+        .method-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--pink-color);
+            box-shadow: 0 0 0 3px rgb(236 72 153 / 0.1);
+        }
+
+        .method-description {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .method-description h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .method-description p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background-color: var(--pink-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #db2777;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .due-date-display {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--pink-color), var(--purple-color));
+            border-radius: calc(var(--radius) - 0.25rem);
+            color: white;
+        }
+
+        .due-date-label {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .due-date-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .due-date-countdown {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .current-status {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .current-week {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--pink-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .current-trimester {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background-color: var(--border-color);
+            border-radius: 1rem;
+            height: 0.5rem;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--pink-color), var(--purple-color));
+            height: 100%;
+            border-radius: 1rem;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .milestones {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .milestones h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .milestone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: calc(var(--radius) - 0.5rem);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .milestone-item:hover {
+            border-color: var(--pink-color);
+            transform: translateY(-1px);
+        }
+
+        .milestone-info {
+            flex: 1;
+        }
+
+        .milestone-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .milestone-desc {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .milestone-date {
+            font-weight: 600;
+            color: var(--pink-color);
+            font-size: 0.875rem;
+            text-align: right;
+        }
+
+        .milestone-week {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .trimester-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trimester-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .trimester-card.active {
+            border-color: var(--pink-color);
+            background-color: rgba(236, 72, 153, 0.1);
+        }
+
+        .trimester-card h5 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .trimester-weeks {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .baby-development {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .baby-development h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .development-item {
+            color: var(--text-secondary);
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .development-item::before {
+            content: "👶";
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--pink-color);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .due-date-value {
+                font-size: 2rem;
+            }
+            
+            .trimester-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculation-method {
+                flex-direction: column;
+            }
+            
+            .method-btn {
+                margin-bottom: 0.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .due-date-value {
+                font-size: 1.75rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-baby"></i>
+                    Pregnancy Due Date Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate your pregnancy due date, track your progress through trimesters, and discover important milestone dates throughout your pregnancy journey.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <!-- Input Section -->
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-calendar-alt"></i>
+                        Calculate Due Date
+                    </h3>
+
+                    <div class="calculation-method">
+                        <button class="method-btn active" id="lmpBtn" onclick="setCalculationMethod('lmp')">Last Menstrual Period</button>
+                        <button class="method-btn" id="conceptionBtn" onclick="setCalculationMethod('conception')">Conception Date</button>
+                        <button class="method-btn" id="ultrasoundBtn" onclick="setCalculationMethod('ultrasound')">Ultrasound Date</button>
+                    </div>
+
+                    <div id="lmpMethod" class="method-content">
+                        <div class="method-description">
+                            <h4>Last Menstrual Period (LMP)</h4>
+                            <p>Enter the first day of your last menstrual period. This is the most common method used by healthcare providers.</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">First Day of Last Menstrual Period</label>
+                            <input type="date" class="form-input" id="lmpDate">
+                        </div>
+                    </div>
+
+                    <div id="conceptionMethod" class="method-content" style="display: none;">
+                        <div class="method-description">
+                            <h4>Conception Date</h4>
+                            <p>If you know the exact date of conception (ovulation/fertilization), enter it here for a more precise calculation.</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Conception Date</label>
+                            <input type="date" class="form-input" id="conceptionDate">
+                        </div>
+                    </div>
+
+                    <div id="ultrasoundMethod" class="method-content" style="display: none;">
+                        <div class="method-description">
+                            <h4>Ultrasound Dating</h4>
+                            <p>Enter the ultrasound date and the gestational age determined by the ultrasound for the most accurate calculation.</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Ultrasound Date</label>
+                            <input type="date" class="form-input" id="ultrasoundDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Gestational Age at Ultrasound</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <div>
+                                    <input type="number" class="form-input" id="ultrasoundWeeks" placeholder="Weeks" min="0" max="42">
+                                    <small style="color: var(--text-muted); font-size: 0.75rem;">Weeks</small>
+                                </div>
+                                <div>
+                                    <input type="number" class="form-input" id="ultrasoundDays" placeholder="Days" min="0" max="6">
+                                    <small style="color: var(--text-muted); font-size: 0.75rem;">Days</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn" id="calculateBtn" onclick="calculateDueDate()">
+                        <i class="fas fa-calculator"></i>
+                        Calculate Due Date
+                    </button>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-heart"></i>
+                        Your Pregnancy Journey
+                    </h3>
+
+                    <div id="results" style="display: none;">
+                        <div class="due-date-display">
+                            <div class="due-date-label">Your Due Date</div>
+                            <div class="due-date-value" id="dueDateValue">March 15, 2024</div>
+                            <div class="due-date-countdown" id="dueDateCountdown">32 weeks to go</div>
+                        </div>
+
+                        <div class="current-status">
+                            <div class="current-week" id="currentWeek">Week 8</div>
+                            <div class="current-trimester" id="currentTrimester">First Trimester</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">20% complete</div>
+                        </div>
+
+                        <div class="trimester-info">
+                            <div class="trimester-card" id="trimester1">
+                                <h5>1st Trimester</h5>
+                                <div class="trimester-weeks">Weeks 1-12</div>
+                            </div>
+                            <div class="trimester-card active" id="trimester2">
+                                <h5>2nd Trimester</h5>
+                                <div class="trimester-weeks">Weeks 13-27</div>
+                            </div>
+                            <div class="trimester-card" id="trimester3">
+                                <h5>3rd Trimester</h5>
+                                <div class="trimester-weeks">Weeks 28-40</div>
+                            </div>
+                        </div>
+
+                        <div class="milestones">
+                            <h4>Important Milestones</h4>
+                            <div id="milestonesList">
+                                <!-- Milestones will be populated dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="baby-development">
+                            <h4>Baby Development This Week</h4>
+                            <div id="developmentInfo">
+                                <!-- Development info will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="placeholderMessage" class="placeholder-message">
+                        <i class="fas fa-baby"></i>
+                        <p>Enter your information above to calculate your due date and track your pregnancy journey</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Understanding Pregnancy Calculations
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-calendar"></i>
+                            280-Day Rule
+                        </h4>
+                        <p>Pregnancy is calculated as 280 days (40 weeks) from the first day of your last menstrual period, following Naegele's rule used by healthcare providers worldwide.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-chart-line"></i>
+                            Accuracy Range
+                        </h4>
+                        <p>Only about 5% of babies are born exactly on their due date. Most babies are born within 2 weeks before or after the estimated due date.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-stethoscope"></i>
+                            Medical Monitoring
+                        </h4>
+                        <p>Regular prenatal checkups are essential. Your healthcare provider may adjust your due date based on ultrasound measurements and other factors.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Important Note
+                        </h4>
+                        <p>This calculator provides estimates for educational purposes. Always consult with your healthcare provider for official pregnancy dating and medical advice.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Pregnancy Calculator Logic
+        let currentMethod = 'lmp';
+
+        function setCalculationMethod(method) {
+            currentMethod = method;
+            
+            // Update button states
+            document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(method + 'Btn').classList.add('active');
+            
+            // Show/hide method content
+            document.querySelectorAll('.method-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.getElementById(method + 'Method').style.display = 'block';
+            
+            // Clear previous results
+            hideResults();
+        }
+
+        function calculateDueDate() {
+            let dueDate, conceptionDate, lmpDate;
+            
+            try {
+                switch (currentMethod) {
+                    case 'lmp':
+                        const lmpInput = document.getElementById('lmpDate').value;
+                        if (!lmpInput) {
+                            showError('Please enter your last menstrual period date');
+                            return;
+                        }
+                        lmpDate = new Date(lmpInput);
+                        conceptionDate = new Date(lmpDate.getTime() + (14 * 24 * 60 * 60 * 1000)); // Add 14 days
+                        dueDate = new Date(lmpDate.getTime() + (280 * 24 * 60 * 60 * 1000)); // Add 280 days
+                        break;
+                        
+                    case 'conception':
+                        const conceptionInput = document.getElementById('conceptionDate').value;
+                        if (!conceptionInput) {
+                            showError('Please enter the conception date');
+                            return;
+                        }
+                        conceptionDate = new Date(conceptionInput);
+                        lmpDate = new Date(conceptionDate.getTime() - (14 * 24 * 60 * 60 * 1000)); // Subtract 14 days
+                        dueDate = new Date(conceptionDate.getTime() + (266 * 24 * 60 * 60 * 1000)); // Add 266 days
+                        break;
+                        
+                    case 'ultrasound':
+                        const ultrasoundDateInput = document.getElementById('ultrasoundDate').value;
+                        const ultrasoundWeeks = parseInt(document.getElementById('ultrasoundWeeks').value) || 0;
+                        const ultrasoundDays = parseInt(document.getElementById('ultrasoundDays').value) || 0;
+                        
+                        if (!ultrasoundDateInput || ultrasoundWeeks === 0) {
+                            showError('Please enter the ultrasound date and gestational age');
+                            return;
+                        }
+                        
+                        const ultrasoundDate = new Date(ultrasoundDateInput);
+                        const gestationalDays = (ultrasoundWeeks * 7) + ultrasoundDays;
+                        lmpDate = new Date(ultrasoundDate.getTime() - (gestationalDays * 24 * 60 * 60 * 1000));
+                        conceptionDate = new Date(lmpDate.getTime() + (14 * 24 * 60 * 60 * 1000));
+                        dueDate = new Date(lmpDate.getTime() + (280 * 24 * 60 * 60 * 1000));
+                        break;
+                }
+                
+                // Validate dates
+                if (dueDate < new Date()) {
+                    showError('The calculated due date is in the past. Please check your dates.');
+                    return;
+                }
+                
+                displayResults(dueDate, lmpDate, conceptionDate);
+                
+            } catch (error) {
+                showError('Please enter valid dates');
+            }
+        }
+
+        function displayResults(dueDate, lmpDate, conceptionDate) {
+            const today = new Date();
+            
+            // Calculate current pregnancy week
+            const daysSinceLMP = Math.floor((today - lmpDate) / (24 * 60 * 60 * 1000));
+            const currentWeek = Math.floor(daysSinceLMP / 7);
+            const currentDay = daysSinceLMP % 7;
+            
+            // Calculate days until due date
+            const daysUntilDue = Math.ceil((dueDate - today) / (24 * 60 * 60 * 1000));
+            const weeksUntilDue = Math.floor(daysUntilDue / 7);
+            
+            // Update main display
+            document.getElementById('dueDateValue').textContent = formatDate(dueDate);
+            
+            if (daysUntilDue > 0) {
+                if (weeksUntilDue > 0) {
+                    document.getElementById('dueDateCountdown').textContent = 
+                        `${weeksUntilDue} week${weeksUntilDue !== 1 ? 's' : ''} to go`;
+                } else {
+                    document.getElementById('dueDateCountdown').textContent = 
+                        `${daysUntilDue} day${daysUntilDue !== 1 ? 's' : ''} to go`;
+                }
+            } else {
+                document.getElementById('dueDateCountdown').textContent = 'Due date has passed';
+            }
+            
+            // Update current status
+            if (currentWeek >= 0 && currentWeek <= 42) {
+                document.getElementById('currentWeek').textContent = 
+                    `Week ${currentWeek}${currentDay > 0 ? `, Day ${currentDay}` : ''}`;
+                
+                // Determine trimester
+                let trimester, trimesterText;
+                if (currentWeek <= 12) {
+                    trimester = 1;
+                    trimesterText = 'First Trimester';
+                } else if (currentWeek <= 27) {
+                    trimester = 2;
+                    trimesterText = 'Second Trimester';
+                } else {
+                    trimester = 3;
+                    trimesterText = 'Third Trimester';
+                }
+                
+                document.getElementById('currentTrimester').textContent = trimesterText;
+                
+                // Update trimester cards
+                document.querySelectorAll('.trimester-card').forEach(card => card.classList.remove('active'));
+                document.getElementById(`trimester${trimester}`).classList.add('active');
+                
+                // Update progress bar
+                const progressPercent = Math.min(100, (currentWeek / 40) * 100);
+                document.getElementById('progressFill').style.width = `${progressPercent}%`;
+                document.getElementById('progressText').textContent = `${Math.round(progressPercent)}% complete`;
+                
+                // Generate milestones
+                generateMilestones(lmpDate, dueDate, currentWeek);
+                
+                // Generate baby development info
+                generateDevelopmentInfo(currentWeek);
+                
+                showResults();
+            } else {
+                showError('Invalid pregnancy week calculated. Please check your dates.');
+            }
+        }
+
+        function generateMilestones(lmpDate, dueDate, currentWeek) {
+            const milestones = [
+                {
+                    name: 'First Prenatal Visit',
+                    desc: 'Initial checkup and blood tests',
+                    week: 8,
+                    icon: '🏥'
+                },
+                {
+                    name: 'First Trimester Screening',
+                    desc: 'Nuchal translucency scan',
+                    week: 12,
+                    icon: '🔬'
+                },
+                {
+                    name: 'Anatomy Scan',
+                    desc: 'Detailed ultrasound examination',
+                    week: 20,
+                    icon: '👶'
+                },
+                {
+                    name: 'Glucose Screening',
+                    desc: 'Test for gestational diabetes',
+                    week: 24,
+                    icon: '🩸'
+                },
+                {
+                    name: 'Third Trimester Begins',
+                    desc: 'Final stretch of pregnancy',
+                    week: 28,
+                    icon: '🤰'
+                },
+                {
+                    name: 'Group B Strep Test',
+                    desc: 'Screening for GBS bacteria',
+                    week: 36,
+                    icon: '🧪'
+                },
+                {
+                    name: 'Full Term',
+                    desc: 'Baby is considered full term',
+                    week: 37,
+                    icon: '✅'
+                },
+                {
+                    name: 'Due Date',
+                    desc: 'Estimated delivery date',
+                    week: 40,
+                    icon: '🎉'
+                }
+            ];
+
+            const milestonesList = document.getElementById('milestonesList');
+            milestonesList.innerHTML = '';
+
+            milestones.forEach(milestone => {
+                const milestoneDate = new Date(lmpDate.getTime() + (milestone.week * 7 * 24 * 60 * 60 * 1000));
+                const isPast = currentWeek > milestone.week;
+                const isCurrent = currentWeek === milestone.week;
+                
+                const milestoneDiv = document.createElement('div');
+                milestoneDiv.className = `milestone-item ${isPast ? 'past' : ''} ${isCurrent ? 'current' : ''}`;
+                
+                milestoneDiv.innerHTML = `
+                    <div class="milestone-info">
+                        <div class="milestone-name">
+                            ${milestone.icon} ${milestone.name}
+                            ${isPast ? ' ✓' : ''}
+                            ${isCurrent ? ' ← Current' : ''}
+                        </div>
+                        <div class="milestone-desc">${milestone.desc}</div>
+                    </div>
+                    <div class="milestone-date">
+                        <div>${formatDate(milestoneDate)}</div>
+                        <div class="milestone-week">Week ${milestone.week}</div>
+                    </div>
+                `;
+                
+                milestonesList.appendChild(milestoneDiv);
+            });
+        }
+
+        function generateDevelopmentInfo(currentWeek) {
+            const developmentData = {
+                4: [
+                    "Your baby is about the size of a poppy seed",
+                    "The neural tube is forming, which will become the brain and spinal cord",
+                    "Basic facial features are beginning to form"
+                ],
+                8: [
+                    "Your baby is about the size of a raspberry",
+                    "All major organs have begun to form",
+                    "Tiny fingers and toes are developing",
+                    "The heart is beating regularly"
+                ],
+                12: [
+                    "Your baby is about the size of a lime",
+                    "Fingernails and toenails are forming",
+                    "The baby can make a fist",
+                    "Sex organs are developing"
+                ],
+                16: [
+                    "Your baby is about the size of an avocado",
+                    "You might feel the first movements",
+                    "The baby can hear sounds from outside the womb",
+                    "Facial expressions are possible"
+                ],
+                20: [
+                    "Your baby is about the size of a banana",
+                    "You can likely feel regular movements now",
+                    "The baby is developing sleep and wake cycles",
+                    "Hair is starting to grow"
+                ],
+                24: [
+                    "Your baby is about the size of an ear of corn",
+                    "The baby's hearing is fully developed",
+                    "Lungs are developing rapidly",
+                    "The baby responds to sounds and touch"
+                ],
+                28: [
+                    "Your baby is about the size of an eggplant",
+                    "Eyes can open and close",
+                    "The baby is gaining weight rapidly",
+                    "Brain development is accelerating"
+                ],
+                32: [
+                    "Your baby is about the size of a coconut",
+                    "Bones are hardening",
+                    "The baby is practicing breathing movements",
+                    "Immune system is developing"
+                ],
+                36: [
+                    "Your baby is about the size of a papaya",
+                    "The baby is considered full term soon",
+                    "Lungs are nearly fully developed",
+                    "The baby is gaining about half a pound per week"
+                ],
+                40: [
+                    "Your baby is about the size of a watermelon",
+                    "Fully developed and ready for birth",
+                    "The baby has likely settled into a head-down position",
+                    "All organs are mature and functioning"
+                ]
+            };
+
+            // Find the closest week with development data
+            let closestWeek = 4;
+            for (let week in developmentData) {
+                if (currentWeek >= parseInt(week)) {
+                    closestWeek = parseInt(week);
+                }
+            }
+
+            const developmentInfo = document.getElementById('developmentInfo');
+            developmentInfo.innerHTML = '';
+
+            if (developmentData[closestWeek]) {
+                developmentData[closestWeek].forEach(info => {
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'development-item';
+                    infoDiv.textContent = info;
+                    developmentInfo.appendChild(infoDiv);
+                });
+            } else {
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'development-item';
+                infoDiv.textContent = 'Your baby is developing beautifully!';
+                developmentInfo.appendChild(infoDiv);
+            }
+        }
+
+        function formatDate(date) {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function showResults() {
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('placeholderMessage').style.display = 'none';
+        }
+
+        function hideResults() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('placeholderMessage').style.display = 'block';
+        }
+
+        function showError(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ef4444;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 0.75rem;
+                box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                font-size: 0.875rem;
+                font-weight: 500;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Auto-calculate functionality
+        function setupAutoCalculation() {
+            const inputs = ['lmpDate', 'conceptionDate', 'ultrasoundDate', 'ultrasoundWeeks', 'ultrasoundDays'];
+            
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', debounce(() => {
+                        if (hasValidInputs()) {
+                            calculateDueDate();
+                        }
+                    }, 500));
+                }
+            });
+        }
+
+        function hasValidInputs() {
+            switch (currentMethod) {
+                case 'lmp':
+                    return document.getElementById('lmpDate').value;
+                case 'conception':
+                    return document.getElementById('conceptionDate').value;
+                case 'ultrasound':
+                    return document.getElementById('ultrasoundDate').value && 
+                           document.getElementById('ultrasoundWeeks').value;
+                default:
+                    return false;
+            }
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Set default date to today for easier testing
+        function setDefaultDates() {
+            const today = new Date();
+            const maxDate = today.toISOString().split('T')[0];
+            
+            // Set max dates for all date inputs
+            document.getElementById('lmpDate').max = maxDate;
+            document.getElementById('conceptionDate').max = maxDate;
+            document.getElementById('ultrasoundDate').max = maxDate;
+        }
+
+        // Sample data for testing
+        function loadSampleData() {
+            const today = new Date();
+            const sampleLMP = new Date(today.getTime() - (8 * 7 * 24 * 60 * 60 * 1000)); // 8 weeks ago
+            
+            document.getElementById('lmpDate').value = sampleLMP.toISOString().split('T')[0];
+            calculateDueDate();
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.classList.contains('form-input')) {
+                    e.preventDefault();
+                    calculateDueDate();
+                }
+            }
+        });
+
+        // Save calculation to history
+        function saveCalculation(dueDate, method) {
+            const calculation = {
+                date: new Date().toISOString(),
+                method: method,
+                dueDate: dueDate.toISOString(),
+                calculatedAt: new Date().toISOString()
+            };
+            
+            let history = JSON.parse(localStorage.getItem('pregnancyCalculations') || '[]');
+            history.unshift(calculation);
+            
+            // Keep only last 5 calculations
+            if (history.length > 5) {
+                history = history.slice(0, 5);
+            }
+            
+            localStorage.setItem('pregnancyCalculations', JSON.stringify(history));
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            setDefaultDates();
+            setupAutoCalculation();
+            
+            // Load sample data for testing in development
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                setTimeout(() => {
+                    const sampleBtn = document.createElement('button');
+                    sampleBtn.textContent = 'Load Sample Data';
+                    sampleBtn.className = 'btn';
+                    sampleBtn.style.cssText = `
+                        background-color: var(--text-muted);
+                        margin-top: 0.5rem;
+                        font-size: 0.875rem;
+                        padding: 0.5rem 1rem;
+                    `;
+                    sampleBtn.onclick = loadSampleData;
+                    
+                    const inputSection = document.querySelector('.input-section');
+                    inputSection.appendChild(sampleBtn);
+                }, 1000);
+            }
+        });
+
+        // Export for potential integration
+        window.PregnancyCalculator = {
+            calculate: calculateDueDate,
+            setMethod: setCalculationMethod,
+            getCurrentMethod: () => currentMethod,
+            saveCalculation: saveCalculation
+        };
+    </script>
+</body>
+</html>
+
+

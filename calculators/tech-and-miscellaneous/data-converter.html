@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Storage Converter - CalcHub</title>
+    <meta name="description" content="Convert between different data storage units - bytes, KB, MB, GB, TB, PB and more. Includes binary and decimal conversions.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .conversion-modes {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .mode-container {
+            display: flex;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .mode-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .mode-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .quick-conversions {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .quick-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .quick-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .quick-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .conversion-result {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+
+        .result-unit {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+
+        .all-conversions {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .conversion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            transition: var(--transition);
+        }
+
+        .conversion-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateX(2px);
+        }
+
+        .conversion-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .conversion-value {
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .conversion-item:hover .conversion-label,
+        .conversion-item:hover .conversion-value {
+            color: white;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            padding: 0.25rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-list li strong {
+            color: var(--text-primary);
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.25rem 0.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .mode-info {
+            background-color: var(--info-color);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .mode-container {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .mode-btn {
+                text-align: center;
+            }
+            
+            .quick-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+            
+            .back-btn span {
+                display: none;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-database"></i>
+                    Data Storage Converter
+                </h1>
+                <p class="calculator-description">
+                    Convert between different data storage units including bytes, KB, MB, GB, TB, PB and more. Supports both binary (1024) and decimal (1000) conversions.
+                </p>
+            </div>
+
+            <div class="conversion-modes">
+                <div class="mode-container">
+                    <button class="mode-btn active" id="binaryMode" data-mode="binary">
+                        Binary (1024)
+                    </button>
+                    <button class="mode-btn" id="decimalMode" data-mode="decimal">
+                        Decimal (1000)
+                    </button>
+                </div>
+            </div>
+
+            <div class="calculator-container">
+                <div class="input-section">
+                    <div class="mode-info" id="modeInfo">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Binary mode: 1 KB = 1,024 bytes (traditional computing)</span>
+                    </div>
+                    
+                    <h3>
+                        <i class="fas fa-edit"></i>
+                        Convert From
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="inputValue">Value</label>
+                        <input 
+                            type="number" 
+                            id="inputValue" 
+                            class="form-input" 
+                            placeholder="Enter value to convert..."
+                            step="any"
+                            min="0"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="fromUnit">From Unit</label>
+                        <select id="fromUnit" class="form-select">
+                            <option value="byte">Byte (B)</option>
+                            <option value="kilobyte" selected>Kilobyte (KB)</option>
+                            <option value="megabyte">Megabyte (MB)</option>
+                            <option value="gigabyte">Gigabyte (GB)</option>
+                            <option value="terabyte">Terabyte (TB)</option>
+                            <option value="petabyte">Petabyte (PB)</option>
+                            <option value="exabyte">Exabyte (EB)</option>
+                            <option value="zettabyte">Zettabyte (ZB)</option>
+                            <option value="yottabyte">Yottabyte (YB)</option>
+                            <option value="bit">Bit</option>
+                            <option value="kilobit">Kilobit (Kb)</option>
+                            <option value="megabit">Megabit (Mb)</option>
+                            <option value="gigabit">Gigabit (Gb)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="toUnit">To Unit</label>
+                        <select id="toUnit" class="form-select">
+                            <option value="byte">Byte (B)</option>
+                            <option value="kilobyte">Kilobyte (KB)</option>
+                            <option value="megabyte" selected>Megabyte (MB)</option>
+                            <option value="gigabyte">Gigabyte (GB)</option>
+                            <option value="terabyte">Terabyte (TB)</option>
+                            <option value="petabyte">Petabyte (PB)</option>
+                            <option value="exabyte">Exabyte (EB)</option>
+                            <option value="zettabyte">Zettabyte (ZB)</option>
+                            <option value="yottabyte">Yottabyte (YB)</option>
+                            <option value="bit">Bit</option>
+                            <option value="kilobit">Kilobit (Kb)</option>
+                            <option value="megabit">Megabit (Mb)</option>
+                            <option value="gigabit">Gigabit (Gb)</option>
+                        </select>
+                    </div>
+
+                    <div class="quick-conversions">
+                        <div class="quick-title">
+                            <i class="fas fa-bolt"></i>
+                            Quick Values
+                        </div>
+                        <div class="quick-buttons">
+                            <button class="quick-btn" data-value="1">1</button>
+                            <button class="quick-btn" data-value="10">10</button>
+                            <button class="quick-btn" data-value="100">100</button>
+                            <button class="quick-btn" data-value="1000">1,000</button>
+                            <button class="quick-btn" data-value="1024">1,024</button>
+                            <button class="quick-btn" data-value="10000">10,000</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i>
+                        Conversion Result
+                    </h3>
+                    
+                    <div class="conversion-result">
+                        <div class="result-value" id="resultValue">0</div>
+                        <div class="result-unit" id="resultUnit">MB</div>
+                        <button class="copy-btn" id="copyResult" title="Copy result">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="all-conversions" id="allConversions">
+                        <!-- All conversion results will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>Data Storage Information</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-info-circle"></i>
+                            Binary vs Decimal
+                        </h4>
+                        <p><strong>Binary (1024):</strong> Traditional computing standard where each unit is 1024 times larger than the previous.</p>
+                        <p><strong>Decimal (1000):</strong> SI standard where each unit is 1000 times larger, often used by storage manufacturers.</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-memory"></i>
+                            Common Storage Sizes
+                        </h4>
+                        <ul class="info-list">
+                            <li><strong>CD:</strong> <span>700 MB</span></li>
+                            <li><strong>DVD:</strong> <span>4.7 GB</span></li>
+                            <li><strong>Blu-ray:</strong> <span>25 GB</span></li>
+                            <li><strong>USB Flash:</strong> <span>8-256 GB</span></li>
+                            <li><strong>SSD:</strong> <span>120 GB - 8 TB</span></li>
+                            <li><strong>HDD:</strong> <span>500 GB - 20 TB</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-download"></i>
+                            File Size Examples
+                        </h4>
+                        <ul class="info-list">
+                            <li><strong>Text file:</strong> <span>1-100 KB</span></li>
+                            <li><strong>Photo (JPEG):</strong> <span>1-10 MB</span></li>
+                            <li><strong>Song (MP3):</strong> <span>3-5 MB</span></li>
+                            <li><strong>Video (HD):</strong> <span>1-5 GB</span></li>
+                            <li><strong>Game:</strong> <span>10-100 GB</span></li>
+                            <li><strong>Movie (4K):</strong> <span>25-100 GB</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-wifi"></i>
+                            Internet Speeds
+                        </h4>
+                        <ul class="info-list">
+                            <li><strong>Dial-up:</strong> <span>56 Kbps</span></li>
+                            <li><strong>DSL:</strong> <span>1-100 Mbps</span></li>
+                            <li><strong>Cable:</strong> <span>10-1000 Mbps</span></li>
+                            <li><strong>Fiber:</strong> <span>100-10000 Mbps</span></li>
+                            <li><strong>5G:</strong> <span>1-20 Gbps</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Data Storage Converter
+        class DataStorageConverter {
+            constructor() {
+                this.inputValue = document.getElementById('inputValue');
+                this.fromUnit = document.getElementById('fromUnit');
+                this.toUnit = document.getElementById('toUnit');
+                this.resultValue = document.getElementById('resultValue');
+                this.resultUnit = document.getElementById('resultUnit');
+                this.allConversions = document.getElementById('allConversions');
+                this.copyResult = document.getElementById('copyResult');
+                this.modeInfo = document.getElementById('modeInfo');
+                
+                this.currentMode = 'binary'; // binary or decimal
+                
+                // Unit definitions
+                this.units = {
+                    binary: {
+                        bit: { name: 'Bit', symbol: 'bit', bytes: 1/8 },
+                        byte: { name: 'Byte', symbol: 'B', bytes: 1 },
+                        kilobyte: { name: 'Kilobyte', symbol: 'KB', bytes: Math.pow(1024, 1) },
+                        megabyte: { name: 'Megabyte', symbol: 'MB', bytes: Math.pow(1024, 2) },
+                        gigabyte: { name: 'Gigabyte', symbol: 'GB', bytes: Math.pow(1024, 3) },
+                        terabyte: { name: 'Terabyte', symbol: 'TB', bytes: Math.pow(1024, 4) },
+                        petabyte: { name: 'Petabyte', symbol: 'PB', bytes: Math.pow(1024, 5) },
+                        exabyte: { name: 'Exabyte', symbol: 'EB', bytes: Math.pow(1024, 6) },
+                        zettabyte: { name: 'Zettabyte', symbol: 'ZB', bytes: Math.pow(1024, 7) },
+                        yottabyte: { name: 'Yottabyte', symbol: 'YB', bytes: Math.pow(1024, 8) },
+                        kilobit: { name: 'Kilobit', symbol: 'Kb', bytes: Math.pow(1024, 1) / 8 },
+                        megabit: { name: 'Megabit', symbol: 'Mb', bytes: Math.pow(1024, 2) / 8 },
+                        gigabit: { name: 'Gigabit', symbol: 'Gb', bytes: Math.pow(1024, 3) / 8 }
+                    },
+                    decimal: {
+                        bit: { name: 'Bit', symbol: 'bit', bytes: 1/8 },
+                        byte: { name: 'Byte', symbol: 'B', bytes: 1 },
+                        kilobyte: { name: 'Kilobyte', symbol: 'KB', bytes: Math.pow(1000, 1) },
+                        megabyte: { name: 'Megabyte', symbol: 'MB', bytes: Math.pow(1000, 2) },
+                        gigabyte: { name: 'Gigabyte', symbol: 'GB', bytes: Math.pow(1000, 3) },
+                        terabyte: { name: 'Terabyte', symbol: 'TB', bytes: Math.pow(1000, 4) },
+                        petabyte: { name: 'Petabyte', symbol: 'PB', bytes: Math.pow(1000, 5) },
+                        exabyte: { name: 'Exabyte', symbol: 'EB', bytes: Math.pow(1000, 6) },
+                        zettabyte: { name: 'Zettabyte', symbol: 'ZB', bytes: Math.pow(1000, 7) },
+                        yottabyte: { name: 'Yottabyte', symbol: 'YB', bytes: Math.pow(1000, 8) },
+                        kilobit: { name: 'Kilobit', symbol: 'Kb', bytes: Math.pow(1000, 1) / 8 },
+                        megabit: { name: 'Megabit', symbol: 'Mb', bytes: Math.pow(1000, 2) / 8 },
+                        gigabit: { name: 'Gigabit', symbol: 'Gb', bytes: Math.pow(1000, 3) / 8 }
+                    }
+                };
+                
+                this.init();
+            }
+
+            init() {
+                // Event listeners
+                this.inputValue.addEventListener('input', () => this.convert());
+                this.fromUnit.addEventListener('change', () => this.convert());
+                this.toUnit.addEventListener('change', () => this.convert());
+                this.copyResult.addEventListener('click', () => this.copyResultToClipboard());
+                
+                // Mode switching
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.switchMode(e.target.dataset.mode));
+                });
+                
+                // Quick value buttons
+                document.querySelectorAll('.quick-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const value = e.target.dataset.value.replace(',', '');
+                        this.inputValue.value = value;
+                        this.convert();
+                    });
+                });
+                
+                // Initial conversion
+                this.inputValue.value = '1';
+                this.convert();
+            }
+
+            switchMode(mode) {
+                this.currentMode = mode;
+                
+                // Update active button
+                document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(mode + 'Mode').classList.add('active');
+                
+                // Update mode info
+                if (mode === 'binary') {
+                    this.modeInfo.innerHTML = `
+                        <i class="fas fa-info-circle"></i>
+                        <span>Binary mode: 1 KB = 1,024 bytes (traditional computing)</span>
+                    `;
+                } else {
+                    this.modeInfo.innerHTML = `
+                        <i class="fas fa-info-circle"></i>
+                        <span>Decimal mode: 1 KB = 1,000 bytes (SI standard, storage manufacturers)</span>
+                    `;
+                }
+                
+                // Reconvert with new mode
+                this.convert();
+            }
+
+            convert() {
+                const inputVal = parseFloat(this.inputValue.value);
+                const fromUnitKey = this.fromUnit.value;
+                const toUnitKey = this.toUnit.value;
+                
+                if (isNaN(inputVal) || inputVal < 0) {
+                    this.displayResult(0, toUnitKey);
+                    this.displayAllConversions(0);
+                    return;
+                }
+                
+                // Convert to bytes first
+                const fromUnitData = this.units[this.currentMode][fromUnitKey];
+                const bytes = inputVal * fromUnitData.bytes;
+                
+                // Convert from bytes to target unit
+                const toUnitData = this.units[this.currentMode][toUnitKey];
+                const result = bytes / toUnitData.bytes;
+                
+                this.displayResult(result, toUnitKey);
+                this.displayAllConversions(bytes);
+            }
+
+            displayResult(value, unitKey) {
+                const unitData = this.units[this.currentMode][unitKey];
+                this.resultValue.textContent = this.formatNumber(value);
+                this.resultUnit.textContent = unitData.symbol;
+            }
+
+            displayAllConversions(bytes) {
+                const conversions = [];
+                const currentUnits = this.units[this.currentMode];
+                
+                // Define the order of units to display
+                const unitOrder = ['bit', 'byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte', 'petabyte'];
+                
+                unitOrder.forEach(unitKey => {
+                    if (currentUnits[unitKey]) {
+                        const unitData = currentUnits[unitKey];
+                        const value = bytes / unitData.bytes;
+                        
+                        conversions.push({
+                            name: unitData.name,
+                            symbol: unitData.symbol,
+                            value: value,
+                            formatted: this.formatNumber(value)
+                        });
+                    }
+                });
+                
+                // Add bit conversions
+                const bitConversions = ['kilobit', 'megabit', 'gigabit'];
+                bitConversions.forEach(unitKey => {
+                    if (currentUnits[unitKey]) {
+                        const unitData = currentUnits[unitKey];
+                        const value = bytes / unitData.bytes;
+                        
+                        conversions.push({
+                            name: unitData.name,
+                            symbol: unitData.symbol,
+                            value: value,
+                            formatted: this.formatNumber(value)
+                        });
+                    }
+                });
+                
+                // Render conversions
+                this.allConversions.innerHTML = '';
+                conversions.forEach(conversion => {
+                    const item = document.createElement('div');
+                    item.className = 'conversion-item';
+                    item.innerHTML = `
+                        <span class="conversion-label">${conversion.name} (${conversion.symbol})</span>
+                        <span class="conversion-value">${conversion.formatted}</span>
+                        <button class="copy-btn" onclick="copyToClipboard('${conversion.formatted}')" title="Copy value">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    `;
+                    this.allConversions.appendChild(item);
+                });
+            }
+
+            formatNumber(num) {
+                if (num === 0) return '0';
+                
+                // Handle very large numbers
+                if (Math.abs(num) >= 1e21) {
+                    return num.toExponential(3);
+                }
+                
+                // Handle very small numbers
+                if (Math.abs(num) < 1e-6 && num !== 0) {
+                    return num.toExponential(3);
+                }
+                
+                // Handle regular numbers
+                if (Math.abs(num) >= 1000000) {
+                    return num.toExponential(3);
+                }
+                
+                // Format with appropriate decimal places
+                if (num >= 1000) {
+                    return num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+                } else if (num >= 1) {
+                    return num.toLocaleString('en-US', { maximumFractionDigits: 6 });
+                } else {
+                    return num.toLocaleString('en-US', { maximumFractionDigits: 10 });
+                }
+            }
+
+            copyResultToClipboard() {
+                const value = this.resultValue.textContent;
+                const unit = this.resultUnit.textContent;
+                const fullResult = `${value} ${unit}`;
+                copyToClipboard(fullResult);
+            }
+        }
+
+        // Utility Functions
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!', 'success');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Copied to clipboard!', 'success');
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-color);
+                color: white;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+
+            if (type === 'success') {
+                toast.style.background = 'var(--success-color)';
+            } else if (type === 'error') {
+                toast.style.background = 'var(--error-color)';
+            }
+
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'c':
+                        if (e.target.id !== 'inputValue') {
+                            e.preventDefault();
+                            document.getElementById('copyResult').click();
+                        }
+                        break;
+                    case '1':
+                        e.preventDefault();
+                        document.getElementById('binaryMode').click();
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        document.getElementById('decimalMode').click();
+                        break;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                document.getElementById('inputValue').blur();
+            }
+        });
+
+        // Add swap functionality
+        function addSwapButton() {
+            const inputSection = document.querySelector('.input-section');
+            const swapContainer = document.createElement('div');
+            swapContainer.style.cssText = `
+                display: flex;
+                justify-content: center;
+                margin: 1rem 0;
+            `;
+            
+            const swapBtn = document.createElement('button');
+            swapBtn.className = 'quick-btn';
+            swapBtn.style.cssText = `
+                background-color: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            `;
+            swapBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Swap Units';
+            swapBtn.title = 'Swap from and to units';
+            
+            swapBtn.addEventListener('click', () => {
+                const fromUnit = document.getElementById('fromUnit');
+                const toUnit = document.getElementById('toUnit');
+                
+                const temp = fromUnit.value;
+                fromUnit.value = toUnit.value;
+                toUnit.value = temp;
+                
+                // Trigger conversion
+                document.querySelector('.calculator-page').dispatchEvent(new Event('convert'));
+            });
+            
+            swapContainer.appendChild(swapBtn);
+            
+            // Insert after the toUnit form group
+            const toUnitGroup = document.querySelector('#toUnit').closest('.form-group');
+            toUnitGroup.parentNode.insertBefore(swapContainer, toUnitGroup.nextSibling);
+        }
+
+        // Add common file size presets
+        function addFileSizePresets() {
+            const quickConversions = document.querySelector('.quick-conversions');
+            
+            const presetsContainer = document.createElement('div');
+            presetsContainer.style.marginTop = '1rem';
+            presetsContainer.innerHTML = `
+                <div class="quick-title">
+                    <i class="fas fa-file"></i>
+                    Common File Sizes
+                </div>
+                <div class="quick-buttons" style="grid-template-columns: repeat(3, 1fr);">
+                    <button class="quick-btn preset-btn" data-preset="photo">Photo (5MB)</button>
+                    <button class="quick-btn preset-btn" data-preset="song">Song (4MB)</button>
+                    <button class="quick-btn preset-btn" data-preset="video">Video (1GB)</button>
+                    <button class="quick-btn preset-btn" data-preset="game">Game (50GB)</button>
+                    <button class="quick-btn preset-btn" data-preset="movie">Movie (25GB)</button>
+                    <button class="quick-btn preset-btn" data-preset="usb">USB (32GB)</button>
+                </div>
+            `;
+            
+            quickConversions.appendChild(presetsContainer);
+            
+            // Add event listeners for presets
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const preset = e.target.dataset.preset;
+                    const inputValue = document.getElementById('inputValue');
+                                        const fromUnit = document.getElementById('fromUnit');
+                    
+                    const presets = {
+                        photo: { value: 5, unit: 'megabyte' },
+                        song: { value: 4, unit: 'megabyte' },
+                        video: { value: 1, unit: 'gigabyte' },
+                        game: { value: 50, unit: 'gigabyte' },
+                        movie: { value: 25, unit: 'gigabyte' },
+                        usb: { value: 32, unit: 'gigabyte' }
+                    };
+                    
+                    if (presets[preset]) {
+                        inputValue.value = presets[preset].value;
+                        fromUnit.value = presets[preset].unit;
+                        
+                        // Trigger conversion
+                        inputValue.dispatchEvent(new Event('input'));
+                    }
+                });
+            });
+        }
+
+        // Add bandwidth calculator
+        function addBandwidthCalculator() {
+            const infoSection = document.querySelector('.info-section');
+            
+            const bandwidthCard = document.createElement('div');
+            bandwidthCard.className = 'info-card';
+            bandwidthCard.innerHTML = `
+                <h4>
+                    <i class="fas fa-stopwatch"></i>
+                    Download Time Calculator
+                </h4>
+                <p>Calculate how long it takes to download files at different speeds.</p>
+                <div style="margin-top: 1rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="number" id="downloadSize" placeholder="File size" style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; background: var(--bg-primary); color: var(--text-primary);">
+                        <select id="downloadUnit" style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; background: var(--bg-primary); color: var(--text-primary);">
+                            <option value="megabyte">MB</option>
+                            <option value="gigabyte">GB</option>
+                            <option value="terabyte">TB</option>
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="number" id="downloadSpeed" placeholder="Speed" style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; background: var(--bg-primary); color: var(--text-primary);">
+                        <select id="speedUnit" style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.25rem; background: var(--bg-primary); color: var(--text-primary);">
+                            <option value="megabit">Mbps</option>
+                            <option value="gigabit">Gbps</option>
+                            <option value="megabyte">MB/s</option>
+                            <option value="gigabyte">GB/s</option>
+                        </select>
+                    </div>
+                    <button id="calculateDownload" style="width: 100%; padding: 0.5rem; background: var(--primary-color); color: white; border: none; border-radius: 0.25rem; cursor: pointer;">
+                        Calculate Time
+                    </button>
+                    <div id="downloadResult" style="margin-top: 0.5rem; font-weight: bold; color: var(--primary-color);"></div>
+                </div>
+            `;
+            
+            document.querySelector('.info-grid').appendChild(bandwidthCard);
+            
+            // Add download time calculation
+            document.getElementById('calculateDownload').addEventListener('click', () => {
+                const size = parseFloat(document.getElementById('downloadSize').value);
+                const sizeUnit = document.getElementById('downloadUnit').value;
+                const speed = parseFloat(document.getElementById('downloadSpeed').value);
+                const speedUnit = document.getElementById('speedUnit').value;
+                const resultDiv = document.getElementById('downloadResult');
+                
+                if (isNaN(size) || isNaN(speed) || size <= 0 || speed <= 0) {
+                    resultDiv.textContent = 'Please enter valid values';
+                    return;
+                }
+                
+                // Convert file size to bytes
+                const converter = new DataStorageConverter();
+                const sizeInBytes = size * converter.units.binary[sizeUnit].bytes;
+                
+                // Convert speed to bytes per second
+                let speedInBytesPerSecond;
+                if (speedUnit.includes('bit')) {
+                    // Speed is in bits per second, convert to bytes per second
+                    speedInBytesPerSecond = (speed * converter.units.binary[speedUnit].bytes) * 8;
+                } else {
+                    // Speed is already in bytes per second
+                    speedInBytesPerSecond = speed * converter.units.binary[speedUnit].bytes;
+                }
+                
+                // Calculate time in seconds
+                const timeInSeconds = sizeInBytes / speedInBytesPerSecond;
+                
+                // Format time
+                const formatTime = (seconds) => {
+                    if (seconds < 60) {
+                        return `${seconds.toFixed(1)} seconds`;
+                    } else if (seconds < 3600) {
+                        const minutes = Math.floor(seconds / 60);
+                        const remainingSeconds = Math.floor(seconds % 60);
+                        return `${minutes}m ${remainingSeconds}s`;
+                    } else if (seconds < 86400) {
+                        const hours = Math.floor(seconds / 3600);
+                        const minutes = Math.floor((seconds % 3600) / 60);
+                        return `${hours}h ${minutes}m`;
+                    } else {
+                        const days = Math.floor(seconds / 86400);
+                        const hours = Math.floor((seconds % 86400) / 3600);
+                        return `${days}d ${hours}h`;
+                    }
+                };
+                
+                resultDiv.textContent = `Download time: ${formatTime(timeInSeconds)}`;
+            });
+        }
+
+        // Add storage comparison feature
+        function addStorageComparison() {
+            const resultsSection = document.querySelector('.results-section');
+            
+            const comparisonDiv = document.createElement('div');
+            comparisonDiv.style.cssText = `
+                background-color: var(--bg-secondary);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+                margin-top: 1.5rem;
+            `;
+            
+            comparisonDiv.innerHTML = `
+                <h4 style="color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-balance-scale"></i>
+                    Storage Comparison
+                </h4>
+                <div id="storageComparison">
+                    <!-- Comparison content will be populated here -->
+                </div>
+            `;
+            
+            resultsSection.appendChild(comparisonDiv);
+        }
+
+        // Update storage comparison when conversion happens
+        function updateStorageComparison(bytes) {
+            const comparisonDiv = document.getElementById('storageComparison');
+            if (!comparisonDiv) return;
+            
+            const comparisons = [
+                { name: 'Floppy Disk', size: 1.44 * 1024 * 1024, unit: 'MB' },
+                { name: 'CD', size: 700 * 1024 * 1024, unit: 'MB' },
+                { name: 'DVD', size: 4.7 * 1024 * 1024 * 1024, unit: 'GB' },
+                { name: 'Blu-ray', size: 25 * 1024 * 1024 * 1024, unit: 'GB' },
+                { name: 'USB Flash Drive', size: 32 * 1024 * 1024 * 1024, unit: 'GB' },
+                { name: 'SSD (1TB)', size: 1024 * 1024 * 1024 * 1024, unit: 'TB' }
+            ];
+            
+            let html = '';
+            comparisons.forEach(item => {
+                const ratio = bytes / item.size;
+                let comparison = '';
+                
+                if (ratio > 1) {
+                    comparison = `${ratio.toFixed(2)}x larger than ${item.name}`;
+                } else if (ratio < 1 && ratio > 0) {
+                    comparison = `${(1/ratio).toFixed(2)}x smaller than ${item.name}`;
+                } else {
+                    comparison = `Same as ${item.name}`;
+                }
+                
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="color: var(--text-primary);">${item.name}</span>
+                        <span style="color: var(--text-secondary); font-size: 0.875rem;">${comparison}</span>
+                    </div>
+                `;
+            });
+            
+            comparisonDiv.innerHTML = html;
+        }
+
+        // Enhanced input validation
+        function addInputValidation() {
+            const inputValue = document.getElementById('inputValue');
+            
+            inputValue.addEventListener('input', (e) => {
+                const value = parseFloat(e.target.value);
+                
+                // Visual feedback for input
+                if (isNaN(value) || value < 0) {
+                    e.target.style.borderColor = 'var(--error-color)';
+                } else if (value === 0) {
+                    e.target.style.borderColor = 'var(--warning-color)';
+                } else {
+                    e.target.style.borderColor = 'var(--success-color)';
+                }
+                
+                // Reset border color after a delay
+                setTimeout(() => {
+                    e.target.style.borderColor = 'var(--border-color)';
+                }, 2000);
+            });
+            
+            // Prevent negative values
+            inputValue.addEventListener('keydown', (e) => {
+                if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Add unit search functionality
+        function addUnitSearch() {
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            
+            [fromUnit, toUnit].forEach(select => {
+                const wrapper = select.parentNode;
+                const searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.placeholder = 'Search units...';
+                searchInput.style.cssText = `
+                    width: 100%;
+                    padding: 0.5rem;
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius);
+                    background-color: var(--bg-primary);
+                    color: var(--text-primary);
+                    font-size: 0.875rem;
+                    margin-bottom: 0.5rem;
+                    display: none;
+                `;
+                
+                wrapper.insertBefore(searchInput, select);
+                
+                // Toggle search on double-click
+                select.addEventListener('dblclick', () => {
+                    searchInput.style.display = searchInput.style.display === 'none' ? 'block' : 'none';
+                    if (searchInput.style.display === 'block') {
+                        searchInput.focus();
+                    }
+                });
+                
+                // Filter options
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    Array.from(select.options).forEach(option => {
+                        const text = option.textContent.toLowerCase();
+                        option.style.display = text.includes(query) ? 'block' : 'none';
+                    });
+                });
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            const converter = new DataStorageConverter();
+            
+            // Add enhanced features
+            addSwapButton();
+            addFileSizePresets();
+            addBandwidthCalculator();
+            addStorageComparison();
+            addInputValidation();
+            addUnitSearch();
+            
+            // Override the original convert method to include comparison updates
+            const originalConvert = converter.convert.bind(converter);
+            converter.convert = function() {
+                originalConvert();
+                
+                // Update storage comparison
+                const inputVal = parseFloat(this.inputValue.value);
+                const fromUnitKey = this.fromUnit.value;
+                if (!isNaN(inputVal) && inputVal > 0) {
+                    const fromUnitData = this.units[this.currentMode][fromUnitKey];
+                    const bytes = inputVal * fromUnitData.bytes;
+                    updateStorageComparison(bytes);
+                }
+            };
+            
+            // Add keyboard shortcuts info
+            // showToast('Tip: Use Ctrl+1 for Binary mode, Ctrl+2 for Decimal mode, Ctrl+C to copy result', 'info');
+        });
+
+        // Add help modal
+        function showHelp() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: var(--bg-card); border-radius: var(--radius); padding: 2rem; max-width: 500px; max-height: 80vh; overflow-y: auto;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Data Storage Converter Help</h3>
+                    <div style="color: var(--text-secondary); line-height: 1.6;">
+                        <h4 style="color: var(--primary-color); margin: 1rem 0 0.5rem 0;">Conversion Modes:</h4>
+                        <ul style="margin-left: 1rem;">
+                            <li><strong>Binary (1024):</strong> Traditional computing standard</li>
+                            <li><strong>Decimal (1000):</strong> SI standard used by manufacturers</li>
+                        </ul>
+                        
+                        <h4 style="color: var(--primary-color); margin: 1rem 0 0.5rem 0;">Keyboard Shortcuts:</h4>
+                        <ul style="margin-left: 1rem;">
+                            <li><strong>Ctrl+1:</strong> Switch to Binary mode</li>
+                            <li><strong>Ctrl+2:</strong> Switch to Decimal mode</li>
+                            <li><strong>Ctrl+C:</strong> Copy result</li>
+                            <li><strong>Escape:</strong> Clear focus</li>
+                        </ul>
+                        
+                        <h4 style="color: var(--primary-color); margin: 1rem 0 0.5rem 0;">Tips:</h4>
+                        <ul style="margin-left: 1rem;">
+                            <li>Double-click unit dropdowns to search</li>
+                            <li>Use quick value buttons for common sizes</li>
+                            <li>Try file size presets for real-world examples</li>
+                            <li>Check download time calculator for bandwidth planning</li>
+                        </ul>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: var(--radius); cursor: pointer;">
+                        Close
+                    </button>
+                </div>
+            `;
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+            
+            document.body.appendChild(modal);
+        }
+
+        // Add help button to header
+        function addHelpButton() {
+            const navActions = document.querySelector('.nav-actions');
+            const helpBtn = document.createElement('button');
+            helpBtn.className = 'theme-toggle';
+            helpBtn.innerHTML = '<i class="fas fa-question"></i>';
+            helpBtn.title = 'Show help';
+            helpBtn.addEventListener('click', showHelp);
+            navActions.insertBefore(helpBtn, navActions.lastElementChild);
+        }
+
+        // Add URL parameter support for sharing conversions
+        function addURLSupport() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Load from URL parameters
+            if (urlParams.has('value')) {
+                document.getElementById('inputValue').value = urlParams.get('value');
+            }
+            if (urlParams.has('from')) {
+                document.getElementById('fromUnit').value = urlParams.get('from');
+            }
+            if (urlParams.has('to')) {
+                document.getElementById('toUnit').value = urlParams.get('to');
+            }
+            if (urlParams.has('mode')) {
+                const mode = urlParams.get('mode');
+                if (mode === 'decimal' || mode === 'binary') {
+                    document.getElementById(mode + 'Mode').click();
+                }
+            }
+            
+            // Add share button
+            const resultsSection = document.querySelector('.results-section');
+            const shareBtn = document.createElement('button');
+            shareBtn.style.cssText = `
+                width: 100%;
+                padding: 0.75rem;
+                background: var(--success-color);
+                color: white;
+                border: none;
+                border-radius: var(--radius);
+                cursor: pointer;
+                margin-top: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            `;
+            shareBtn.innerHTML = '<i class="fas fa-share"></i> Share This Conversion';
+            shareBtn.addEventListener('click', () => {
+                const value = document.getElementById('inputValue').value;
+                const from = document.getElementById('fromUnit').value;
+                const to = document.getElementById('toUnit').value;
+                const mode = document.querySelector('.mode-btn.active').dataset.mode;
+                
+                const url = new URL(window.location);
+                url.searchParams.set('value', value);
+                url.searchParams.set('from', from);
+                url.searchParams.set('to', to);
+                url.searchParams.set('mode', mode);
+                
+                copyToClipboard(url.toString());
+                showToast('Conversion URL copied to clipboard!', 'success');
+            });
+            
+            resultsSection.appendChild(shareBtn);
+        }
+
+        // Add recent conversions history
+        function addConversionHistory() {
+            const history = JSON.parse(localStorage.getItem('dataConverterHistory') || '[]');
+            
+            function saveConversion(value, from, to, result, mode) {
+                const conversion = {
+                    value,
+                    from,
+                    to,
+                    result,
+                    mode,
+                    timestamp: Date.now()
+                };
+                
+                history.unshift(conversion);
+                if (history.length > 10) history.pop(); // Keep only last 10
+                localStorage.setItem('dataConverterHistory', JSON.stringify(history));
+                updateHistoryDisplay();
+            }
+            
+            function updateHistoryDisplay() {
+                const historyContainer = document.getElementById('conversionHistory');
+                if (!historyContainer || history.length === 0) return;
+                
+                historyContainer.innerHTML = history.map(item => `
+                    <div class="conversion-item" style="cursor: pointer;" onclick="loadHistoryItem('${item.value}', '${item.from}', '${item.to}', '${item.mode}')">
+                        <span class="conversion-label">${item.value} ${item.from} → ${item.to}</span>
+                        <span class="conversion-value">${item.mode}</span>
+                    </div>
+                `).join('');
+            }
+            
+            // Add history section
+            const inputSection = document.querySelector('.input-section');
+            const historyDiv = document.createElement('div');
+            historyDiv.innerHTML = `
+                <div class="quick-conversions" style="margin-top: 1.5rem;">
+                    <div class="quick-title">
+                        <i class="fas fa-history"></i>
+                        Recent Conversions
+                    </div>
+                    <div id="conversionHistory">
+                        <!-- History items will be populated here -->
+                    </div>
+                </div>
+            `;
+            inputSection.appendChild(historyDiv);
+            
+            // Load history item function
+            window.loadHistoryItem = function(value, from, to, mode) {
+                document.getElementById('inputValue').value = value;
+                document.getElementById('fromUnit').value = from;
+                document.getElementById('toUnit').value = to;
+                document.getElementById(mode + 'Mode').click();
+            };
+            
+            // Save conversion when it happens
+            const originalConvert = DataStorageConverter.prototype.convert;
+            DataStorageConverter.prototype.convert = function() {
+                originalConvert.call(this);
+                
+                const value = this.inputValue.value;
+                const from = this.fromUnit.value;
+                const to = this.toUnit.value;
+                const result = this.resultValue.textContent;
+                const mode = this.currentMode;
+                
+                if (value && !isNaN(parseFloat(value)) && parseFloat(value) > 0) {
+                    saveConversion(value, from, to, result, mode);
+                }
+            };
+            
+            updateHistoryDisplay();
+        }
+
+        // Add data export functionality
+        function addDataExport() {
+            const resultsSection = document.querySelector('.results-section');
+            
+            const exportBtn = document.createElement('button');
+            exportBtn.style.cssText = `
+                width: 100%;
+                padding: 0.75rem;
+                background: var(--warning-color);
+                color: white;
+                border: none;
+                border-radius: var(--radius);
+                cursor: pointer;
+                margin-top: 0.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            `;
+            exportBtn.innerHTML = '<i class="fas fa-download"></i> Export Results';
+            exportBtn.addEventListener('click', exportResults);
+            
+            resultsSection.appendChild(exportBtn);
+        }
+
+        function exportResults() {
+            const inputValue = document.getElementById('inputValue').value;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            const resultValue = document.getElementById('resultValue').textContent;
+            const resultUnit = document.getElementById('resultUnit').textContent;
+            const mode = document.querySelector('.mode-btn.active').textContent;
+            
+            const allConversions = Array.from(document.querySelectorAll('.conversion-item')).map(item => {
+                const label = item.querySelector('.conversion-label').textContent;
+                const value = item.querySelector('.conversion-value').textContent;
+                return `${label}: ${value}`;
+            }).join('\n');
+            
+            const exportData = `
+Data Storage Conversion Results
+Generated: ${new Date().toLocaleString()}
+Mode: ${mode}
+
+Input: ${inputValue} ${fromUnit}
+Result: ${resultValue} ${resultUnit}
+
+All Conversions:
+${allConversions}
+            `.trim();
+            
+            // Create and download file
+            const blob = new Blob([exportData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `data-conversion-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Results exported successfully!', 'success');
+        }
+
+        // Initialize all enhanced features
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add a small delay to ensure everything is loaded
+            setTimeout(() => {
+                addHelpButton();
+                addURLSupport();
+                addConversionHistory();
+                addDataExport();
+            }, 100);
+        });
+
+        // Add responsive behavior for mobile
+        function addMobileOptimizations() {
+            if (window.innerWidth <= 768) {
+                // Simplify quick buttons on mobile
+                const quickButtons = document.querySelector('.quick-buttons');
+                if (quickButtons) {
+                    quickButtons.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                }
+                
+                // Make file size presets single column on mobile
+                const presetButtons = document.querySelector('.preset-btn').parentElement;
+                if (presetButtons) {
+                    presetButtons.style.gridTemplateColumns = '1fr';
+                }
+            }
+        }
+
+        window.addEventListener('resize', addMobileOptimizations);
+        document.addEventListener('DOMContentLoaded', addMobileOptimizations);
+
+        // Add performance monitoring
+        function addPerformanceMonitoring() {
+            let conversionCount = 0;
+            const startTime = performance.now();
+            
+            const originalConvert = DataStorageConverter.prototype.convert;
+            DataStorageConverter.prototype.convert = function() {
+                const convertStart = performance.now();
+                originalConvert.call(this);
+                const convertEnd = performance.now();
+                
+                conversionCount++;
+                
+                // Log performance every 10 conversions
+                if (conversionCount % 10 === 0) {
+                    console.log(`Conversion #${conversionCount} took ${convertEnd - convertStart}ms`);
+                }
+            };
+        }
+
+        // Add accessibility improvements
+        function addAccessibilityFeatures() {
+            // Add ARIA labels
+            document.getElementById('inputValue').setAttribute('aria-label', 'Enter value to convert');
+            document.getElementById('fromUnit').setAttribute('aria-label', 'Select unit to convert from');
+            document.getElementById('toUnit').setAttribute('aria-label', 'Select unit to convert to');
+            
+            // Add keyboard navigation for mode buttons
+            document.querySelectorAll('.mode-btn').forEach((btn, index) => {
+                btn.setAttribute('tabindex', '0');
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        btn.click();
+                    }
+                });
+            });
+            
+            // Add focus indicators
+            const style = document.createElement('style');
+            style.textContent = `
+                .mode-btn:focus,
+                .quick-btn:focus,
+                .copy-btn:focus {
+                    outline: 2px solid var(--primary-color);
+                    outline-offset: 2px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize accessibility features
+        document.addEventListener('DOMContentLoaded', () => {
+            addPerformanceMonitoring();
+            addAccessibilityFeatures();
+        });
+    </script>
+</body>
+</html>
+
+
