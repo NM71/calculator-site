@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator - CalcHub</title>
+    <meta name="description" content="Free online basic calculator for addition, subtraction, multiplication, and division. Clean and easy to use.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .calculator-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .calculator-display {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: right;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .display-history {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            min-height: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .display-current {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+            line-height: 1.2;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        .btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-primary);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-number {
+            background-color: var(--bg-card);
+        }
+
+        .btn-operator {
+            background-color: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+
+        .btn-operator:hover {
+            background-color: #d97706;
+        }
+
+        .btn-equals {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            grid-column: span 2;
+        }
+
+        .btn-equals:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-clear {
+            background-color: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .btn-clear:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-zero {
+            grid-column: span 2;
+        }
+
+        .calculator-info {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .calculator-info h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .calculator-info h4 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.125rem;
+        }
+
+        .calculator-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .calculator-info li {
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .calculator-info li::before {
+            content: "•";
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .shortcuts-grid span {
+            background-color: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calculator-buttons {
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                min-height: 50px;
+                font-size: 1rem;
+            }
+            
+            .display-current {
+                font-size: 1.5rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-calculator"></i>
+                    Basic Calculator
+                </h1>
+                <p class="calculator-description">
+                    Perform basic arithmetic operations including addition, subtraction, multiplication, and division.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-wrapper">
+                    <div class="calculator-display">
+                        <div class="display-history" id="displayHistory"></div>
+                        <div class="display-current" id="displayCurrent">0</div>
+                    </div>
+                    
+                    <div class="calculator-buttons">
+                        <button class="btn btn-clear" onclick="clearAll()">C</button>
+                        <button class="btn btn-clear" onclick="clearEntry()">CE</button>
+                        <button class="btn btn-operator" onclick="deleteLast()">⌫</button>
+                        <button class="btn btn-operator" onclick="inputOperator('÷')">÷</button>
+                        
+                        <button class="btn btn-number" onclick="inputNumber('7')">7</button>
+                        <button class="btn btn-number" onclick="inputNumber('8')">8</button>
+                        <button class="btn btn-number" onclick="inputNumber('9')">9</button>
+                        <button class="btn btn-operator" onclick="inputOperator('×')">×</button>
+                        
+                        <button class="btn btn-number" onclick="inputNumber('4')">4</button>
+                        <button class="btn btn-number" onclick="inputNumber('5')">5</button>
+                        <button class="btn btn-number" onclick="inputNumber('6')">6</button>
+                        <button class="btn btn-operator" onclick="inputOperator('-')">-</button>
+                        
+                        <button class="btn btn-number" onclick="inputNumber('1')">1</button>
+                        <button class="btn btn-number" onclick="inputNumber('2')">2</button>
+                        <button class="btn btn-number" onclick="inputNumber('3')">3</button>
+                        <button class="btn btn-operator" onclick="inputOperator('+')">+</button>
+                        
+                        <button class="btn btn-number btn-zero" onclick="inputNumber('0')">0</button>
+                        <button class="btn btn-number" onclick="inputDecimal()">.</button>
+                        <button class="btn btn-equals" onclick="calculate()">=</button>
+                    </div>
+                </div>
+
+                <div class="calculator-info">
+                    <h3>How to Use</h3>
+                    <ul>
+                        <li>Click numbers to input values</li>
+                        <li>Use +, -, ×, ÷ for operations</li>
+                        <li>Press = to calculate result</li>
+                        <li>C clears everything, CE clears current entry</li>
+                        <li>⌫ deletes the last entered digit</li>
+                    </ul>
+                    
+                    <div class="keyboard-shortcuts">
+                        <h4>Keyboard Shortcuts</h4>
+                        <div class="shortcuts-grid">
+                            <span>Numbers: 0-9</span>
+                            <span>Add: +</span>
+                            <span>Subtract: -</span>
+                            <span>Multiply: *</span>
+                            <span>Divide: /</span>
+                            <span>Equals: Enter</span>
+                            <span>Clear: Escape</span>
+                            <span>Delete: Backspace</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Basic Calculator Logic
+        let currentInput = '0';
+        let previousInput = '';
+        let operator = '';
+        let waitingForNewInput = false;
+
+        const displayCurrent = document.getElementById('displayCurrent');
+        const displayHistory = document.getElementById('displayHistory');
+
+        function updateDisplay() {
+            displayCurrent.textContent = formatNumber(currentInput);
+            if (previousInput && operator) {
+                displayHistory.textContent = `${formatNumber(previousInput)} ${operator}`;
+            } else {
+                displayHistory.textContent = '';
+            }
+        }
+
+        function formatNumber(num) {
+            if (num === '') return '0';
+            const number = parseFloat(num);
+            if (isNaN(number)) return '0';
+            
+            if (Math.abs(number) > 999999999999 || (Math.abs(number) < 0.000001 && number !== 0)) {
+                return number.toExponential(6);
+            }
+            
+            return number.toLocaleString('en-US', { maximumFractionDigits: 10 });
+        }
+
+        function inputNumber(num) {
+            if (waitingForNewInput) {
+                currentInput = num;
+                waitingForNewInput = false;
+            } else {
+                currentInput = currentInput === '0' ? num : currentInput + num;
+            }
+            updateDisplay();
+        }
+
+        function inputDecimal() {
+            if (waitingForNewInput) {
+                currentInput = '0.';
+                waitingForNewInput = false;
+            } else if (currentInput.indexOf('.') === -1) {
+                currentInput += '.';
+            }
+            updateDisplay();
+        }
+
+        function inputOperator(nextOperator) {
+            const inputValue = parseFloat(currentInput);
+
+            if (previousInput === '') {
+                previousInput = currentInput;
+            } else if (operator) {
+                const result = performCalculation();
+                currentInput = String(result);
+                previousInput = currentInput;
+            }
+
+            waitingForNewInput = true;
+            operator = nextOperator;
+            updateDisplay();
+        }
+
+        function performCalculation() {
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+
+            if (isNaN(prev) || isNaN(current)) return current;
+
+            switch (operator) {
+                case '+':
+                    return prev + current;
+                case '-':
+                    return prev - current;
+                case '×':
+                    return prev * current;
+                case '÷':
+                    if (current === 0) {
+                        alert('Cannot divide by zero');
+                        return prev;
+                    }
+                    return prev / current;
+                default:
+                    return current;
+            }
+        }
+
+        function calculate() {
+            if (operator && previousInput !== '' && !waitingForNewInput) {
+                const result = performCalculation();
+                displayHistory.textContent = `${formatNumber(previousInput)} ${operator} ${formatNumber(currentInput)} =`;
+                currentInput = String(result);
+                previousInput = '';
+                operator = '';
+                waitingForNewInput = true;
+                updateDisplay();
+            }
+        }
+
+        function clearAll() {
+            currentInput = '0';
+            previousInput = '';
+            operator = '';
+            waitingForNewInput = false;
+            updateDisplay();
+        }
+
+        function clearEntry() {
+            currentInput = '0';
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            e.preventDefault();
+            
+            if (e.key >= '0' && e.key <= '9') {
+                inputNumber(e.key);
+            } else if (e.key === '.') {
+                inputDecimal();
+            } else if (e.key === '+') {
+                inputOperator('+');
+            } else if (e.key === '-') {
+                inputOperator('-');
+            } else if (e.key === '*') {
+                inputOperator('×');
+            } else if (e.key === '/') {
+                inputOperator('÷');
+            } else if (e.key === 'Enter' || e.key === '=') {
+                calculate();
+            } else if (e.key === 'Escape') {
+                clearAll();
+            } else if (e.key === 'Backspace') {
+                deleteLast();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>

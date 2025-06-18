@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalcHub - Your Ultimate Calculator Collection</title>
+    <meta name="description" content="Access 25+ professional calculators for math, finance, health, business and more. Clean, fast, and mobile-friendly.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CalcHub">
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Your Ultimate Calculator Hub</h1>
+                <p class="hero-subtitle">Access 25+ professional calculators for math, finance, health, business and more. Clean, fast, and mobile-friendly.</p>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search calculators..." autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Categories -->
+    <main class="main container">
+        <div class="categories-grid">
+            <!-- General Math & Conversion -->
+            <div class="category-card" data-category="math">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h2 class="category-title">General Math & Conversion</h2>
+                </div>
+                <div class="calculators-list">
+                    <a href="calculators/general-math-and-conversion/age-calculator.html" class="calculator-item" data-name="age calculator">
+                        <span>Age Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/general-math-and-conversion/basic-calculator.html" class="calculator-item" data-name="basic calculator">
+                        <span>Basic Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/general-math-and-conversion/unit-converter.html" class="calculator-item" data-name="unit converter">
+                        <span>Unit Converter</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/general-math-and-conversion/percentage-calculator.html" class="calculator-item" data-name="percentage calculator">
+                        <span>Percentage Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/general-math-and-conversion/fraction-calculator.html" class="calculator-item" data-name="fraction calculator">
+                        <span>Fraction Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/general-math-and-conversion/scientific-calculator.html" class="calculator-item" data-name="scientific calculator">
+                        <span>Scientific Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Finance & Money -->
+            <div class="category-card" data-category="finance">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h2 class="category-title">Finance & Money</h2>
+                </div>
+                <div class="calculators-list">
+                    <a href="calculators/finance-and-money/loan-calculator.html" class="calculator-item" data-name="loan calculator">
+                        <span>Loan Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/finance-and-money/mortgage-calculator.html" class="calculator-item" data-name="mortgage calculator">
+                        <span>Mortgage Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/finance-and-money/emi-calculator.html" class="calculator-item" data-name="emi calculator">
+                        <span>EMI Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/finance-and-money/interest-calculator.html" class="calculator-item" data-name="interest calculator">
+                        <span>Interest Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/finance-and-money/currency-converter.html" class="calculator-item" data-name="currency converter">
+                        <span>Currency Converter</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Health & Fitness -->
+            <div class="category-card" data-category="health">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h2 class="category-title">Health & Fitness</h2>
+                </div>
+                <div class="calculators-list">
+                    <a href="calculators/health-and-fitness/bmi-calculator.html" class="calculator-item" data-name="bmi calculator">
+                        <span>BMI Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/health-and-fitness/bmr-calculator.html" class="calculator-item" data-name="bmr calculator">
+                        <span>BMR Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/health-and-fitness/calorie-calculator.html" class="calculator-item" data-name="calorie calculator">
+                        <span>Calorie Needs Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/health-and-fitness/ideal-weight-calculator.html" class="calculator-item" data-name="ideal weight calculator">
+                        <span>Ideal Weight Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/health-and-fitness/pregnancy-calculator.html" class="calculator-item" data-name="pregnancy calculator">
+                        <span>Pregnancy Due Date Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Education & Students -->
+            <div class="category-card" data-category="education">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h2 class="category-title">Education & Students</h2>
+                </div>
+                <div class="calculators-list">
+                    <a href="calculators/education-and-students/gpa-calculator.html" class="calculator-item" data-name="gpa calculator">
+                        <span>GPA Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/education-and-students/grade-calculator.html" class="calculator-item" data-name="grade calculator">
+                        <span>Grade Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/education-and-students/exam-score-calculator.html" class="calculator-item" data-name="exam score calculator">
+                        <span>Final Exam Score Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/education-and-students/age-calculator.html" class="calculator-item" data-name="age calculator">
+                        <span>Age Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/education-and-students/time-duration-calculator.html" class="calculator-item" data-name="time duration calculator">
+                        <span>Time Duration Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Construction & Engineering -->
+            <div class="category-card" data-category="construction">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-hard-hat"></i>
+                    </div>
+                    <h2 class="category-title">Construction & Engineering</h2>
+                </div>
+                <div class="calculators-list">
+                    <a href="calculators/construction-and-engineering/area-calculator.html" class="calculator-item" data-name="area calculator">
+                        <span>Area & Volume Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/construction-and-engineering/paint-calculator.html" class="calculator-item" data-name="paint calculator">
+                        <span>Paint Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/construction-and-engineering/concrete-calculator.html" class="calculator-item" data-name="concrete calculator">
+                        <span>Concrete Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/construction-and-engineering/roofing-calculator.html" class="calculator-item" data-name="roofing calculator">
+                        <span>Roofing Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Business & Productivity -->
+            <div class="category-card" data-category="business">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h2 class="category-title">Business & Productivity</h2>
+                </div>
+                <div class="calculators-list">
+                    <a href="calculators/business-and-productivity/tax-calculator.html" class="calculator-item" data-name="tax calculator">
+                        <span>Tax Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/business-and-productivity/profit-margin-calculator.html" class="calculator-item" data-name="profit margin calculator">
+                        <span>Profit Margin Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/business-and-productivity/discount-calculator.html" class="calculator-item" data-name="discount calculator">
+                        <span>Discount Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/business-and-productivity/break-even-calculator.html" class="calculator-item" data-name="break even calculator">
+                        <span>Break-even Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/business-and-productivity/salary-converter.html" class="calculator-item" data-name="salary converter">
+                        <span>Hourly to Salary Converter</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tech & Miscellaneous -->
+            <div class="category-card" data-category="tech">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h2 class="category-title">Tech & Miscellaneous</h2>
+                </div>
+                <div class="calculators-list">
+                    <a href="calculators/tech-and-miscellaneous/password-checker.html" class="calculator-item" data-name="password checker">
+                        <span>Password Strength Checker</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/tech-and-miscellaneous/data-converter.html" class="calculator-item" data-name="data converter">
+                        <span>Data Storage Converter</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/tech-and-miscellaneous/color-converter.html" class="calculator-item" data-name="color converter">
+                        <span>Hex to RGB Converter</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/tech-and-miscellaneous/ip-calculator.html" class="calculator-item" data-name="ip calculator">
+                        <span>IP Subnet Calculator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="calculators/tech-and-miscellaneous/qr-generator.html" class="calculator-item" data-name="qr generator">
+                        <span>QR Code Generator</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

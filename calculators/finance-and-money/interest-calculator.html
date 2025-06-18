@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Calculator - CalcHub</title>
+    <meta name="description" content="Calculate simple and compound interest with different compounding frequencies. Compare interest earnings and see detailed breakdown with charts.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .interest-type-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .toggle-container {
+            display: flex;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .toggle-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-input.has-prefix {
+            padding-left: 2.5rem;
+        }
+
+        .form-input.has-suffix {
+            padding-right: 3rem;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .calculate-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .result-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .breakdown-item {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .breakdown-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comparison-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-top: 2rem;
+        }
+
+        .comparison-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparison-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .comparison-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .comparison-card.highlight {
+            border-color: var(--success-color);
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .comparison-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-interest {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .chart-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-top: 2rem;
+        }
+
+        .chart-container h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        #growthChart {
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-secondary);
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .breakdown-table th,
+        .breakdown-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-table th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-table td {
+            color: var(--text-secondary);
+        }
+
+        .preset-amounts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .preset-btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .preset-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+            
+            .result-breakdown {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .toggle-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+            
+            .comparison-amount {
+                font-size: 1.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-percentage"></i>
+                    Interest Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate simple and compound interest with different compounding frequencies. Compare interest earnings and see detailed breakdown with charts.
+                </p>
+            </div>
+
+            <div class="interest-type-toggle">
+                <div class="toggle-container">
+                    <button class="toggle-btn active" onclick="setInterestType('compound')">Compound Interest</button>
+                    <button class="toggle-btn" onclick="setInterestType('simple')">Simple Interest</button>
+                </div>
+            </div>
+
+            <div class="calculator-container">
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-edit"></i>
+                        Investment Details
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="principalAmount">Principal Amount</label>
+                        <div class="input-group">
+                            <span class="input-prefix">Rs</span>
+                            <input type="number" 
+                                   id="principalAmount" 
+                                   class="form-input has-prefix" 
+                                   placeholder="Enter principal amount"
+                                   min="1"
+                                   step="1000"
+                                   value="100000">
+                        </div>
+                        <div class="preset-amounts">
+                            <button class="preset-btn" onclick="setPrincipal(50000)">50K</button>
+                            <button class="preset-btn" onclick="setPrincipal(100000)">1L</button>
+                            <button class="preset-btn" onclick="setPrincipal(500000)">5L</button>
+                            <button class="preset-btn" onclick="setPrincipal(1000000)">10L</button>
+                            <button class="preset-btn" onclick="setPrincipal(2500000)">25L</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="interestRate">Annual Interest Rate</label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   id="interestRate" 
+                                   class="form-input has-suffix" 
+                                   placeholder="Enter interest rate"
+                                   min="0.1"
+                                   max="50"
+                                   step="0.1"
+                                   value="8.5">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="timePeriod">Time Period</label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   id="timePeriod" 
+                                   class="form-input has-suffix" 
+                                   placeholder="Enter time period"
+                                   min="0.1"
+                                   max="50"
+                                   step="0.1"
+                                   value="5">
+                            <span class="input-suffix">years</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="compoundingGroup">
+                        <label class="form-label" for="compoundingFrequency">Compounding Frequency</label>
+                        <select id="compoundingFrequency" class="form-select">
+                            <option value="1">Annually</option>
+                            <option value="2">Semi-annually</option>
+                            <option value="4" selected>Quarterly</option>
+                            <option value="12">Monthly</option>
+                            <option value="52">Weekly</option>
+                            <option value="365">Daily</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="additionalDeposit">Additional Monthly Deposit (Optional)</label>
+                        <div class="input-group">
+                            <span class="input-prefix">Rs</span>
+                            <input type="number" 
+                                   id="additionalDeposit" 
+                                   class="form-input has-prefix" 
+                                   placeholder="Enter monthly deposit"
+                                   min="0"
+                                   step="500"
+                                   value="0">
+                        </div>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculateInterest()">
+                        <i class="fas fa-calculator"></i>
+                        Calculate Interest
+                    </button>
+                </div>
+
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-pie"></i>
+                        Results
+                    </h3>
+                    
+                    <div class="result-card">
+                        <div class="result-label">Final Amount</div>
+                        <div class="result-value" id="finalAmount">Rs0</div>
+                    </div>
+
+                    <div class="result-breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Principal Amount</div>
+                            <div class="breakdown-value" id="totalPrincipal">Rs0</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Interest Earned</div>
+                            <div class="breakdown-value" id="interestEarned">Rs0</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Total Deposits</div>
+                            <div class="breakdown-value" id="totalDeposits">Rs0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <h3>
+                    <i class="fas fa-balance-scale"></i>
+                    Interest Type Comparison
+                </h3>
+                <div class="comparison-cards" id="comparisonCards">
+                    <!-- Comparison cards will be populated here -->
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>
+                    <i class="fas fa-chart-line"></i>
+                    Growth Chart
+                </h3>
+                <div class="chart-wrapper">
+                    <canvas id="growthChart" width="600" height="300"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>
+                    <i class="fas fa-table"></i>
+                    Year-wise Breakdown
+                </h3>
+                <div style="overflow-x: auto;">
+                    <table class="breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Opening Balance</th>
+                                <th>Interest Earned</th>
+                                <th>Deposits</th>
+                                <th>Closing Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="breakdownBody">
+                            <!-- Breakdown rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Tips for Better Returns
+                </h3>
+                <ul style="color: var(--text-secondary); line-height: 1.8;">
+                    <li>Start investing early to take advantage of compound interest</li>
+                    <li>Choose investments with higher compounding frequencies</li>
+                    <li>Regular additional deposits can significantly boost returns</li>
+                    <li>Consider tax implications on interest earnings</li>
+                    <li>Reinvest interest to maximize compound growth</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Interest Calculator Logic
+        let currentInterestType = 'compound';
+        let yearlyBreakdown = [];
+
+        function setInterestType(type) {
+            currentInterestType = type;
+            
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide compounding frequency
+            const compoundingGroup = document.getElementById('compoundingGroup');
+            if (type === 'simple') {
+                compoundingGroup.style.display = 'none';
+            } else {
+                compoundingGroup.style.display = 'block';
+            }
+            
+            // Recalculate if values are present
+            calculateInterest();
+        }
+
+        function setPrincipal(amount) {
+            document.getElementById('principalAmount').value = amount;
+            calculateInterest();
+        }
+
+        function calculateInterest() {
+            const principal = parseFloat(document.getElementById('principalAmount').value) || 0;
+            const rate = parseFloat(document.getElementById('interestRate').value) || 0;
+            const time = parseFloat(document.getElementById('timePeriod').value) || 0;
+            const compoundingFreq = parseInt(document.getElementById('compoundingFrequency').value) || 1;
+            const monthlyDeposit = parseFloat(document.getElementById('additionalDeposit').value) || 0;
+
+            if (principal <= 0 || rate <= 0 || time <= 0) {
+                resetResults();
+                return;
+            }
+
+            let result;
+            if (currentInterestType === 'simple') {
+                result = calculateSimpleInterest(principal, rate, time, monthlyDeposit);
+            } else {
+                result = calculateCompoundInterest(principal, rate, time, compoundingFreq, monthlyDeposit);
+            }
+
+            updateResults(result);
+            updateComparison(principal, rate, time, compoundingFreq, monthlyDeposit);
+            updateGrowthChart();
+            updateBreakdownTable();
+        }
+
+        function calculateSimpleInterest(principal, rate, time, monthlyDeposit) {
+            const annualDeposit = monthlyDeposit * 12;
+            const totalDeposits = annualDeposit * time;
+            const totalPrincipal = principal + totalDeposits;
+            
+            // Simple interest on principal
+            const interestOnPrincipal = (principal * rate * time) / 100;
+            
+            // Simple interest on deposits (average time = time/2)
+            const interestOnDeposits = totalDeposits > 0 ? (totalDeposits * rate * (time / 2)) / 100 : 0;
+            
+            const totalInterest = interestOnPrincipal + interestOnDeposits;
+            const finalAmount = totalPrincipal + totalInterest;
+
+            // Generate yearly breakdown
+            yearlyBreakdown = [];
+            let currentBalance = principal;
+            
+            for (let year = 1; year <= time; year++) {
+                const openingBalance = currentBalance;
+                const yearlyInterest = (openingBalance * rate) / 100;
+                const deposits = annualDeposit;
+                const closingBalance = openingBalance + yearlyInterest + deposits;
+                
+                yearlyBreakdown.push({
+                    year: year,
+                    openingBalance: openingBalance,
+                    interestEarned: yearlyInterest,
+                    deposits: deposits,
+                    closingBalance: closingBalance
+                });
+                
+                currentBalance = closingBalance;
+            }
+
+            return {
+                finalAmount: finalAmount,
+                interestEarned: totalInterest,
+                totalPrincipal: totalPrincipal,
+                totalDeposits: totalDeposits
+            };
+        }
+
+        function calculateCompoundInterest(principal, rate, time, compoundingFreq, monthlyDeposit) {
+            const r = rate / 100;
+            const n = compoundingFreq;
+            const t = time;
+            
+            // Compound interest on principal
+            const compoundAmount = principal * Math.pow(1 + r / n, n * t);
+            
+            // Future value of monthly deposits (annuity)
+            let futureValueOfDeposits = 0;
+            if (monthlyDeposit > 0) {
+                const monthlyRate = r / 12;
+                const totalMonths = t * 12;
+                futureValueOfDeposits = monthlyDeposit * ((Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate);
+            }
+            
+            const finalAmount = compoundAmount + futureValueOfDeposits;
+            const totalDeposits = monthlyDeposit * 12 * t;
+            const totalPrincipal = principal + totalDeposits;
+            const interestEarned = finalAmount - totalPrincipal;
+
+            // Generate yearly breakdown
+            yearlyBreakdown = [];
+            let currentBalance = principal;
+            
+            for (let year = 1; year <= time; year++) {
+                const openingBalance = currentBalance;
+                const yearlyInterest = openingBalance * (Math.pow(1 + r / n, n) - 1);
+                const deposits = monthlyDeposit * 12;
+                const closingBalance = (openingBalance + deposits) * Math.pow(1 + r / n, n);
+                
+                yearlyBreakdown.push({
+                    year: year,
+                    openingBalance: openingBalance,
+                    interestEarned: yearlyInterest,
+                    deposits: deposits,
+                    closingBalance: closingBalance
+                });
+                
+                currentBalance = closingBalance;
+            }
+
+            return {
+                finalAmount: finalAmount,
+                interestEarned: interestEarned,
+                totalPrincipal: totalPrincipal,
+                totalDeposits: totalDeposits
+            };
+        }
+
+        function updateResults(result) {
+            document.getElementById('finalAmount').textContent = formatCurrency(result.finalAmount);
+            document.getElementById('totalPrincipal').textContent = formatCurrency(result.totalPrincipal);
+            document.getElementById('interestEarned').textContent = formatCurrency(result.interestEarned);
+            document.getElementById('totalDeposits').textContent = formatCurrency(result.totalDeposits);
+        }
+
+        function updateComparison(principal, rate, time, compoundingFreq, monthlyDeposit) {
+            const simpleResult = calculateSimpleInterest(principal, rate, time, monthlyDeposit);
+            const compoundResult = calculateCompoundInterest(principal, rate, time, compoundingFreq, monthlyDeposit);
+            
+            const comparisonContainer = document.getElementById('comparisonCards');
+            comparisonContainer.innerHTML = '';
+
+            const cards = [
+                {
+                    title: 'Simple Interest',
+                    amount: simpleResult.finalAmount,
+                    interest: simpleResult.interestEarned,
+                    highlight: currentInterestType === 'simple'
+                },
+                {
+                    title: 'Compound Interest',
+                    amount: compoundResult.finalAmount,
+                    interest: compoundResult.interestEarned,
+                    highlight: currentInterestType === 'compound'
+                }
+            ];
+
+            cards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = `comparison-card ${card.highlight ? 'highlight' : ''}`;
+                
+                const difference = card.amount - (card.highlight ? 0 : cards.find(c => c.highlight).amount);
+                const differenceText = difference > 0 ? `+${formatCurrency(Math.abs(difference))} more` : 
+                                     difference < 0 ? `${formatCurrency(Math.abs(difference))} less` : 'Same amount';
+                
+                cardElement.innerHTML = `
+                    <div class="comparison-title">${card.title}</div>
+                    <div class="comparison-amount">${formatCurrency(card.amount)}</div>
+                    <div class="comparison-interest">Interest: ${formatCurrency(card.interest)}</div>
+                    ${!card.highlight && difference !== 0 ? `<div style="font-size: 0.875rem; color: ${difference > 0 ? 'var(--success-color)' : 'var(--error-color)'}; margin-top: 0.5rem;">${differenceText}</div>` : ''}
+                `;
+                
+                comparisonContainer.appendChild(cardElement);
+            });
+        }
+
+        function updateGrowthChart() {
+            const canvas = document.getElementById('growthChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (yearlyBreakdown.length === 0) return;
+            
+            // Chart dimensions
+            const padding = 50;
+            const chartWidth = canvas.width - 2 * padding;
+            const chartHeight = canvas.height - 2 * padding;
+            
+            // Data points
+            const dataPoints = [
+                { year: 0, amount: yearlyBreakdown[0].openingBalance }
+            ];
+            yearlyBreakdown.forEach(item => {
+                dataPoints.push({ year: item.year, amount: item.closingBalance });
+            });
+            
+            // Find min/max values
+            const maxAmount = Math.max(...dataPoints.map(p => p.amount));
+            const minAmount = Math.min(...dataPoints.map(p => p.amount));
+            const maxYear = Math.max(...dataPoints.map(p => p.year));
+            
+            // Draw axes
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border-color');
+            ctx.lineWidth = 1;
+            
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Draw line chart
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            dataPoints.forEach((point, index) => {
+                const x = padding + (point.year / maxYear) * chartWidth;
+                const y = canvas.height - padding - ((point.amount - minAmount) / (maxAmount - minAmount)) * chartHeight;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+                
+                // Draw data points
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            ctx.stroke();
+            
+            // Add labels
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary');
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            
+            // X-axis labels (years)
+            for (let year = 0; year <= maxYear; year++) {
+                const x = padding + (year / maxYear) * chartWidth;
+                ctx.fillText(year.toString(), x, canvas.height - padding + 20);
+            }
+            
+            // Y-axis labels (amounts)
+            const steps = 5;
+            for (let i = 0; i <= steps; i++) {
+                const amount = minAmount + (maxAmount - minAmount) * (i / steps);
+                const y = canvas.height - padding - (i / steps) * chartHeight;
+                ctx.textAlign = 'right';
+                ctx.fillText(formatCurrencyShort(amount), padding - 10, y + 4);
+            }
+            
+            // Chart title
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary');
+            ctx.font = 'bold 14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Investment Growth Over Time', canvas.width / 2, 20);
+        }
+
+        function updateBreakdownTable() {
+            const tbody = document.getElementById('breakdownBody');
+            tbody.innerHTML = '';
+            
+            yearlyBreakdown.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>Year ${item.year}</td>
+                    <td>${formatCurrency(item.openingBalance)}</td>
+                    <td>${formatCurrency(item.interestEarned)}</td>
+                    <td>${formatCurrency(item.deposits)}</td>
+                    <td>${formatCurrency(item.closingBalance)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function resetResults() {
+            document.getElementById('finalAmount').textContent = 'Rs0';
+            document.getElementById('totalPrincipal').textContent = 'Rs0';
+            document.getElementById('interestEarned').textContent = 'Rs0';
+            document.getElementById('totalDeposits').textContent = 'Rs0';
+            document.getElementById('comparisonCards').innerHTML = '';
+            document.getElementById('breakdownBody').innerHTML = '';
+            
+            // Clear chart
+            const canvas = document.getElementById('growthChart');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function formatCurrency(amount) {
+            if (amount === 0) return 'Rs0';
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function formatCurrencyShort(amount) {
+            if (amount === 0) return 'Rs0';
+            if (amount >= 10000000) {
+                return 'Rs' + (amount / 10000000).toFixed(1) + 'Cr';
+            } else if (amount >= 100000) {
+                return 'Rs' + (amount / 100000).toFixed(1) + 'L';
+            } else if (amount >= 1000) {
+                return 'Rs' + (amount / 1000).toFixed(1) + 'K';
+            }
+            return 'Rs' + amount.toFixed(0);
+        }
+
+        // Auto-calculation setup
+        function setupAutoCalculation() {
+            const inputs = ['principalAmount', 'interestRate', 'timePeriod', 'compoundingFrequency', 'additionalDeposit'];
+            inputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                input.addEventListener('input', () => {
+                    clearTimeout(input.timeout);
+                    input.timeout = setTimeout(calculateInterest, 500);
+                });
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        calculateInterest();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            setupAutoCalculation();
+            calculateInterest(); // Initial calculation with default values
+        });
+
+        // Handle window resize for chart
+        window.addEventListener('resize', () => {
+            setTimeout(updateGrowthChart, 100);
+        });
+    </script>
+</body>
+</html>
+
+

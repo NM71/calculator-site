@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Calculator - CalcHub</title>
+    <meta name="description" content="Calculate monthly mortgage payments including principal, interest, taxes, insurance, and PMI. Get detailed payment breakdown and affordability analysis.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .input-field.has-prefix {
+            padding-left: 2rem;
+        }
+
+        .input-field.has-suffix {
+            padding-right: 2.5rem;
+        }
+
+        .section-divider {
+            border-top: 1px solid var(--border-color);
+            margin: 2rem 0 1.5rem 0;
+            padding-top: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .calculate-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            margin-bottom: 1rem;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-item.highlight {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .result-item.highlight .result-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .result-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .result-value.large {
+            font-size: 1.5rem;
+        }
+
+        .result-item.highlight .result-value {
+            color: white;
+        }
+
+        .breakdown-section {
+            grid-column: 1 / -1;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-top: 2rem;
+        }
+
+        .breakdown-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .breakdown-card {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .breakdown-card-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            margin: 0 auto 1rem auto;
+        }
+
+        .breakdown-card-title {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .breakdown-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .breakdown-card-percentage {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .affordability-section {
+            grid-column: 1 / -1;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-top: 2rem;
+        }
+
+        .affordability-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .affordability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .affordability-item {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .affordability-item-title {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+                .affordability-item-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .affordability-item.warning .affordability-item-value {
+            color: var(--warning-color);
+        }
+
+        .affordability-item.error .affordability-item-value {
+            color: var(--error-color);
+        }
+
+        .affordability-item.success .affordability-item-value {
+            color: var(--success-color);
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+            
+            .breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .affordability-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .affordability-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-home"></i>
+                    Mortgage Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate monthly mortgage payments including principal, interest, taxes, insurance, and PMI. Get detailed payment breakdown and affordability analysis.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-edit"></i>
+                        Mortgage Details
+                    </h3>
+                    
+                    <div class="input-group">
+                        <label for="homePrice">Home Price</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="homePrice" class="input-field has-prefix" 
+                                   placeholder="400000" min="1" step="1000" value="400000">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="downPayment">Down Payment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="downPayment" class="input-field has-prefix" 
+                                   placeholder="80000" min="0" step="1000" value="80000">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="interestRate">Interest Rate</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="interestRate" class="input-field has-suffix" 
+                                   placeholder="6.5" min="0" max="50" step="0.01" value="6.5">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="loanTerm">Loan Term</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="loanTerm" class="input-field has-suffix" 
+                                   placeholder="30" min="1" max="50" step="1" value="30">
+                            <span class="input-suffix">years</span>
+                        </div>
+                    </div>
+
+                    <div class="section-divider">
+                        <div class="section-title">
+                            <i class="fas fa-shield-alt"></i>
+                            Additional Costs
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="propertyTax">Property Tax (Annual)</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="propertyTax" class="input-field has-prefix" 
+                                   placeholder="4800" min="0" step="100" value="4800">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="homeInsurance">Home Insurance (Annual)</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="homeInsurance" class="input-field has-prefix" 
+                                   placeholder="1200" min="0" step="100" value="1200">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="pmiRate">PMI Rate (if down payment < 20%)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="pmiRate" class="input-field has-suffix" 
+                                   placeholder="0.5" min="0" max="5" step="0.1" value="0.5">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hoaFees">HOA Fees (Monthly)</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="hoaFees" class="input-field has-prefix" 
+                                   placeholder="0" min="0" step="10" value="0">
+                        </div>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculateMortgage()">
+                        <i class="fas fa-calculator"></i>
+                        Calculate Mortgage
+                    </button>
+                </div>
+
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-line"></i>
+                        Monthly Payment
+                    </h3>
+                    
+                    <div class="result-item highlight">
+                        <span class="result-label">Total Monthly Payment</span>
+                        <span class="result-value large" id="totalMonthlyPayment">$0.00</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Principal & Interest</span>
+                        <span class="result-value" id="principalInterest">$0.00</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Property Tax</span>
+                        <span class="result-value" id="monthlyPropertyTax">$0.00</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Home Insurance</span>
+                        <span class="result-value" id="monthlyInsurance">$0.00</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">PMI</span>
+                        <span class="result-value" id="monthlyPMI">$0.00</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">HOA Fees</span>
+                        <span class="result-value" id="monthlyHOA">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="breakdown-section" id="breakdownSection" style="display: none;">
+                    <h3>
+                        <i class="fas fa-pie-chart"></i>
+                        Payment Breakdown
+                    </h3>
+                    
+                    <div class="breakdown-grid">
+                        <div class="breakdown-card">
+                            <div class="breakdown-card-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="breakdown-card-title">Principal & Interest</div>
+                            <div class="breakdown-card-value" id="piAmount">$0</div>
+                            <div class="breakdown-card-percentage" id="piPercentage">0%</div>
+                        </div>
+                        
+                        <div class="breakdown-card">
+                            <div class="breakdown-card-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="breakdown-card-title">Property Tax</div>
+                            <div class="breakdown-card-value" id="taxAmount">$0</div>
+                            <div class="breakdown-card-percentage" id="taxPercentage">0%</div>
+                        </div>
+                        
+                        <div class="breakdown-card">
+                            <div class="breakdown-card-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="breakdown-card-title">Insurance</div>
+                            <div class="breakdown-card-value" id="insuranceAmount">$0</div>
+                            <div class="breakdown-card-percentage" id="insurancePercentage">0%</div>
+                        </div>
+                        
+                        <div class="breakdown-card">
+                            <div class="breakdown-card-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="breakdown-card-title">PMI</div>
+                            <div class="breakdown-card-value" id="pmiAmount">$0</div>
+                            <div class="breakdown-card-percentage" id="pmiPercentage">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="affordability-section" id="affordabilitySection" style="display: none;">
+                    <h3>
+                        <i class="fas fa-balance-scale"></i>
+                        Affordability Analysis
+                    </h3>
+                    
+                    <div class="affordability-grid">
+                        <div class="affordability-item">
+                            <div class="affordability-item-title">Loan Amount</div>
+                            <div class="affordability-item-value" id="loanAmount">$0</div>
+                        </div>
+                        
+                        <div class="affordability-item">
+                            <div class="affordability-item-title">Down Payment %</div>
+                            <div class="affordability-item-value" id="downPaymentPercent">0%</div>
+                        </div>
+                        
+                        <div class="affordability-item">
+                            <div class="affordability-item-title">Total Interest</div>
+                            <div class="affordability-item-value" id="totalInterest">$0</div>
+                        </div>
+                        
+                        <div class="affordability-item">
+                            <div class="affordability-item-title">Total Cost</div>
+                            <div class="affordability-item-value" id="totalCost">$0</div>
+                        </div>
+                        
+                        <div class="affordability-item">
+                            <div class="affordability-item-title">Required Income (28% rule)</div>
+                            <div class="affordability-item-value" id="requiredIncome">$0</div>
+                        </div>
+                        
+                        <div class="affordability-item">
+                            <div class="affordability-item-title">PMI Removal Date</div>
+                            <div class="affordability-item-value" id="pmiRemovalDate">N/A</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Mortgage Calculator Logic
+        let mortgageData = null;
+
+                function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-US').format(num);
+        }
+
+        function calculateMortgage() {
+            const homePrice = parseFloat(document.getElementById('homePrice').value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const annualRate = parseFloat(document.getElementById('interestRate').value);
+            const loanTermYears = parseInt(document.getElementById('loanTerm').value);
+            const propertyTax = parseFloat(document.getElementById('propertyTax').value) || 0;
+            const homeInsurance = parseFloat(document.getElementById('homeInsurance').value) || 0;
+            const pmiRate = parseFloat(document.getElementById('pmiRate').value) || 0;
+            const hoaFees = parseFloat(document.getElementById('hoaFees').value) || 0;
+
+            // Validation
+            if (!homePrice || homePrice <= 0) {
+                alert('Please enter a valid home price');
+                return;
+            }
+            if (downPayment < 0 || downPayment >= homePrice) {
+                alert('Please enter a valid down payment');
+                return;
+            }
+            if (!annualRate || annualRate < 0) {
+                alert('Please enter a valid interest rate');
+                return;
+            }
+            if (!loanTermYears || loanTermYears <= 0) {
+                alert('Please enter a valid loan term');
+                return;
+            }
+
+            // Calculate loan details
+            const loanAmount = homePrice - downPayment;
+            const monthlyRate = annualRate / 100 / 12;
+            const numberOfPayments = loanTermYears * 12;
+            const downPaymentPercent = (downPayment / homePrice) * 100;
+
+            // Calculate monthly principal and interest
+            let monthlyPI;
+            if (monthlyRate === 0) {
+                monthlyPI = loanAmount / numberOfPayments;
+            } else {
+                monthlyPI = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / 
+                           (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            }
+
+            // Calculate other monthly costs
+            const monthlyPropertyTax = propertyTax / 12;
+            const monthlyInsurance = homeInsurance / 12;
+            const monthlyPMI = (downPaymentPercent < 20) ? (loanAmount * pmiRate / 100 / 12) : 0;
+            const monthlyHOA = hoaFees;
+
+            // Total monthly payment
+            const totalMonthlyPayment = monthlyPI + monthlyPropertyTax + monthlyInsurance + monthlyPMI + monthlyHOA;
+
+            // Calculate totals
+            const totalInterest = (monthlyPI * numberOfPayments) - loanAmount;
+            const totalCost = homePrice + totalInterest + (propertyTax * loanTermYears) + 
+                             (homeInsurance * loanTermYears) + (monthlyPMI * numberOfPayments) + 
+                             (monthlyHOA * numberOfPayments);
+
+            // Required income (28% rule)
+            const requiredAnnualIncome = (totalMonthlyPayment * 12) / 0.28;
+
+            // PMI removal calculation (when loan balance reaches 80% of original home value)
+            let pmiRemovalDate = 'N/A';
+            if (monthlyPMI > 0) {
+                const targetBalance = homePrice * 0.8;
+                let balance = loanAmount;
+                let month = 0;
+                
+                while (balance > targetBalance && month < numberOfPayments) {
+                    const interestPayment = balance * monthlyRate;
+                    const principalPayment = monthlyPI - interestPayment;
+                    balance -= principalPayment;
+                    month++;
+                }
+                
+                if (month < numberOfPayments) {
+                    const years = Math.floor(month / 12);
+                    const months = month % 12;
+                    pmiRemovalDate = `${years}y ${months}m`;
+                }
+            }
+
+            // Store mortgage data
+            mortgageData = {
+                homePrice,
+                downPayment,
+                loanAmount,
+                monthlyPI,
+                monthlyPropertyTax,
+                monthlyInsurance,
+                monthlyPMI,
+                monthlyHOA,
+                totalMonthlyPayment,
+                totalInterest,
+                totalCost,
+                downPaymentPercent,
+                requiredAnnualIncome,
+                pmiRemovalDate
+            };
+
+            // Update results display
+            updateResults();
+            updateBreakdown();
+            updateAffordability();
+
+            // Show additional sections
+            document.getElementById('breakdownSection').style.display = 'block';
+            document.getElementById('affordabilitySection').style.display = 'block';
+        }
+
+        function updateResults() {
+            if (!mortgageData) return;
+
+            document.getElementById('totalMonthlyPayment').textContent = formatCurrency(mortgageData.totalMonthlyPayment);
+            document.getElementById('principalInterest').textContent = formatCurrency(mortgageData.monthlyPI);
+            document.getElementById('monthlyPropertyTax').textContent = formatCurrency(mortgageData.monthlyPropertyTax);
+            document.getElementById('monthlyInsurance').textContent = formatCurrency(mortgageData.monthlyInsurance);
+            document.getElementById('monthlyPMI').textContent = formatCurrency(mortgageData.monthlyPMI);
+            document.getElementById('monthlyHOA').textContent = formatCurrency(mortgageData.monthlyHOA);
+        }
+
+        function updateBreakdown() {
+            if (!mortgageData) return;
+
+            const total = mortgageData.totalMonthlyPayment;
+
+            // Principal & Interest
+            const piPercent = (mortgageData.monthlyPI / total) * 100;
+            document.getElementById('piAmount').textContent = formatCurrency(mortgageData.monthlyPI);
+            document.getElementById('piPercentage').textContent = piPercent.toFixed(1) + '%';
+
+            // Property Tax
+            const taxPercent = (mortgageData.monthlyPropertyTax / total) * 100;
+            document.getElementById('taxAmount').textContent = formatCurrency(mortgageData.monthlyPropertyTax);
+            document.getElementById('taxPercentage').textContent = taxPercent.toFixed(1) + '%';
+
+            // Insurance
+            const insurancePercent = (mortgageData.monthlyInsurance / total) * 100;
+            document.getElementById('insuranceAmount').textContent = formatCurrency(mortgageData.monthlyInsurance);
+            document.getElementById('insurancePercentage').textContent = insurancePercent.toFixed(1) + '%';
+
+            // PMI
+            const pmiPercent = (mortgageData.monthlyPMI / total) * 100;
+            document.getElementById('pmiAmount').textContent = formatCurrency(mortgageData.monthlyPMI);
+            document.getElementById('pmiPercentage').textContent = pmiPercent.toFixed(1) + '%';
+        }
+
+        function updateAffordability() {
+            if (!mortgageData) return;
+
+            document.getElementById('loanAmount').textContent = formatCurrency(mortgageData.loanAmount);
+            document.getElementById('downPaymentPercent').textContent = mortgageData.downPaymentPercent.toFixed(1) + '%';
+            document.getElementById('totalInterest').textContent = formatCurrency(mortgageData.totalInterest);
+            document.getElementById('totalCost').textContent = formatCurrency(mortgageData.totalCost);
+            document.getElementById('requiredIncome').textContent = formatCurrency(mortgageData.requiredAnnualIncome);
+            document.getElementById('pmiRemovalDate').textContent = mortgageData.pmiRemovalDate;
+
+            // Color code affordability items
+            const downPaymentElement = document.getElementById('downPaymentPercent').parentElement;
+            const requiredIncomeElement = document.getElementById('requiredIncome').parentElement;
+            const pmiElement = document.getElementById('pmiRemovalDate').parentElement;
+
+            // Reset classes
+            [downPaymentElement, requiredIncomeElement, pmiElement].forEach(el => {
+                el.classList.remove('success', 'warning', 'error');
+            });
+
+            // Down payment color coding
+            if (mortgageData.downPaymentPercent >= 20) {
+                downPaymentElement.classList.add('success');
+            } else if (mortgageData.downPaymentPercent >= 10) {
+                downPaymentElement.classList.add('warning');
+            } else {
+                downPaymentElement.classList.add('error');
+            }
+
+            // PMI color coding
+            if (mortgageData.monthlyPMI === 0) {
+                pmiElement.classList.add('success');
+            } else {
+                pmiElement.classList.add('warning');
+            }
+        }
+
+        // Auto-update down payment percentage
+        function updateDownPaymentPercent() {
+            const homePrice = parseFloat(document.getElementById('homePrice').value) || 0;
+            const downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
+            
+            if (homePrice > 0) {
+                const percent = (downPayment / homePrice) * 100;
+                // You could add a visual indicator here
+            }
+        }
+
+        // Input validation and formatting
+        function setupInputValidation() {
+            const inputs = [
+                'homePrice', 'downPayment', 'interestRate', 'loanTerm',
+                'propertyTax', 'homeInsurance', 'pmiRate', 'hoaFees'
+            ];
+
+            inputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                
+                // Auto-calculate on input change
+                input.addEventListener('input', () => {
+                    if (inputId === 'homePrice' || inputId === 'downPayment') {
+                        updateDownPaymentPercent();
+                    }
+                    
+                    // Auto-calculate if required fields have values
+                    const homePrice = document.getElementById('homePrice').value;
+                    const downPayment = document.getElementById('downPayment').value;
+                    const interestRate = document.getElementById('interestRate').value;
+                    const loanTerm = document.getElementById('loanTerm').value;
+                    
+                    if (homePrice && downPayment && interestRate && loanTerm) {
+                        setTimeout(calculateMortgage, 500); // Debounce
+                    }
+                });
+
+                // Format on blur
+                input.addEventListener('blur', function() {
+                    const value = parseFloat(this.value);
+                    if (!isNaN(value)) {
+                        if (inputId === 'homePrice' || inputId === 'downPayment' || 
+                            inputId === 'propertyTax' || inputId === 'homeInsurance' || inputId === 'hoaFees') {
+                            this.value = Math.round(value);
+                        } else if (inputId === 'interestRate' || inputId === 'pmiRate') {
+                            this.value = Math.min(50, Math.max(0, value)).toFixed(2);
+                        } else if (inputId === 'loanTerm') {
+                            this.value = Math.min(50, Math.max(1, Math.round(value)));
+                        }
+                    }
+                });
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.target.classList.contains('input-field'))) {
+                calculateMortgage();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            setupInputValidation();
+            
+            // Calculate with default values
+            calculateMortgage();
+        });
+    </script>
+</body>
+</html>
