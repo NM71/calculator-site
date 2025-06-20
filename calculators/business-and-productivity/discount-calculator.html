@@ -1,0 +1,2176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discount Calculator - CalcHub</title>
+    <meta name="description" content="Calculate discounts, sale prices, and savings. Find original prices, discount percentages, and compare multiple discount scenarios.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--success-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+                .tab-btn:hover:not(.active) {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-muted);
+            color: white;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .discount-breakdown {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .discount-breakdown h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .breakdown-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .savings-highlight {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .savings-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .savings-text {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .comparison-table {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-table h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .comparison-row:first-child {
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-cell {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .comparison-row:first-child .comparison-cell {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .discount-item {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .discount-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .discount-item-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .discount-item-remove {
+            background: none;
+            border: none;
+            color: var(--error-color);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .discount-item-remove:hover {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .discount-item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .discount-detail {
+            color: var(--text-secondary);
+        }
+
+        .discount-detail strong {
+            color: var(--text-primary);
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-btn {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+            
+            .comparison-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-percent"></i>
+                    Discount Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate discounts, sale prices, and savings. Find original prices, discount percentages, and compare multiple discount scenarios.
+                </p>
+            </div>
+
+            <!-- Calculator Tabs -->
+            <div class="calculator-tabs">
+                <button class="tab-btn active" onclick="switchTab('basic-discount')">Basic Discount</button>
+                <button class="tab-btn" onclick="switchTab('reverse-discount')">Find Original Price</button>
+                <button class="tab-btn" onclick="switchTab('multiple-discounts')">Multiple Discounts</button>
+                <button class="tab-btn" onclick="switchTab('bulk-discount')">Bulk Discount</button>
+            </div>
+
+            <!-- Basic Discount Tab -->
+            <div id="basic-discount" class="tab-content active">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-tag"></i>
+                            Discount Calculation
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Original Price</label>
+                            <input type="number" class="form-input" id="originalPrice" placeholder="100.00" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Discount Percentage (%)</label>
+                            <input type="number" class="form-input" id="discountPercent" placeholder="20" min="0" max="100" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Or Discount Amount ($)</label>
+                            <input type="number" class="form-input" id="discountAmount" placeholder="20.00" min="0" step="0.01">
+                        </div>
+
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateBasicDiscount()">
+                                                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearBasicDiscount()">
+                                <i class="fas fa-eraser"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-receipt"></i>
+                            Discount Results
+                        </h3>
+
+                        <div id="basicDiscountResults" style="display: none;">
+                            <div class="savings-highlight">
+                                <div class="savings-amount" id="totalSavings">$20.00</div>
+                                <div class="savings-text">Total Savings</div>
+                            </div>
+
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Original Price</div>
+                                    <div class="result-value" id="displayOriginalPrice">$100.00</div>
+                                    <div class="result-description">Before discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Sale Price</div>
+                                    <div class="result-value" id="salePrice">$80.00</div>
+                                    <div class="result-description">After discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Discount %</div>
+                                    <div class="result-value" id="displayDiscountPercent">20%</div>
+                                    <div class="result-description">Percentage off</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">You Save</div>
+                                    <div class="result-value" id="displayDiscountAmount">$20.00</div>
+                                    <div class="result-description">Money saved</div>
+                                </div>
+                            </div>
+
+                            <div class="discount-breakdown">
+                                <h4>Price Breakdown</h4>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Original Price</span>
+                                    <span class="breakdown-value" id="breakdownOriginal">$100.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Discount Applied</span>
+                                    <span class="breakdown-value" id="breakdownDiscount">-$20.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Final Price</span>
+                                    <span class="breakdown-value" id="breakdownFinal">$80.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="basicDiscountPlaceholder" class="placeholder-message">
+                            <i class="fas fa-percent"></i>
+                            <p>Enter original price and discount to calculate savings</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reverse Discount Tab -->
+            <div id="reverse-discount" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-search-dollar"></i>
+                            Find Original Price
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Sale Price (After Discount)</label>
+                            <input type="number" class="form-input" id="salePriceReverse" placeholder="80.00" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Discount Percentage (%)</label>
+                            <input type="number" class="form-input" id="discountPercentReverse" placeholder="20" min="0" max="100" step="0.1">
+                        </div>
+
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateReverseDiscount()">
+                                <i class="fas fa-calculator"></i>
+                                Find Original Price
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearReverseDiscount()">
+                                <i class="fas fa-eraser"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-search"></i>
+                            Original Price Results
+                        </h3>
+
+                        <div id="reverseDiscountResults" style="display: none;">
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Original Price</div>
+                                    <div class="result-value" id="calculatedOriginalPrice">$100.00</div>
+                                    <div class="result-description">Before discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Sale Price</div>
+                                    <div class="result-value" id="displaySalePrice">$80.00</div>
+                                    <div class="result-description">After discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Discount Amount</div>
+                                    <div class="result-value" id="calculatedDiscountAmount">$20.00</div>
+                                    <div class="result-description">Money saved</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Discount %</div>
+                                    <div class="result-value" id="displayDiscountPercentReverse">20%</div>
+                                    <div class="result-description">Percentage off</div>
+                                </div>
+                            </div>
+
+                            <div class="discount-breakdown">
+                                <h4>Reverse Calculation</h4>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Sale Price (Given)</span>
+                                    <span class="breakdown-value" id="reverseBreakdownSale">$80.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Discount % (Given)</span>
+                                    <span class="breakdown-value" id="reverseBreakdownPercent">20%</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Calculated Original Price</span>
+                                    <span class="breakdown-value" id="reverseBreakdownOriginal">$100.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="reverseDiscountPlaceholder" class="placeholder-message">
+                            <i class="fas fa-search-dollar"></i>
+                            <p>Enter sale price and discount percentage to find original price</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multiple Discounts Tab -->
+            <div id="multiple-discounts" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-layer-group"></i>
+                            Multiple Discounts
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Original Price</label>
+                            <input type="number" class="form-input" id="multipleOriginalPrice" placeholder="100.00" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">First Discount (%)</label>
+                            <input type="number" class="form-input" id="firstDiscount" placeholder="20" min="0" max="100" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Second Discount (%)</label>
+                            <input type="number" class="form-input" id="secondDiscount" placeholder="10" min="0" max="100" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Third Discount (%) - Optional</label>
+                            <input type="number" class="form-input" id="thirdDiscount" placeholder="5" min="0" max="100" step="0.1">
+                        </div>
+
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateMultipleDiscounts()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearMultipleDiscounts()">
+                                <i class="fas fa-eraser"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-line"></i>
+                            Multiple Discount Results
+                        </h3>
+
+                        <div id="multipleDiscountResults" style="display: none;">
+                            <div class="savings-highlight">
+                                <div class="savings-amount" id="multipleTotalSavings">$32.00</div>
+                                <div class="savings-text">Total Savings</div>
+                            </div>
+
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Original Price</div>
+                                    <div class="result-value" id="multipleDisplayOriginal">$100.00</div>
+                                    <div class="result-description">Starting price</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Final Price</div>
+                                    <div class="result-value" id="multipleFinalPrice">$68.00</div>
+                                    <div class="result-description">After all discounts</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Total Discount %</div>
+                                    <div class="result-value" id="multipleTotalPercent">32%</div>
+                                    <div class="result-description">Combined discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Equivalent Single Discount</div>
+                                    <div class="result-value" id="equivalentDiscount">32%</div>
+                                    <div class="result-description">As one discount</div>
+                                </div>
+                            </div>
+
+                            <div class="comparison-table">
+                                <h4>Discount Breakdown</h4>
+                                <div class="comparison-row">
+                                    <div class="comparison-cell">Step</div>
+                                    <div class="comparison-cell">Price</div>
+                                    <div class="comparison-cell">Discount</div>
+                                    <div class="comparison-cell">Savings</div>
+                                </div>
+                                <div class="comparison-row" id="step0">
+                                    <div class="comparison-cell">Original</div>
+                                    <div class="comparison-cell">$100.00</div>
+                                    <div class="comparison-cell">-</div>
+                                    <div class="comparison-cell">-</div>
+                                </div>
+                                <div class="comparison-row" id="step1">
+                                    <div class="comparison-cell">After 1st Discount</div>
+                                    <div class="comparison-cell">$80.00</div>
+                                    <div class="comparison-cell">20%</div>
+                                    <div class="comparison-cell">$20.00</div>
+                                </div>
+                                <div class="comparison-row" id="step2">
+                                    <div class="comparison-cell">After 2nd Discount</div>
+                                    <div class="comparison-cell">$72.00</div>
+                                    <div class="comparison-cell">10%</div>
+                                    <div class="comparison-cell">$8.00</div>
+                                </div>
+                                <div class="comparison-row" id="step3" style="display: none;">
+                                    <div class="comparison-cell">After 3rd Discount</div>
+                                    <div class="comparison-cell">$68.40</div>
+                                    <div class="comparison-cell">5%</div>
+                                    <div class="comparison-cell">$3.60</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="multipleDiscountPlaceholder" class="placeholder-message">
+                            <i class="fas fa-layer-group"></i>
+                            <p>Enter original price and multiple discount percentages</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bulk Discount Tab -->
+            <div id="bulk-discount" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-boxes"></i>
+                            Bulk Discount Calculator
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Unit Price</label>
+                            <input type="number" class="form-input" id="unitPrice" placeholder="10.00" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-input" id="quantity" placeholder="50" min="1" step="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Bulk Discount Tiers</label>
+                            <div id="bulkTiers">
+                                <div class="input-group" style="margin-bottom: 0.5rem;">
+                                    <input type="number" class="form-input" placeholder="Qty: 10" id="tier1Qty">
+                                    <input type="number" class="form-input" placeholder="Discount: 5%" id="tier1Discount">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 0.5rem;">
+                                    <input type="number" class="form-input" placeholder="Qty: 25" id="tier2Qty">
+                                    <input type="number" class="form-input" placeholder="Discount: 10%" id="tier2Discount">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 0.5rem;">
+                                    <input type="number" class="form-input" placeholder="Qty: 50" id="tier3Qty">
+                                    <input type="number" class="form-input" placeholder="Discount: 15%" id="tier3Discount">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                                                        <button class="btn" onclick="calculateBulkDiscount()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearBulkDiscount()">
+                                <i class="fas fa-eraser"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Bulk Discount Results
+                        </h3>
+
+                        <div id="bulkDiscountResults" style="display: none;">
+                            <div class="savings-highlight">
+                                <div class="savings-amount" id="bulkTotalSavings">$75.00</div>
+                                <div class="savings-text">Total Bulk Savings</div>
+                            </div>
+
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Regular Total</div>
+                                    <div class="result-value" id="regularTotal">$500.00</div>
+                                    <div class="result-description">Without discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Bulk Total</div>
+                                    <div class="result-value" id="bulkTotal">$425.00</div>
+                                    <div class="result-description">With bulk discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Applied Discount</div>
+                                    <div class="result-value" id="appliedBulkDiscount">15%</div>
+                                    <div class="result-description">Tier discount</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Price Per Unit</div>
+                                    <div class="result-value" id="discountedUnitPrice">$8.50</div>
+                                    <div class="result-description">After discount</div>
+                                </div>
+                            </div>
+
+                            <div class="comparison-table">
+                                <h4>Bulk Discount Tiers</h4>
+                                <div class="comparison-row">
+                                    <div class="comparison-cell">Quantity Range</div>
+                                    <div class="comparison-cell">Discount</div>
+                                    <div class="comparison-cell">Unit Price</div>
+                                    <div class="comparison-cell">Total</div>
+                                </div>
+                                <div class="comparison-row" id="bulkTier1Row">
+                                    <div class="comparison-cell">1-9</div>
+                                    <div class="comparison-cell">0%</div>
+                                    <div class="comparison-cell">$10.00</div>
+                                    <div class="comparison-cell">$500.00</div>
+                                </div>
+                                <div class="comparison-row" id="bulkTier2Row">
+                                    <div class="comparison-cell">10-24</div>
+                                    <div class="comparison-cell">5%</div>
+                                    <div class="comparison-cell">$9.50</div>
+                                    <div class="comparison-cell">$475.00</div>
+                                </div>
+                                <div class="comparison-row" id="bulkTier3Row">
+                                    <div class="comparison-cell">25-49</div>
+                                    <div class="comparison-cell">10%</div>
+                                    <div class="comparison-cell">$9.00</div>
+                                    <div class="comparison-cell">$450.00</div>
+                                </div>
+                                <div class="comparison-row" id="bulkTier4Row">
+                                    <div class="comparison-cell">50+</div>
+                                    <div class="comparison-cell">15%</div>
+                                    <div class="comparison-cell">$8.50</div>
+                                    <div class="comparison-cell">$425.00</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="bulkDiscountPlaceholder" class="placeholder-message">
+                            <i class="fas fa-boxes"></i>
+                            <p>Enter unit price, quantity, and discount tiers to calculate bulk savings</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Discount Calculator Guide
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-percent"></i>
+                            Basic Discounts
+                        </h4>
+                        <p>Calculate simple percentage or fixed amount discounts. Perfect for sales, coupons, and promotional offers. Shows you exactly how much you save and the final price.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-search-dollar"></i>
+                            Reverse Calculation
+                        </h4>
+                        <p>Find the original price when you know the sale price and discount percentage. Useful for understanding the true value of discounted items.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-layer-group"></i>
+                            Multiple Discounts
+                        </h4>
+                        <p>Calculate stacked discounts applied sequentially. Note that multiple discounts don't simply add up - each is applied to the already discounted price.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-boxes"></i>
+                            Bulk Discounts
+                        </h4>
+                        <p>Calculate tiered pricing based on quantity purchased. Common in wholesale, B2B sales, and volume purchasing scenarios.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-lightbulb"></i>
+                            Shopping Tips
+                        </h4>
+                        <p>Compare different discount offers, understand the real savings, and make informed purchasing decisions. Always check if multiple smaller discounts beat one large discount.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-calculator"></i>
+                            Business Use
+                        </h4>
+                        <p>Set competitive pricing, calculate profit margins after discounts, and design effective promotional strategies that maintain profitability.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Basic Discount Calculator
+        function calculateBasicDiscount() {
+            try {
+                const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+                let discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
+                let discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
+
+                if (originalPrice <= 0) {
+                    showError('Please enter a valid original price');
+                    return;
+                }
+
+                // Calculate based on available inputs
+                if (discountAmount > 0 && discountPercent === 0) {
+                    // Calculate percentage from amount
+                    discountPercent = (discountAmount / originalPrice) * 100;
+                } else if (discountPercent > 0 && discountAmount === 0) {
+                    // Calculate amount from percentage
+                    discountAmount = (originalPrice * discountPercent) / 100;
+                } else if (discountPercent === 0 && discountAmount === 0) {
+                    showError('Please enter either discount percentage or discount amount');
+                    return;
+                }
+
+                const salePrice = originalPrice - discountAmount;
+
+                if (salePrice < 0) {
+                    showError('Discount cannot be greater than original price');
+                    return;
+                }
+
+                // Display results
+                displayBasicDiscountResults({
+                    originalPrice,
+                    discountPercent,
+                    discountAmount,
+                    salePrice
+                });
+
+            } catch (error) {
+                showError('Error calculating discount. Please check your inputs.');
+                console.error('Basic discount calculation error:', error);
+            }
+        }
+
+        function displayBasicDiscountResults(results) {
+            // Update main results
+            document.getElementById('totalSavings').textContent = formatCurrency(results.discountAmount);
+            document.getElementById('displayOriginalPrice').textContent = formatCurrency(results.originalPrice);
+            document.getElementById('salePrice').textContent = formatCurrency(results.salePrice);
+            document.getElementById('displayDiscountPercent').textContent = results.discountPercent.toFixed(1) + '%';
+            document.getElementById('displayDiscountAmount').textContent = formatCurrency(results.discountAmount);
+
+            // Update breakdown
+            document.getElementById('breakdownOriginal').textContent = formatCurrency(results.originalPrice);
+            document.getElementById('breakdownDiscount').textContent = '-' + formatCurrency(results.discountAmount);
+            document.getElementById('breakdownFinal').textContent = formatCurrency(results.salePrice);
+
+            // Show results
+            document.getElementById('basicDiscountResults').style.display = 'block';
+            document.getElementById('basicDiscountPlaceholder').style.display = 'none';
+        }
+
+        function clearBasicDiscount() {
+            document.getElementById('originalPrice').value = '';
+            document.getElementById('discountPercent').value = '';
+            document.getElementById('discountAmount').value = '';
+            document.getElementById('basicDiscountResults').style.display = 'none';
+            document.getElementById('basicDiscountPlaceholder').style.display = 'block';
+        }
+
+        // Reverse Discount Calculator
+        function calculateReverseDiscount() {
+            try {
+                const salePrice = parseFloat(document.getElementById('salePriceReverse').value) || 0;
+                const discountPercent = parseFloat(document.getElementById('discountPercentReverse').value) || 0;
+
+                if (salePrice <= 0) {
+                    showError('Please enter a valid sale price');
+                    return;
+                }
+
+                if (discountPercent <= 0 || discountPercent >= 100) {
+                    showError('Please enter a valid discount percentage (1-99%)');
+                    return;
+                }
+
+                // Calculate original price: sale_price = original_price * (1 - discount/100)
+                // Therefore: original_price = sale_price / (1 - discount/100)
+                const originalPrice = salePrice / (1 - discountPercent / 100);
+                const discountAmount = originalPrice - salePrice;
+
+                // Display results
+                displayReverseDiscountResults({
+                    originalPrice,
+                    salePrice,
+                    discountPercent,
+                    discountAmount
+                });
+
+            } catch (error) {
+                showError('Error calculating reverse discount. Please check your inputs.');
+                console.error('Reverse discount calculation error:', error);
+            }
+        }
+
+        function displayReverseDiscountResults(results) {
+            // Update main results
+            document.getElementById('calculatedOriginalPrice').textContent = formatCurrency(results.originalPrice);
+            document.getElementById('displaySalePrice').textContent = formatCurrency(results.salePrice);
+            document.getElementById('calculatedDiscountAmount').textContent = formatCurrency(results.discountAmount);
+            document.getElementById('displayDiscountPercentReverse').textContent = results.discountPercent.toFixed(1) + '%';
+
+            // Update breakdown
+            document.getElementById('reverseBreakdownSale').textContent = formatCurrency(results.salePrice);
+            document.getElementById('reverseBreakdownPercent').textContent = results.discountPercent.toFixed(1) + '%';
+            document.getElementById('reverseBreakdownOriginal').textContent = formatCurrency(results.originalPrice);
+
+            // Show results
+            document.getElementById('reverseDiscountResults').style.display = 'block';
+            document.getElementById('reverseDiscountPlaceholder').style.display = 'none';
+        }
+
+        function clearReverseDiscount() {
+            document.getElementById('salePriceReverse').value = '';
+            document.getElementById('discountPercentReverse').value = '';
+            document.getElementById('reverseDiscountResults').style.display = 'none';
+            document.getElementById('reverseDiscountPlaceholder').style.display = 'block';
+        }
+
+        // Multiple Discounts Calculator
+        function calculateMultipleDiscounts() {
+            try {
+                const originalPrice = parseFloat(document.getElementById('multipleOriginalPrice').value) || 0;
+                const firstDiscount = parseFloat(document.getElementById('firstDiscount').value) || 0;
+                const secondDiscount = parseFloat(document.getElementById('secondDiscount').value) || 0;
+                const thirdDiscount = parseFloat(document.getElementById('thirdDiscount').value) || 0;
+
+                if (originalPrice <= 0) {
+                    showError('Please enter a valid original price');
+                    return;
+                }
+
+                if (firstDiscount <= 0 || secondDiscount <= 0) {
+                    showError('Please enter at least two discount percentages');
+                    return;
+                }
+
+                // Apply discounts sequentially
+                let currentPrice = originalPrice;
+                                const steps = [];
+                
+                // Original price
+                steps.push({
+                    step: 'Original',
+                    price: originalPrice,
+                    discount: 0,
+                    savings: 0
+                });
+
+                // First discount
+                const firstSavings = (currentPrice * firstDiscount) / 100;
+                currentPrice -= firstSavings;
+                steps.push({
+                    step: 'After 1st Discount',
+                    price: currentPrice,
+                    discount: firstDiscount,
+                    savings: firstSavings
+                });
+
+                // Second discount
+                const secondSavings = (currentPrice * secondDiscount) / 100;
+                currentPrice -= secondSavings;
+                steps.push({
+                    step: 'After 2nd Discount',
+                    price: currentPrice,
+                    discount: secondDiscount,
+                    savings: secondSavings
+                });
+
+                // Third discount (if provided)
+                let thirdSavings = 0;
+                if (thirdDiscount > 0) {
+                    thirdSavings = (currentPrice * thirdDiscount) / 100;
+                    currentPrice -= thirdSavings;
+                    steps.push({
+                        step: 'After 3rd Discount',
+                        price: currentPrice,
+                        discount: thirdDiscount,
+                        savings: thirdSavings
+                    });
+                }
+
+                const finalPrice = currentPrice;
+                const totalSavings = originalPrice - finalPrice;
+                const totalDiscountPercent = (totalSavings / originalPrice) * 100;
+
+                // Display results
+                displayMultipleDiscountResults({
+                    originalPrice,
+                    finalPrice,
+                    totalSavings,
+                    totalDiscountPercent,
+                    steps,
+                    hasThirdDiscount: thirdDiscount > 0
+                });
+
+            } catch (error) {
+                showError('Error calculating multiple discounts. Please check your inputs.');
+                console.error('Multiple discount calculation error:', error);
+            }
+        }
+
+        function displayMultipleDiscountResults(results) {
+            // Update main results
+            document.getElementById('multipleTotalSavings').textContent = formatCurrency(results.totalSavings);
+            document.getElementById('multipleDisplayOriginal').textContent = formatCurrency(results.originalPrice);
+            document.getElementById('multipleFinalPrice').textContent = formatCurrency(results.finalPrice);
+            document.getElementById('multipleTotalPercent').textContent = results.totalDiscountPercent.toFixed(1) + '%';
+            document.getElementById('equivalentDiscount').textContent = results.totalDiscountPercent.toFixed(1) + '%';
+
+            // Update breakdown table
+            results.steps.forEach((step, index) => {
+                if (index === 0) return; // Skip original step
+                
+                const stepElement = document.getElementById(`step${index}`);
+                if (stepElement) {
+                    const cells = stepElement.querySelectorAll('.comparison-cell');
+                    cells[0].textContent = step.step;
+                    cells[1].textContent = formatCurrency(step.price);
+                    cells[2].textContent = step.discount + '%';
+                    cells[3].textContent = formatCurrency(step.savings);
+                }
+            });
+
+            // Show/hide third discount step
+            const step3Element = document.getElementById('step3');
+            if (results.hasThirdDiscount) {
+                step3Element.style.display = '';
+            } else {
+                step3Element.style.display = 'none';
+            }
+
+            // Show results
+            document.getElementById('multipleDiscountResults').style.display = 'block';
+            document.getElementById('multipleDiscountPlaceholder').style.display = 'none';
+        }
+
+        function clearMultipleDiscounts() {
+            document.getElementById('multipleOriginalPrice').value = '';
+            document.getElementById('firstDiscount').value = '';
+            document.getElementById('secondDiscount').value = '';
+            document.getElementById('thirdDiscount').value = '';
+            document.getElementById('multipleDiscountResults').style.display = 'none';
+            document.getElementById('multipleDiscountPlaceholder').style.display = 'block';
+        }
+
+        // Bulk Discount Calculator
+        function calculateBulkDiscount() {
+            try {
+                const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
+                const quantity = parseInt(document.getElementById('quantity').value) || 0;
+
+                if (unitPrice <= 0) {
+                    showError('Please enter a valid unit price');
+                    return;
+                }
+
+                if (quantity <= 0) {
+                    showError('Please enter a valid quantity');
+                    return;
+                }
+
+                // Get discount tiers
+                const tiers = [
+                    {
+                        qty: parseInt(document.getElementById('tier1Qty').value) || 10,
+                        discount: parseFloat(document.getElementById('tier1Discount').value) || 5
+                    },
+                    {
+                        qty: parseInt(document.getElementById('tier2Qty').value) || 25,
+                        discount: parseFloat(document.getElementById('tier2Discount').value) || 10
+                    },
+                    {
+                        qty: parseInt(document.getElementById('tier3Qty').value) || 50,
+                        discount: parseFloat(document.getElementById('tier3Discount').value) || 15
+                    }
+                ];
+
+                // Sort tiers by quantity
+                tiers.sort((a, b) => a.qty - b.qty);
+
+                // Determine applicable discount
+                let appliedDiscount = 0;
+                for (let i = tiers.length - 1; i >= 0; i--) {
+                    if (quantity >= tiers[i].qty) {
+                        appliedDiscount = tiers[i].discount;
+                        break;
+                    }
+                }
+
+                const regularTotal = unitPrice * quantity;
+                const discountAmount = (regularTotal * appliedDiscount) / 100;
+                const bulkTotal = regularTotal - discountAmount;
+                const discountedUnitPrice = bulkTotal / quantity;
+
+                // Display results
+                displayBulkDiscountResults({
+                    unitPrice,
+                    quantity,
+                    regularTotal,
+                    bulkTotal,
+                    discountAmount,
+                    appliedDiscount,
+                    discountedUnitPrice,
+                    tiers
+                });
+
+            } catch (error) {
+                showError('Error calculating bulk discount. Please check your inputs.');
+                console.error('Bulk discount calculation error:', error);
+            }
+        }
+
+                function displayBulkDiscountResults(results) {
+            // Update main results
+            document.getElementById('bulkTotalSavings').textContent = formatCurrency(results.discountAmount);
+            document.getElementById('regularTotal').textContent = formatCurrency(results.regularTotal);
+            document.getElementById('bulkTotal').textContent = formatCurrency(results.bulkTotal);
+            document.getElementById('appliedBulkDiscount').textContent = results.appliedDiscount + '%';
+            document.getElementById('discountedUnitPrice').textContent = formatCurrency(results.discountedUnitPrice);
+
+            // Generate dynamic tier ranges based on user quantity
+            const userQuantity = results.quantity;
+            const sortedTiers = [...results.tiers].sort((a, b) => a.qty - b.qty);
+            
+            // Calculate dynamic tier quantities based on user's quantity scale
+            let dynamicTiers;
+            
+            if (userQuantity <= 100) {
+                // Small scale: use original tier structure
+                dynamicTiers = [
+                    Math.max(1, Math.floor(userQuantity * 0.2)),  // 20% of user quantity
+                    Math.max(2, Math.floor(userQuantity * 0.5)),  // 50% of user quantity  
+                    Math.max(3, Math.floor(userQuantity * 0.8))   // 80% of user quantity
+                ];
+            } else if (userQuantity <= 1000) {
+                // Medium scale
+                dynamicTiers = [
+                    Math.max(10, Math.floor(userQuantity * 0.1)),   // 10% of user quantity
+                    Math.max(20, Math.floor(userQuantity * 0.3)),   // 30% of user quantity
+                    Math.max(30, Math.floor(userQuantity * 0.6))    // 60% of user quantity
+                ];
+            } else {
+                // Large scale
+                dynamicTiers = [
+                    Math.max(50, Math.floor(userQuantity * 0.05)),   // 5% of user quantity
+                    Math.max(100, Math.floor(userQuantity * 0.2)),   // 20% of user quantity
+                    Math.max(200, Math.floor(userQuantity * 0.5))    // 50% of user quantity
+                ];
+            }
+
+            // Ensure tiers are in ascending order and don't exceed user quantity
+            dynamicTiers = dynamicTiers.map(tier => Math.min(tier, userQuantity - 1));
+            dynamicTiers.sort((a, b) => a - b);
+
+            // Create tier rows with dynamic ranges
+            const tierRows = [
+                { 
+                    range: `1-${dynamicTiers[0]}`, 
+                    discount: 0, 
+                    unitPrice: results.unitPrice,
+                    isActive: userQuantity <= dynamicTiers[0]
+                },
+                { 
+                    range: `${dynamicTiers[0] + 1}-${dynamicTiers[1]}`, 
+                    discount: sortedTiers[0].discount, 
+                    unitPrice: results.unitPrice * (1 - sortedTiers[0].discount / 100),
+                    isActive: userQuantity > dynamicTiers[0] && userQuantity <= dynamicTiers[1]
+                },
+                { 
+                    range: `${dynamicTiers[1] + 1}-${dynamicTiers[2]}`, 
+                    discount: sortedTiers[1].discount, 
+                    unitPrice: results.unitPrice * (1 - sortedTiers[1].discount / 100),
+                    isActive: userQuantity > dynamicTiers[1] && userQuantity <= dynamicTiers[2]
+                },
+                { 
+                    range: `${dynamicTiers[2] + 1}+`, 
+                    discount: sortedTiers[2].discount, 
+                    unitPrice: results.unitPrice * (1 - sortedTiers[2].discount / 100),
+                    isActive: userQuantity > dynamicTiers[2]
+                }
+            ];
+
+            // Update the table with dynamic ranges
+            tierRows.forEach((tier, index) => {
+                const rowElement = document.getElementById(`bulkTier${index + 1}Row`);
+                if (rowElement) {
+                    const cells = rowElement.querySelectorAll('.comparison-cell');
+                    cells[0].textContent = tier.range;
+                    cells[1].textContent = tier.discount + '%';
+                    cells[2].textContent = formatCurrency(tier.unitPrice);
+                    cells[3].textContent = formatCurrency(tier.unitPrice * userQuantity);
+                    
+                    // // Highlight the active tier
+                    // if (tier.isActive) {
+                    //     rowElement.style.backgroundColor = 'var(--primary-color)';
+                    //     rowElement.style.color = 'white';
+                    //     rowElement.style.fontWeight = '600';
+                    // } else {
+                    //     rowElement.style.backgroundColor = '';
+                    //     rowElement.style.color = '';
+                    //     rowElement.style.fontWeight = '';
+                    // }
+                }
+            });
+
+            // Show results
+            document.getElementById('bulkDiscountResults').style.display = 'block';
+            document.getElementById('bulkDiscountPlaceholder').style.display = 'none';
+        }
+
+
+        function clearBulkDiscount() {
+            document.getElementById('unitPrice').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('tier1Qty').value = '';
+            document.getElementById('tier1Discount').value = '';
+            document.getElementById('tier2Qty').value = '';
+            document.getElementById('tier2Discount').value = '';
+            document.getElementById('tier3Qty').value = '';
+            document.getElementById('tier3Discount').value = '';
+            document.getElementById('bulkDiscountResults').style.display = 'none';
+            document.getElementById('bulkDiscountPlaceholder').style.display = 'block';
+        }
+
+        // Utility Functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function showError(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--error-color);
+                color: white;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                font-size: 0.875rem;
+                font-weight: 500;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Auto-calculation functionality
+        function setupAutoCalculation() {
+            // Basic discount inputs
+            const basicInputs = ['originalPrice', 'discountPercent', 'discountAmount'];
+            basicInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidBasicInputs()) {
+                            calculateBasicDiscount();
+                        }
+                    }, 500));
+                }
+            });
+
+            // Reverse discount inputs
+            const reverseInputs = ['salePriceReverse', 'discountPercentReverse'];
+            reverseInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidReverseInputs()) {
+                            calculateReverseDiscount();
+                        }
+                    }, 500));
+                }
+            });
+
+            // Multiple discount inputs
+            const multipleInputs = ['multipleOriginalPrice', 'firstDiscount', 'secondDiscount', 'thirdDiscount'];
+            multipleInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidMultipleInputs()) {
+                            calculateMultipleDiscounts();
+                        }
+                    }, 500));
+                }
+            });
+
+            // Bulk discount inputs
+            const bulkInputs = ['unitPrice', 'quantity', 'tier1Qty', 'tier1Discount', 'tier2Qty', 'tier2Discount', 'tier3Qty', 'tier3Discount'];
+            bulkInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidBulkInputs()) {
+                            calculateBulkDiscount();
+                        }
+                    }, 500));
+                }
+            });
+        }
+
+        function hasValidBasicInputs() {
+            const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+            const discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
+            const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
+            return originalPrice > 0 && (discountPercent > 0 || discountAmount > 0);
+        }
+
+        function hasValidReverseInputs() {
+            const salePrice = parseFloat(document.getElementById('salePriceReverse').value) || 0;
+            const discountPercent = parseFloat(document.getElementById('discountPercentReverse').value) || 0;
+            return salePrice > 0 && discountPercent > 0 && discountPercent < 100;
+        }
+
+        function hasValidMultipleInputs() {
+            const originalPrice = parseFloat(document.getElementById('multipleOriginalPrice').value) || 0;
+            const firstDiscount = parseFloat(document.getElementById('firstDiscount').value) || 0;
+            const secondDiscount = parseFloat(document.getElementById('secondDiscount').value) || 0;
+            return originalPrice > 0 && firstDiscount > 0 && secondDiscount > 0;
+        }
+
+        function hasValidBulkInputs() {
+            const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            return unitPrice > 0 && quantity > 0;
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Sample data for testing
+        function loadSampleData() {
+            // Basic discount sample
+            document.getElementById('originalPrice').value = '100';
+            document.getElementById('discountPercent').value = '20';
+
+            // Reverse discount sample
+            document.getElementById('salePriceReverse').value = '80';
+            document.getElementById('discountPercentReverse').value = '20';
+
+            // Multiple discounts sample
+            document.getElementById('multipleOriginalPrice').value = '100';
+            document.getElementById('firstDiscount').value = '20';
+            document.getElementById('secondDiscount').value = '10';
+            document.getElementById('thirdDiscount').value = '5';
+
+            // Bulk discount sample
+            document.getElementById('unitPrice').value = '10';
+            document.getElementById('quantity').value = '50';
+            document.getElementById('tier1Qty').value = '10';
+            document.getElementById('tier1Discount').value = '5';
+            document.getElementById('tier2Qty').value = '25';
+                        document.getElementById('tier2Discount').value = '10';
+            document.getElementById('tier3Qty').value = '50';
+            document.getElementById('tier3Discount').value = '15';
+        }
+
+        // Keyboard shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + Enter to calculate
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    const activeTab = document.querySelector('.tab-content.active');
+                    if (activeTab) {
+                        switch (activeTab.id) {
+                            case 'basic-discount':
+                                calculateBasicDiscount();
+                                break;
+                            case 'reverse-discount':
+                                calculateReverseDiscount();
+                                break;
+                            case 'multiple-discounts':
+                                calculateMultipleDiscounts();
+                                break;
+                            case 'bulk-discount':
+                                calculateBulkDiscount();
+                                break;
+                        }
+                    }
+                }
+
+                // Ctrl/Cmd + R to clear
+                if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                    e.preventDefault();
+                    const activeTab = document.querySelector('.tab-content.active');
+                    if (activeTab) {
+                        switch (activeTab.id) {
+                            case 'basic-discount':
+                                clearBasicDiscount();
+                                break;
+                            case 'reverse-discount':
+                                clearReverseDiscount();
+                                break;
+                            case 'multiple-discounts':
+                                clearMultipleDiscounts();
+                                break;
+                            case 'bulk-discount':
+                                clearBulkDiscount();
+                                break;
+                        }
+                    }
+                }
+
+                // Number keys 1-4 to switch tabs
+                if (e.key >= '1' && e.key <= '4' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    const tabNames = ['basic-discount', 'reverse-discount', 'multiple-discounts', 'bulk-discount'];
+                    const tabIndex = parseInt(e.key) - 1;
+                    if (tabIndex < tabNames.length) {
+                        const tabButtons = document.querySelectorAll('.tab-btn');
+                        tabButtons[tabIndex].click();
+                    }
+                }
+            });
+        }
+
+        // Export results functionality
+        function exportResults() {
+            const activeTab = document.querySelector('.tab-content.active');
+            if (!activeTab) return;
+
+            let exportData = {
+                calculator: 'Discount Calculator',
+                timestamp: new Date().toISOString(),
+                tab: activeTab.id
+            };
+
+            switch (activeTab.id) {
+                case 'basic-discount':
+                    if (document.getElementById('basicDiscountResults').style.display !== 'none') {
+                        exportData.results = {
+                            originalPrice: document.getElementById('originalPrice').value,
+                            discountPercent: document.getElementById('discountPercent').value,
+                            discountAmount: document.getElementById('discountAmount').value,
+                            salePrice: document.getElementById('salePrice').textContent,
+                            totalSavings: document.getElementById('totalSavings').textContent
+                        };
+                    }
+                    break;
+                case 'reverse-discount':
+                    if (document.getElementById('reverseDiscountResults').style.display !== 'none') {
+                        exportData.results = {
+                            salePrice: document.getElementById('salePriceReverse').value,
+                            discountPercent: document.getElementById('discountPercentReverse').value,
+                            calculatedOriginalPrice: document.getElementById('calculatedOriginalPrice').textContent,
+                            calculatedDiscountAmount: document.getElementById('calculatedDiscountAmount').textContent
+                        };
+                    }
+                    break;
+                case 'multiple-discounts':
+                    if (document.getElementById('multipleDiscountResults').style.display !== 'none') {
+                        exportData.results = {
+                            originalPrice: document.getElementById('multipleOriginalPrice').value,
+                            firstDiscount: document.getElementById('firstDiscount').value,
+                            secondDiscount: document.getElementById('secondDiscount').value,
+                            thirdDiscount: document.getElementById('thirdDiscount').value,
+                            finalPrice: document.getElementById('multipleFinalPrice').textContent,
+                            totalSavings: document.getElementById('multipleTotalSavings').textContent,
+                            totalDiscountPercent: document.getElementById('multipleTotalPercent').textContent
+                        };
+                    }
+                    break;
+                case 'bulk-discount':
+                    if (document.getElementById('bulkDiscountResults').style.display !== 'none') {
+                        exportData.results = {
+                            unitPrice: document.getElementById('unitPrice').value,
+                            quantity: document.getElementById('quantity').value,
+                            regularTotal: document.getElementById('regularTotal').textContent,
+                            bulkTotal: document.getElementById('bulkTotal').textContent,
+                            appliedDiscount: document.getElementById('appliedBulkDiscount').textContent,
+                            totalSavings: document.getElementById('bulkTotalSavings').textContent
+                        };
+                    }
+                    break;
+            }
+
+            // Create and download JSON file
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `discount-calculation-${Date.now()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            showSuccess('Results exported successfully!');
+        }
+
+        function showSuccess(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--success-color);
+                color: white;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                font-size: 0.875rem;
+                font-weight: 500;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Add export button to each tab
+        function addExportButtons() {
+            const tabs = ['basic-discount', 'reverse-discount', 'multiple-discounts', 'bulk-discount'];
+            
+            tabs.forEach(tabId => {
+                const tab = document.getElementById(tabId);
+                const inputSection = tab.querySelector('.input-section');
+                const buttonGroup = inputSection.querySelector('.input-group');
+                
+                const exportBtn = document.createElement('button');
+                exportBtn.className = 'btn btn-secondary';
+                exportBtn.innerHTML = '<i class="fas fa-download"></i> Export';
+                exportBtn.onclick = exportResults;
+                
+                buttonGroup.appendChild(exportBtn);
+            });
+        }
+
+        // Comparison feature
+        function addComparisonFeature() {
+            const comparisonSection = document.createElement('div');
+            comparisonSection.className = 'info-section';
+            comparisonSection.innerHTML = `
+                <h3>
+                    <i class="fas fa-balance-scale"></i>
+                    Discount Comparison Tool
+                </h3>
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h4>Compare Discount Scenarios</h4>
+                        <div class="form-group">
+                            <label class="form-label">Original Price</label>
+                            <input type="number" class="form-input" id="compareOriginalPrice" placeholder="100.00" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Scenario 1: Single Discount (%)</label>
+                            <input type="number" class="form-input" id="scenario1Discount" placeholder="30" min="0" max="100" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Scenario 2: First Discount (%)</label>
+                            <input type="number" class="form-input" id="scenario2Discount1" placeholder="20" min="0" max="100" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Scenario 2: Second Discount (%)</label>
+                            <input type="number" class="form-input" id="scenario2Discount2" placeholder="15" min="0" max="100" step="0.1">
+                        </div>
+                        <button class="btn" onclick="compareDiscounts()">
+                            <i class="fas fa-balance-scale"></i>
+                            Compare
+                        </button>
+                    </div>
+                    <div class="results-section">
+                        <h4>Comparison Results</h4>
+                        <div id="comparisonResults" style="display: none;">
+                            <div class="comparison-table">
+                                <div class="comparison-row">
+                                    <div class="comparison-cell">Scenario</div>
+                                    <div class="comparison-cell">Final Price</div>
+                                    <div class="comparison-cell">Total Savings</div>
+                                    <div class="comparison-cell">Effective Discount</div>
+                                </div>
+                                <div class="comparison-row" id="scenario1Row">
+                                    <div class="comparison-cell">Single Discount</div>
+                                    <div class="comparison-cell" id="scenario1Price">$70.00</div>
+                                    <div class="comparison-cell" id="scenario1Savings">$30.00</div>
+                                    <div class="comparison-cell" id="scenario1Percent">30%</div>
+                                </div>
+                                <div class="comparison-row" id="scenario2Row">
+                                    <div class="comparison-cell">Multiple Discounts</div>
+                                    <div class="comparison-cell" id="scenario2Price">$68.00</div>
+                                    <div class="comparison-cell" id="scenario2Savings">$32.00</div>
+                                    <div class="comparison-cell" id="scenario2Percent">32%</div>
+                                </div>
+                            </div>
+                            <div class="savings-highlight" id="betterDeal">
+                                <div class="savings-amount" id="extraSavings">$2.00</div>
+                                <div class="savings-text" id="betterScenario">Multiple discounts save more!</div>
+                            </div>
+                        </div>
+                        <div id="comparisonPlaceholder" class="placeholder-message">
+                            <i class="fas fa-balance-scale"></i>
+                            <p>Enter discount scenarios to compare savings</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Insert before the existing info section
+            const existingInfoSection = document.querySelector('.info-section');
+            existingInfoSection.parentNode.insertBefore(comparisonSection, existingInfoSection);
+        }
+
+        function compareDiscounts() {
+            try {
+                const originalPrice = parseFloat(document.getElementById('compareOriginalPrice').value) || 0;
+                const scenario1Discount = parseFloat(document.getElementById('scenario1Discount').value) || 0;
+                const scenario2Discount1 = parseFloat(document.getElementById('scenario2Discount1').value) || 0;
+                const scenario2Discount2 = parseFloat(document.getElementById('scenario2Discount2').value) || 0;
+
+                if (originalPrice <= 0) {
+                    showError('Please enter a valid original price');
+                    return;
+                }
+
+                if (scenario1Discount <= 0 || scenario2Discount1 <= 0 || scenario2Discount2 <= 0) {
+                    showError('Please enter valid discount percentages');
+                    return;
+                }
+
+                // Calculate scenario 1 (single discount)
+                const scenario1Savings = (originalPrice * scenario1Discount) / 100;
+                const scenario1Price = originalPrice - scenario1Savings;
+
+                // Calculate scenario 2 (multiple discounts)
+                let scenario2Price = originalPrice;
+                scenario2Price -= (scenario2Price * scenario2Discount1) / 100;
+                scenario2Price -= (scenario2Price * scenario2Discount2) / 100;
+                const scenario2Savings = originalPrice - scenario2Price;
+                const scenario2EffectivePercent = (scenario2Savings / originalPrice) * 100;
+
+                // Update comparison results
+                document.getElementById('scenario1Price').textContent = formatCurrency(scenario1Price);
+                document.getElementById('scenario1Savings').textContent = formatCurrency(scenario1Savings);
+                document.getElementById('scenario1Percent').textContent = scenario1Discount.toFixed(1) + '%';
+
+                document.getElementById('scenario2Price').textContent = formatCurrency(scenario2Price);
+                document.getElementById('scenario2Savings').textContent = formatCurrency(scenario2Savings);
+                document.getElementById('scenario2Percent').textContent = scenario2EffectivePercent.toFixed(1) + '%';
+
+                // Determine better deal
+                const extraSavings = Math.abs(scenario2Savings - scenario1Savings);
+                const betterScenario = scenario2Savings > scenario1Savings ? 'Multiple discounts save more!' : 'Single discount is better!';
+                
+                document.getElementById('extraSavings').textContent = formatCurrency(extraSavings);
+                document.getElementById('betterScenario').textContent = betterScenario;
+
+                // Show results
+                document.getElementById('comparisonResults').style.display = 'block';
+                document.getElementById('comparisonPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error comparing discounts. Please check your inputs.');
+                console.error('Discount comparison error:', error);
+            }
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme manager
+            new ThemeManager();
+            
+            // Setup auto-calculation
+            setupAutoCalculation();
+            
+            // Setup keyboard shortcuts
+            setupKeyboardShortcuts();
+            
+            // Add export buttons
+            addExportButtons();
+            
+            // Add comparison feature
+            addComparisonFeature();
+            
+            // Load sample data for testing (comment out for production)
+            // loadSampleData();
+            
+            console.log('Discount Calculator initialized successfully');
+        });
+
+        // Add CSS variables for success and error colors
+        document.documentElement.style.setProperty('--success-color', '#10b981');
+        document.documentElement.style.setProperty('--error-color', '#ef4444');
+    </script>
+</body>
+</html>
+
+
+
+
+

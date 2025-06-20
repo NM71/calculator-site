@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Margin Calculator - CalcHub</title>
+    <meta name="description" content="Calculate profit margins, markup percentages, and pricing strategies. Analyze gross profit, net profit, and operating margins for your business.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+                        font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--success-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .profit-breakdown {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profit-breakdown h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .breakdown-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .margin-analysis {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .margin-analysis h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .analysis-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        .analysis-label {
+            color: var(--text-secondary);
+        }
+
+        .analysis-value {
+            font-weight: 500;
+        }
+
+        .analysis-value.good {
+            color: var(--success-color);
+        }
+
+        .analysis-value.average {
+            color: var(--warning-color);
+        }
+
+        .analysis-value.poor {
+            color: var(--error-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-btn {
+                font-size: 0.875rem;
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-chart-line"></i>
+                    Profit Margin Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate profit margins, markup percentages, and analyze your business profitability with detailed breakdowns.
+                </p>
+            </div>
+
+            <!-- Calculator Tabs -->
+            <div class="calculator-tabs">
+                <button class="tab-btn active" onclick="switchTab('profit-margin')">Profit Margin</button>
+                <button class="tab-btn" onclick="switchTab('markup')">Markup</button>
+                <button class="tab-btn" onclick="switchTab('pricing')">Pricing Strategy</button>
+            </div>
+
+            <!-- Profit Margin Tab -->
+            <div id="profit-margin" class="tab-content active">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-dollar-sign"></i>
+                            Revenue & Costs
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Revenue (Sales)</label>
+                            <input type="number" class="form-input" id="revenue" placeholder="100000" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Cost of Goods Sold (COGS)</label>
+                                                        <input type="number" class="form-input" id="cogs" placeholder="60000" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Operating Expenses</label>
+                            <input type="number" class="form-input" id="operatingExpenses" placeholder="25000" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Other Expenses</label>
+                            <input type="number" class="form-input" id="otherExpenses" placeholder="5000" min="0" step="0.01">
+                        </div>
+
+                        <button class="btn" onclick="calculateProfitMargin()">
+                            <i class="fas fa-calculator"></i>
+                            Calculate Margins
+                        </button>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-pie"></i>
+                            Margin Analysis
+                        </h3>
+
+                        <div id="marginResults" style="display: none;">
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Gross Margin</div>
+                                    <div class="result-value" id="grossMargin">40.0%</div>
+                                    <div class="result-description">Revenue - COGS</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Operating Margin</div>
+                                    <div class="result-value" id="operatingMargin">15.0%</div>
+                                    <div class="result-description">After operating expenses</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Net Margin</div>
+                                    <div class="result-value" id="netMargin">10.0%</div>
+                                    <div class="result-description">Final profit margin</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Net Profit</div>
+                                    <div class="result-value" id="netProfit">$10,000</div>
+                                    <div class="result-description">Total profit amount</div>
+                                </div>
+                            </div>
+
+                            <div class="profit-breakdown">
+                                <h4>Profit Breakdown</h4>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Revenue</span>
+                                    <span class="breakdown-value" id="breakdownRevenue">$100,000</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Cost of Goods Sold</span>
+                                    <span class="breakdown-value" id="breakdownCOGS">-$60,000</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Gross Profit</span>
+                                    <span class="breakdown-value" id="breakdownGrossProfit">$40,000</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Operating Expenses</span>
+                                    <span class="breakdown-value" id="breakdownOpEx">-$25,000</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Operating Profit</span>
+                                    <span class="breakdown-value" id="breakdownOpProfit">$15,000</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Other Expenses</span>
+                                    <span class="breakdown-value" id="breakdownOtherEx">-$5,000</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Net Profit</span>
+                                    <span class="breakdown-value" id="breakdownNetProfit">$10,000</span>
+                                </div>
+                            </div>
+
+                            <div class="margin-analysis">
+                                <h4>Margin Analysis</h4>
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Gross Margin Rating</span>
+                                    <span class="analysis-value good" id="grossRating">Good</span>
+                                </div>
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Operating Margin Rating</span>
+                                    <span class="analysis-value average" id="operatingRating">Average</span>
+                                </div>
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Net Margin Rating</span>
+                                    <span class="analysis-value average" id="netRating">Average</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="marginPlaceholder" class="placeholder-message">
+                            <i class="fas fa-chart-line"></i>
+                            <p>Enter your revenue and costs to calculate profit margins</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Markup Tab -->
+            <div id="markup" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-tags"></i>
+                            Markup Calculation
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Cost Price</label>
+                            <input type="number" class="form-input" id="costPrice" placeholder="50" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Selling Price</label>
+                            <input type="number" class="form-input" id="sellingPrice" placeholder="75" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Or Enter Desired Markup %</label>
+                            <input type="number" class="form-input" id="markupPercent" placeholder="50" min="0" step="0.1">
+                        </div>
+
+                        <button class="btn" onclick="calculateMarkup()">
+                            <i class="fas fa-calculator"></i>
+                            Calculate Markup
+                        </button>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-percentage"></i>
+                            Markup Results
+                        </h3>
+
+                        <div id="markupResults" style="display: none;">
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Markup %</div>
+                                    <div class="result-value" id="markupPercentResult">50.0%</div>
+                                    <div class="result-description">Markup percentage</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Profit Margin %</div>
+                                    <div class="result-value" id="marginFromMarkup">33.3%</div>
+                                    <div class="result-description">Equivalent margin</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Profit Amount</div>
+                                    <div class="result-value" id="profitAmount">$25.00</div>
+                                    <div class="result-description">Profit per unit</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Selling Price</div>
+                                    <div class="result-value" id="calculatedSellingPrice">$75.00</div>
+                                    <div class="result-description">Recommended price</div>
+                                </div>
+                            </div>
+
+                            <div class="profit-breakdown">
+                                <h4>Markup vs Margin Comparison</h4>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Cost Price</span>
+                                    <span class="breakdown-value" id="markupCostPrice">$50.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Markup Amount</span>
+                                    <span class="breakdown-value" id="markupAmount">$25.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Selling Price</span>
+                                    <span class="breakdown-value" id="markupSellingPrice">$75.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Markup Percentage</span>
+                                    <span class="breakdown-value" id="finalMarkupPercent">50.0%</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Profit Margin</span>
+                                    <span class="breakdown-value" id="finalMarginPercent">33.3%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="markupPlaceholder" class="placeholder-message">
+                            <i class="fas fa-tags"></i>
+                            <p>Enter cost and selling price or desired markup percentage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Strategy Tab -->
+            <div id="pricing" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-bullseye"></i>
+                            Pricing Strategy
+                        </h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Product Cost</label>
+                            <input type="number" class="form-input" id="productCost" placeholder="30" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Target Profit Margin %</label>
+                            <input type="number" class="form-input" id="targetMargin" placeholder="40" min="0" max="100" step="0.1">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Expected Monthly Sales Volume</label>
+                            <input type="number" class="form-input" id="salesVolume" placeholder="1000" min="1" step="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Fixed Monthly Costs</label>
+                            <input type="number" class="form-input" id="fixedCosts" placeholder="5000" min="0" step="0.01">
+                        </div>
+
+                        <button class="btn" onclick="calculatePricing()">
+                            <i class="fas fa-calculator"></i>
+                            Calculate Pricing
+                        </button>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Pricing Analysis
+                        </h3>
+
+                        <div id="pricingResults" style="display: none;">
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Recommended Price</div>
+                                    <div class="result-value" id="recommendedPrice">$50.00</div>
+                                    <div class="result-description">Based on target margin</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Break-even Price</div>
+                                    <div class="result-value" id="breakEvenPrice">$35.00</div>
+                                    <div class="result-description">Minimum viable price</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Monthly Revenue</div>
+                                    <div class="result-value" id="monthlyRevenue">$50,000</div>
+                                    <div class="result-description">At recommended price</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Monthly Profit</div>
+                                    <div class="result-value" id="monthlyProfit">$15,000</div>
+                                    <div class="result-description">After all costs</div>
+                                </div>
+                            </div>
+
+                            <div class="profit-breakdown">
+                                <h4>Pricing Breakdown</h4>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Product Cost</span>
+                                    <span class="breakdown-value" id="pricingProductCost">$30.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Fixed Cost per Unit</span>
+                                    <span class="breakdown-value" id="fixedCostPerUnit">$5.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Total Cost per Unit</span>
+                                    <span class="breakdown-value" id="totalCostPerUnit">$35.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Target Profit per Unit</span>
+                                    <span class="breakdown-value" id="targetProfitPerUnit">$15.00</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Recommended Selling Price</span>
+                                    <span class="breakdown-value" id="finalRecommendedPrice">$50.00</span>
+                                </div>
+                            </div>
+
+                            <div class="margin-analysis">
+                                <h4>Pricing Strategy Analysis</h4>
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Margin Achievement</span>
+                                    <span class="analysis-value good" id="marginAchievement">Target Met</span>
+                                </div>
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Competitiveness</span>
+                                    <span class="analysis-value" id="competitiveness">Moderate</span>
+                                </div>
+                                <div class="analysis-item">
+                                    <span class="analysis-label">Risk Level</span>
+                                    <span class="analysis-value" id="riskLevel">Low</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="pricingPlaceholder" class="placeholder-message">
+                            <i class="fas fa-bullseye"></i>
+                            <p>Enter product details to calculate optimal pricing strategy</p>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Profit Margin Guide
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-chart-line"></i>
+                            Gross Margin
+                        </h4>
+                        <p>Gross margin shows profitability after direct costs. Good margins vary by industry but typically range from 20-50%. Higher margins indicate better pricing power and cost control.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-cogs"></i>
+                            Operating Margin
+                        </h4>
+                        <p>Operating margin includes all operating expenses. It shows operational efficiency. Healthy operating margins are typically 10-20%, depending on the business model.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-percentage"></i>
+                            Markup vs Margin
+                        </h4>
+                        <p>Markup is profit over cost, while margin is profit over selling price. A 50% markup equals a 33.3% margin. Understanding both helps with pricing decisions.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-lightbulb"></i>
+                            Pricing Tips
+                        </h4>
+                        <p>Consider value-based pricing, competitor analysis, and customer willingness to pay. Factor in fixed costs, market positioning, and long-term business goals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Profit Margin Calculator
+        function calculateProfitMargin() {
+            try {
+                const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+                const cogs = parseFloat(document.getElementById('cogs').value) || 0;
+                const operatingExpenses = parseFloat(document.getElementById('operatingExpenses').value) || 0;
+                const otherExpenses = parseFloat(document.getElementById('otherExpenses').value) || 0;
+
+                if (revenue <= 0) {
+                    showError('Please enter a valid revenue amount');
+                    return;
+                }
+
+                // Calculate profits
+                const grossProfit = revenue - cogs;
+                const operatingProfit = grossProfit - operatingExpenses;
+                const netProfit = operatingProfit - otherExpenses;
+
+                // Calculate margins
+                const grossMargin = (grossProfit / revenue) * 100;
+                const operatingMargin = (operatingProfit / revenue) * 100;
+                const netMargin = (netProfit / revenue) * 100;
+
+                // Display results
+                displayProfitMarginResults({
+                    revenue,
+                    cogs,
+                    operatingExpenses,
+                    otherExpenses,
+                    grossProfit,
+                    operatingProfit,
+                    netProfit,
+                    grossMargin,
+                    operatingMargin,
+                    netMargin
+                });
+
+            } catch (error) {
+                showError('Error calculating profit margins. Please check your inputs.');
+                console.error('Profit margin calculation error:', error);
+            }
+        }
+
+        function displayProfitMarginResults(results) {
+            // Update main results
+            document.getElementById('grossMargin').textContent = results.grossMargin.toFixed(1) + '%';
+            document.getElementById('operatingMargin').textContent = results.operatingMargin.toFixed(1) + '%';
+            document.getElementById('netMargin').textContent = results.netMargin.toFixed(1) + '%';
+            document.getElementById('netProfit').textContent = formatCurrency(results.netProfit);
+
+            // Update breakdown
+            document.getElementById('breakdownRevenue').textContent = formatCurrency(results.revenue);
+            document.getElementById('breakdownCOGS').textContent = '-' + formatCurrency(results.cogs);
+            document.getElementById('breakdownGrossProfit').textContent = formatCurrency(results.grossProfit);
+            document.getElementById('breakdownOpEx').textContent = '-' + formatCurrency(results.operatingExpenses);
+            document.getElementById('breakdownOpProfit').textContent = formatCurrency(results.operatingProfit);
+            document.getElementById('breakdownOtherEx').textContent = '-' + formatCurrency(results.otherExpenses);
+            document.getElementById('breakdownNetProfit').textContent = formatCurrency(results.netProfit);
+
+            // Update analysis
+            document.getElementById('grossRating').textContent = getMarginRating(results.grossMargin, 'gross');
+            document.getElementById('grossRating').className = 'analysis-value ' + getMarginClass(results.grossMargin, 'gross');
+            
+            document.getElementById('operatingRating').textContent = getMarginRating(results.operatingMargin, 'operating');
+            document.getElementById('operatingRating').className = 'analysis-value ' + getMarginClass(results.operatingMargin, 'operating');
+            
+            document.getElementById('netRating').textContent = getMarginRating(results.netMargin, 'net');
+            document.getElementById('netRating').className = 'analysis-value ' + getMarginClass(results.netMargin, 'net');
+
+            // Show results
+            document.getElementById('marginResults').style.display = 'block';
+            document.getElementById('marginPlaceholder').style.display = 'none';
+        }
+
+        // Markup Calculator
+        function calculateMarkup() {
+            try {
+                const costPrice = parseFloat(document.getElementById('costPrice').value) || 0;
+                let sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+                const markupPercent = parseFloat(document.getElementById('markupPercent').value) || 0;
+
+                if (costPrice <= 0) {
+                    showError('Please enter a valid cost price');
+                    return;
+                }
+
+                // Calculate based on available inputs
+                let markup, margin, profit;
+
+                if (markupPercent > 0) {
+                    // Calculate from markup percentage
+                    sellingPrice = costPrice * (1 + markupPercent / 100);
+                    markup = markupPercent;
+                    profit = sellingPrice - costPrice;
+                    margin = (profit / sellingPrice) * 100;
+                } else if (sellingPrice > 0) {
+                    // Calculate from selling price
+                    profit = sellingPrice - costPrice;
+                    markup = (profit / costPrice) * 100;
+                    margin = (profit / sellingPrice) * 100;
+                } else {
+                    showError('Please enter either selling price or markup percentage');
+                    return;
+                }
+
+                // Display results
+                displayMarkupResults({
+                    costPrice,
+                    sellingPrice,
+                    profit,
+                    markup,
+                    margin
+                });
+
+            } catch (error) {
+                showError('Error calculating markup. Please check your inputs.');
+                console.error('Markup calculation error:', error);
+            }
+        }
+
+        function displayMarkupResults(results) {
+            // Update main results
+            document.getElementById('markupPercentResult').textContent = results.markup.toFixed(1) + '%';
+            document.getElementById('marginFromMarkup').textContent = results.margin.toFixed(1) + '%';
+            document.getElementById('profitAmount').textContent = formatCurrency(results.profit);
+            document.getElementById('calculatedSellingPrice').textContent = formatCurrency(results.sellingPrice);
+
+            // Update breakdown
+            document.getElementById('markupCostPrice').textContent = formatCurrency(results.costPrice);
+            document.getElementById('markupAmount').textContent = formatCurrency(results.profit);
+            document.getElementById('markupSellingPrice').textContent = formatCurrency(results.sellingPrice);
+            document.getElementById('finalMarkupPercent').textContent = results.markup.toFixed(1) + '%';
+            document.getElementById('finalMarginPercent').textContent = results.margin.toFixed(1) + '%';
+
+            // Show results
+            document.getElementById('markupResults').style.display = 'block';
+            document.getElementById('markupPlaceholder').style.display = 'none';
+        }
+
+        // Pricing Strategy Calculator
+        function calculatePricing() {
+            try {
+                const productCost = parseFloat(document.getElementById('productCost').value) || 0;
+                const targetMargin = parseFloat(document.getElementById('targetMargin').value) || 0;
+                const salesVolume = parseFloat(document.getElementById('salesVolume').value) || 0;
+                const fixedCosts = parseFloat(document.getElementById('fixedCosts').value) || 0;
+
+                if (productCost <= 0 || targetMargin <= 0 || salesVolume <= 0) {
+                    showError('Please enter valid values for all required fields');
+                    return;
+                }
+
+                // Calculate fixed cost per unit
+                const fixedCostPerUnit = fixedCosts / salesVolume;
+                const totalCostPerUnit = productCost + fixedCostPerUnit;
+
+                // Calculate recommended price based on target margin
+                const recommendedPrice = totalCostPerUnit / (1 - targetMargin / 100);
+                
+                // Calculate break-even price (covers all costs)
+                const breakEvenPrice = totalCostPerUnit;
+
+                // Calculate monthly figures
+                const monthlyRevenue = recommendedPrice * salesVolume;
+                const monthlyCosts = (productCost * salesVolume) + fixedCosts;
+                const monthlyProfit = monthlyRevenue - monthlyCosts;
+
+                // Calculate target profit per unit
+                const targetProfitPerUnit = recommendedPrice - totalCostPerUnit;
+
+                // Display results
+                displayPricingResults({
+                    productCost,
+                    fixedCostPerUnit,
+                    totalCostPerUnit,
+                    recommendedPrice,
+                    breakEvenPrice,
+                    monthlyRevenue,
+                    monthlyProfit,
+                    targetProfitPerUnit,
+                    targetMargin
+                });
+
+            } catch (error) {
+                showError('Error calculating pricing strategy. Please check your inputs.');
+                console.error('Pricing calculation error:', error);
+            }
+        }
+
+        function displayPricingResults(results) {
+            // Update main results
+            document.getElementById('recommendedPrice').textContent = formatCurrency(results.recommendedPrice);
+            document.getElementById('breakEvenPrice').textContent = formatCurrency(results.breakEvenPrice);
+            document.getElementById('monthlyRevenue').textContent = formatCurrency(results.monthlyRevenue);
+            document.getElementById('monthlyProfit').textContent = formatCurrency(results.monthlyProfit);
+
+            // Update breakdown
+            document.getElementById('pricingProductCost').textContent = formatCurrency(results.productCost);
+            document.getElementById('fixedCostPerUnit').textContent = formatCurrency(results.fixedCostPerUnit);
+            document.getElementById('totalCostPerUnit').textContent = formatCurrency(results.totalCostPerUnit);
+            document.getElementById('targetProfitPerUnit').textContent = formatCurrency(results.targetProfitPerUnit);
+            document.getElementById('finalRecommendedPrice').textContent = formatCurrency(results.recommendedPrice);
+
+            // Update analysis
+            const marginAchievement = results.targetMargin <= 50 ? 'Target Met' : 'High Target';
+            const marginClass = results.targetMargin <= 30 ? 'good' : results.targetMargin <= 50 ? 'average' : 'poor';
+            
+            document.getElementById('marginAchievement').textContent = marginAchievement;
+            document.getElementById('marginAchievement').className = 'analysis-value ' + marginClass;
+            
+            document.getElementById('competitiveness').textContent = getPricingCompetitiveness(results.recommendedPrice, results.productCost);
+            document.getElementById('riskLevel').textContent = getPricingRisk(results.targetMargin);
+
+            // Show results
+            document.getElementById('pricingResults').style.display = 'block';
+            document.getElementById('pricingPlaceholder').style.display = 'none';
+        }
+
+        // Utility Functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function getMarginRating(margin, type) {
+            const thresholds = {
+                gross: { good: 40, average: 20 },
+                operating: { good: 15, average: 8 },
+                net: { good: 10, average: 5 }
+            };
+
+            const threshold = thresholds[type];
+            if (margin >= threshold.good) return 'Excellent';
+            if (margin >= threshold.average) return 'Good';
+            if (margin >= 0) return 'Poor';
+            return 'Loss';
+        }
+
+        function getMarginClass(margin, type) {
+            const thresholds = {
+                gross: { good: 40, average: 20 },
+                operating: { good: 15, average: 8 },
+                net: { good: 10, average: 5 }
+            };
+
+            const threshold = thresholds[type];
+            if (margin >= threshold.good) return 'good';
+            if (margin >= threshold.average) return 'average';
+                        return 'poor';
+        }
+
+        function getPricingCompetitiveness(price, cost) {
+            const markup = ((price - cost) / cost) * 100;
+            if (markup < 25) return 'Very Competitive';
+            if (markup < 50) return 'Competitive';
+            if (markup < 100) return 'Moderate';
+            return 'Premium';
+        }
+
+        function getPricingRisk(margin) {
+            if (margin < 20) return 'Low';
+            if (margin < 40) return 'Moderate';
+            return 'High';
+        }
+
+        function showError(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--error-color);
+                color: white;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                font-size: 0.875rem;
+                font-weight: 500;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Auto-calculation functionality
+        function setupAutoCalculation() {
+            // Profit margin inputs
+            const marginInputs = ['revenue', 'cogs', 'operatingExpenses', 'otherExpenses'];
+            marginInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidMarginInputs()) {
+                            calculateProfitMargin();
+                        }
+                    }, 500));
+                }
+            });
+
+            // Markup inputs
+            const markupInputs = ['costPrice', 'sellingPrice', 'markupPercent'];
+            markupInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidMarkupInputs()) {
+                            calculateMarkup();
+                        }
+                    }, 500));
+                }
+            });
+
+            // Pricing inputs
+            const pricingInputs = ['productCost', 'targetMargin', 'salesVolume', 'fixedCosts'];
+            pricingInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidPricingInputs()) {
+                            calculatePricing();
+                        }
+                    }, 500));
+                }
+            });
+        }
+
+        function hasValidMarginInputs() {
+            const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+            return revenue > 0;
+        }
+
+        function hasValidMarkupInputs() {
+            const costPrice = parseFloat(document.getElementById('costPrice').value) || 0;
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+            const markupPercent = parseFloat(document.getElementById('markupPercent').value) || 0;
+            return costPrice > 0 && (sellingPrice > 0 || markupPercent > 0);
+        }
+
+        function hasValidPricingInputs() {
+            const productCost = parseFloat(document.getElementById('productCost').value) || 0;
+            const targetMargin = parseFloat(document.getElementById('targetMargin').value) || 0;
+            const salesVolume = parseFloat(document.getElementById('salesVolume').value) || 0;
+            return productCost > 0 && targetMargin > 0 && salesVolume > 0;
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Sample data for testing
+        function loadSampleData() {
+            // Profit margin sample
+            document.getElementById('revenue').value = '100000';
+            document.getElementById('cogs').value = '60000';
+            document.getElementById('operatingExpenses').value = '25000';
+            document.getElementById('otherExpenses').value = '5000';
+
+            // Markup sample
+            document.getElementById('costPrice').value = '50';
+            document.getElementById('sellingPrice').value = '75';
+
+            // Pricing sample
+            document.getElementById('productCost').value = '30';
+            document.getElementById('targetMargin').value = '40';
+            document.getElementById('salesVolume').value = '1000';
+            document.getElementById('fixedCosts').value = '5000';
+
+            // Calculate current tab
+            const activeTab = document.querySelector('.tab-content.active').id;
+            if (activeTab === 'profit-margin') {
+                calculateProfitMargin();
+            } else if (activeTab === 'markup') {
+                calculateMarkup();
+            } else if (activeTab === 'pricing') {
+                calculatePricing();
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.classList.contains('form-input')) {
+                    e.preventDefault();
+                    const activeTab = document.querySelector('.tab-content.active').id;
+                    if (activeTab === 'profit-margin') {
+                        calculateProfitMargin();
+                    } else if (activeTab === 'markup') {
+                        calculateMarkup();
+                    } else if (activeTab === 'pricing') {
+                        calculatePricing();
+                    }
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            setupAutoCalculation();
+            
+            // Load sample data for testing in development
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                setTimeout(() => {
+                    const sampleBtn = document.createElement('button');
+                    sampleBtn.textContent = 'Load Sample Data';
+                    sampleBtn.className = 'btn';
+                    sampleBtn.style.cssText = `
+                        background-color: var(--text-muted);
+                        margin-top: 0.5rem;
+                        font-size: 0.875rem;
+                        padding: 0.5rem 1rem;
+                    `;
+                    sampleBtn.onclick = loadSampleData;
+                    
+                    const inputSection = document.querySelector('.input-section');
+                    inputSection.appendChild(sampleBtn);
+                }, 1000);
+            }
+        });
+
+        // Export for potential integration
+        window.ProfitMarginCalculator = {
+            calculateProfitMargin,
+            calculateMarkup,
+            calculatePricing,
+            formatCurrency,
+            getMarginRating,
+            getPricingCompetitiveness
+        };
+    </script>
+</body>
+</html>
+
+

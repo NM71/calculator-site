@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator - CalcHub</title>
+    <meta name="description" content="Calculate income tax, deductions, and take-home pay. Supports federal and state tax calculations with detailed breakdown.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--success-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .tax-breakdown {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tax-breakdown h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .breakdown-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .tax-rate-info {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .tax-rate-info h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .rate-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        .rate-label {
+            color: var(--text-secondary);
+        }
+
+        .rate-value {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-receipt"></i>
+                    Tax Calculator US
+                </h1>
+                <p class="calculator-description">
+                    Calculate your income tax, deductions, and take-home pay with detailed breakdown of federal and state taxes.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <!-- Input Section -->
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-dollar-sign"></i>
+                        Tax Information
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Annual Gross Income</label>
+                        <input type="number" class="form-input" id="grossIncome" placeholder="75000" min="0" step="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Filing Status</label>
+                        <select class="form-select" id="filingStatus">
+                            <option value="single">Single</option>
+                            <option value="marriedJoint">Married Filing Jointly</option>
+                            <option value="marriedSeparate">Married Filing Separately</option>
+                            <option value="headOfHousehold">Head of Household</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="form-group">
+                            <label class="form-label">State</label>
+                            <select class="form-select" id="state">
+                                <option value="none">No State Tax</option>
+                                <option value="ca">California</option>
+                                <option value="ny">New York</option>
+                                <option value="tx">Texas</option>
+                                <option value="fl">Florida</option>
+                                <option value="il">Illinois</option>
+                                <option value="pa">Pennsylvania</option>
+                                <option value="oh">Ohio</option>
+                                <option value="ga">Georgia</option>
+                                <option value="nc">North Carolina</option>
+                                <option value="mi">Michigan</option>
+                                <option value="other">Other (5%)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-input" id="age" placeholder="35" min="16" max="100">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Standard Deduction</label>
+                        <select class="form-select" id="deductionType">
+                            <option value="standard">Use Standard Deduction</option>
+                            <option value="itemized">Itemize Deductions</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="itemizedGroup" style="display: none;">
+                        <label class="form-label">Total Itemized Deductions</label>
+                        <input type="number" class="form-input" id="itemizedDeductions" placeholder="15000" min="0" step="100">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="form-group">
+                            <label class="form-label">401(k) Contribution</label>
+                            <input type="number" class="form-input" id="retirement401k" placeholder="6000" min="0" step="100">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Health Insurance Premium</label>
+                            <input type="number" class="form-input" id="healthInsurance" placeholder="3000" min="0" step="100">
+                        </div>
+                    </div>
+
+                    <button class="btn" id="calculateBtn" onclick="calculateTax()">
+                        <i class="fas fa-calculator"></i>
+                        Calculate Tax
+                    </button>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-pie"></i>
+                        Tax Calculation Results
+                    </h3>
+
+                    <div id="results" style="display: none;">
+                        <div class="result-card">
+                            <div class="result-label">Take-Home Pay</div>
+                            <div class="result-value" id="takeHomePay">$54,750</div>
+                            <div class="result-description">After all taxes and deductions</div>
+                        </div>
+
+                        <div class="tax-breakdown">
+                            <h4>Tax Breakdown</h4>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Gross Income</span>
+                                <span class="breakdown-value" id="breakdownGross">$75,000</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Pre-tax Deductions</span>
+                                <span class="breakdown-value" id="breakdownPreTax">-$9,000</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Taxable Income</span>
+                                <span class="breakdown-value" id="breakdownTaxable">$66,000</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Federal Tax</span>
+                                <span class="breakdown-value" id="breakdownFederal">-$7,590</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">State Tax</span>
+                                <span class="breakdown-value" id="breakdownState">-$3,300</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">FICA Tax</span>
+                                <span class="breakdown-value" id="breakdownFICA">-$5,738</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Net Take-Home</span>
+                                <span class="breakdown-value" id="breakdownNet">$54,750</span>
+                            </div>
+                        </div>
+
+                        <div class="tax-rate-info">
+                            <h4>Effective Tax Rates</h4>
+                            <div class="rate-item">
+                                <span class="rate-label">Federal Rate</span>
+                                <span class="rate-value" id="federalRate">10.1%</span>
+                            </div>
+                            <div class="rate-item">
+                                <span class="rate-label">State Rate</span>
+                                <span class="rate-value" id="stateRate">4.4%</span>
+                            </div>
+                            <div class="rate-item">
+                                <span class="rate-label">FICA Rate</span>
+                                <span class="rate-value" id="ficaRate">7.65%</span>
+                            </div>
+                            <div class="rate-item">
+                                <span class="rate-label">Total Tax Rate</span>
+                                <span class="rate-value" id="totalRate">27.0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="placeholderMessage" class="placeholder-message">
+                        <i class="fas fa-receipt"></i>
+                        <p>Enter your tax information to calculate your take-home pay and tax breakdown</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Tax Information & Tips
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-university"></i>
+                            Federal Tax Brackets
+                        </h4>
+                        <p>The US uses a progressive tax system with rates from 10% to 37%. Your effective rate is typically lower than your marginal rate due to the bracket structure.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-map-marker-alt"></i>
+                            State Taxes
+                        </h4>
+                        <p>State tax rates vary significantly. Some states like Texas and Florida have no state income tax, while others like California have rates up to 13.3%.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-piggy-bank"></i>
+                            Pre-tax Savings
+                        </h4>
+                        <p>Contributing to 401(k), health insurance, and other pre-tax benefits reduces your taxable income and can significantly lower your tax burden.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Disclaimer
+                        </h4>
+                        <p>This calculator provides estimates for planning purposes. Consult a tax professional for accurate calculations and personalized tax advice.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Tax Calculator Logic
+        const TAX_YEAR = 2024;
+
+        // Federal tax brackets for 2024
+        const FEDERAL_BRACKETS = {
+            single: [
+                { min: 0, max: 11000, rate: 0.10 },
+                { min: 11000, max: 44725, rate: 0.12 },
+                { min: 44725, max: 95375, rate: 0.22 },
+                { min: 95375, max: 182050, rate: 0.24 },
+                { min: 182050, max: 231250, rate: 0.32 },
+                { min: 231250, max: 578125, rate: 0.35 },
+                { min: 578125, max: Infinity, rate: 0.37 }
+            ],
+            marriedJoint: [
+                { min: 0, max: 22000, rate: 0.10 },
+                { min: 22000, max: 89450, rate: 0.12 },
+                { min: 89450, max: 190750, rate: 0.22 },
+                { min: 190750, max: 364200, rate: 0.24 },
+                { min: 364200, max: 462500, rate: 0.32 },
+                { min: 462500, max: 693750, rate: 0.35 },
+                { min: 693750, max: Infinity, rate: 0.37 }
+            ],
+            marriedSeparate: [
+                { min: 0, max: 11000, rate: 0.10 },
+                { min: 11000, max: 44725, rate: 0.12 },
+                { min: 44725, max: 95375, rate: 0.22 },
+                { min: 95375, max: 182050, rate: 0.24 },
+                { min: 182050, max: 231250, rate: 0.32 },
+                { min: 231250, max: 346875, rate: 0.35 },
+                { min: 346875, max: Infinity, rate: 0.37 }
+            ],
+            headOfHousehold: [
+                { min: 0, max: 15700, rate: 0.10 },
+                { min: 15700, max: 59850, rate: 0.12 },
+                { min: 59850, max: 95350, rate: 0.22 },
+                { min: 95350, max: 182050, rate: 0.24 },
+                { min: 182050, max: 231250, rate: 0.32 },
+                { min: 231250, max: 578100, rate: 0.35 },
+                { min: 578100, max: Infinity, rate: 0.37 }
+            ]
+        };
+
+        // Standard deductions for 2024
+        const STANDARD_DEDUCTIONS = {
+            single: 14600,
+            marriedJoint: 29200,
+            marriedSeparate: 14600,
+            headOfHousehold: 21900
+        };
+
+        // State tax rates (simplified)
+        const STATE_TAX_RATES = {
+            none : 0,
+            ca: 0.093, // California average
+            ny: 0.068, // New York average
+            tx: 0,     // Texas - no state income tax
+            fl: 0,     // Florida - no state income tax
+            il: 0.0495, // Illinois flat rate
+            pa: 0.0307, // Pennsylvania flat rate
+            oh: 0.0399, // Ohio average
+            ga: 0.0575, // Georgia average
+            nc: 0.0525, // North Carolina flat rate
+            mi: 0.0425, // Michigan flat rate
+            other: 0.05 // Generic 5% rate
+        };
+
+        function calculateTax() {
+            try {
+                // Get input values
+                const grossIncome = parseFloat(document.getElementById('grossIncome').value) || 0;
+                const filingStatus = document.getElementById('filingStatus').value;
+                const state = document.getElementById('state').value;
+                const age = parseInt(document.getElementById('age').value) || 35;
+                const deductionType = document.getElementById('deductionType').value;
+                const itemizedDeductions = parseFloat(document.getElementById('itemizedDeductions').value) || 0;
+                const retirement401k = parseFloat(document.getElementById('retirement401k').value) || 0;
+                const healthInsurance = parseFloat(document.getElementById('healthInsurance').value) || 0;
+
+                if (grossIncome <= 0) {
+                    showError('Please enter a valid gross income');
+                    return;
+                }
+
+                // Calculate pre-tax deductions
+                const preTaxDeductions = retirement401k + healthInsurance;
+                const adjustedGrossIncome = grossIncome - preTaxDeductions;
+
+                // Calculate deductions
+                const standardDeduction = STANDARD_DEDUCTIONS[filingStatus];
+                const totalDeductions = deductionType === 'itemized' ? 
+                    Math.max(itemizedDeductions, standardDeduction) : standardDeduction;
+
+                // Calculate taxable income
+                const taxableIncome = Math.max(0, adjustedGrossIncome - totalDeductions);
+
+                // Calculate federal tax
+                const federalTax = calculateFederalTax(taxableIncome, filingStatus);
+
+                // Calculate state tax
+                const stateTaxRate = STATE_TAX_RATES[state] || 0;
+                const stateTax = taxableIncome * stateTaxRate;
+
+                // Calculate FICA taxes (Social Security + Medicare)
+                const socialSecurityTax = Math.min(grossIncome * 0.062, 160200 * 0.062); // 2024 SS wage base
+                const medicareTax = grossIncome * 0.0145;
+                const additionalMedicareTax = grossIncome > 200000 ? (grossIncome - 200000) * 0.009 : 0;
+                const ficaTax = socialSecurityTax + medicareTax + additionalMedicareTax;
+
+                // Calculate total taxes
+                const totalTaxes = federalTax + stateTax + ficaTax;
+                const takeHomePay = grossIncome - totalTaxes - preTaxDeductions;
+
+                // Calculate effective rates
+                const federalRate = (federalTax / grossIncome) * 100;
+                const stateRate = (stateTax / grossIncome) * 100;
+                const ficaRate = (ficaTax / grossIncome) * 100;
+                const totalRate = (totalTaxes / grossIncome) * 100;
+
+                // Display results
+                displayResults({
+                    grossIncome,
+                    preTaxDeductions,
+                    taxableIncome,
+                    federalTax,
+                    stateTax,
+                    ficaTax,
+                    totalTaxes,
+                    takeHomePay,
+                    federalRate,
+                    stateRate,
+                    ficaRate,
+                    totalRate
+                });
+
+            } catch (error) {
+                showError('Error calculating tax. Please check your inputs.');
+                console.error('Tax calculation error:', error);
+            }
+        }
+
+        function calculateFederalTax(taxableIncome, filingStatus) {
+            const brackets = FEDERAL_BRACKETS[filingStatus];
+            let tax = 0;
+
+            for (const bracket of brackets) {
+                if (taxableIncome > bracket.min) {
+                    const taxableAtThisBracket = Math.min(taxableIncome, bracket.max) - bracket.min;
+                    tax += taxableAtThisBracket * bracket.rate;
+                } else {
+                    break;
+                }
+            }
+
+            return tax;
+        }
+
+        function displayResults(results) {
+            // Update main result
+            document.getElementById('takeHomePay').textContent = formatCurrency(results.takeHomePay);
+
+            // Update breakdown
+            document.getElementById('breakdownGross').textContent = formatCurrency(results.grossIncome);
+            document.getElementById('breakdownPreTax').textContent = '-' + formatCurrency(results.preTaxDeductions);
+            document.getElementById('breakdownTaxable').textContent = formatCurrency(results.taxableIncome);
+            document.getElementById('breakdownFederal').textContent = '-' + formatCurrency(results.federalTax);
+            document.getElementById('breakdownState').textContent = '-' + formatCurrency(results.stateTax);
+            document.getElementById('breakdownFICA').textContent = '-' + formatCurrency(results.ficaTax);
+            document.getElementById('breakdownNet').textContent = formatCurrency(results.takeHomePay);
+
+            // Update rates
+            document.getElementById('federalRate').textContent = results.federalRate.toFixed(1) + '%';
+            document.getElementById('stateRate').textContent = results.stateRate.toFixed(1) + '%';
+            document.getElementById('ficaRate').textContent = results.ficaRate.toFixed(1) + '%';
+            document.getElementById('totalRate').textContent = results.totalRate.toFixed(1) + '%';
+
+            // Show results
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('placeholderMessage').style.display = 'none';
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(Math.round(amount));
+        }
+
+        function showError(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--error-color);
+                color: white;
+                padding: 12px 20px;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                font-size: 0.875rem;
+                font-weight: 500;
+                max-width: 300px;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Toggle itemized deductions visibility
+        document.getElementById('deductionType').addEventListener('change', function() {
+            const itemizedGroup = document.getElementById('itemizedGroup');
+            if (this.value === 'itemized') {
+                itemizedGroup.style.display = 'block';
+            } else {
+                itemizedGroup.style.display = 'none';
+            }
+        });
+
+        // Auto-calculate functionality
+        function setupAutoCalculation() {
+            const inputs = [
+                'grossIncome', 'filingStatus', 'state', 'age', 
+                'deductionType', 'itemizedDeductions', 'retirement401k', 'healthInsurance'
+            ];
+            
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounce(() => {
+                        if (hasValidInputs()) {
+                            calculateTax();
+                        }
+                    }, 500));
+                    
+                    element.addEventListener('change', debounce(() => {
+                        if (hasValidInputs()) {
+                            calculateTax();
+                        }
+                    }, 500));
+                }
+            });
+        }
+
+        function hasValidInputs() {
+            const grossIncome = parseFloat(document.getElementById('grossIncome').value) || 0;
+            return grossIncome > 0;
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Sample data for testing
+        function loadSampleData() {
+            document.getElementById('grossIncome').value = '75000';
+            document.getElementById('filingStatus').value = 'single';
+            document.getElementById('state').value = 'ca';
+            document.getElementById('age').value = '35';
+            document.getElementById('retirement401k').value = '6000';
+            document.getElementById('healthInsurance').value = '3000';
+            calculateTax();
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.classList.contains('form-input')) {
+                    e.preventDefault();
+                    calculateTax();
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            setupAutoCalculation();
+            
+            // Load sample data for testing in development
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                setTimeout(() => {
+                    const sampleBtn = document.createElement('button');
+                    sampleBtn.textContent = 'Load Sample Data';
+                    sampleBtn.className = 'btn';
+                    sampleBtn.style.cssText = `
+                        background-color: var(--text-muted);
+                        margin-top: 0.5rem;
+                        font-size: 0.875rem;
+                        padding: 0.5rem 1rem;
+                    `;
+                    sampleBtn.onclick = loadSampleData;
+                    
+                    const inputSection = document.querySelector('.input-section');
+                    inputSection.appendChild(sampleBtn);
+                }, 1000);
+            }
+        });
+
+        // Export for potential integration
+        window.TaxCalculator = {
+            calculate: calculateTax,
+            formatCurrency: formatCurrency,
+            FEDERAL_BRACKETS: FEDERAL_BRACKETS,
+            STATE_TAX_RATES: STATE_TAX_RATES
+        };
+    </script>
+</body>
+</html>
+

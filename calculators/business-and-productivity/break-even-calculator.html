@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Break-even Calculator - CalcHub</title>
+    <meta name="description" content="Calculate your business break-even point. Determine how many units you need to sell to cover all costs and start making profit.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+                        background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--warning-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-muted);
+            color: white;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breakeven-highlight {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakeven-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .breakeven-text {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .breakdown-section {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown-section h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .breakdown-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .analysis-section {
+            background-color: var(--info-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .analysis-section h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .analysis-section p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-section li {
+            color: var(--text-secondary);
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .info-section li::before {
+            content: "•";
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .breakeven-amount {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .breakeven-amount {
+                font-size: 1.75rem;
+            }
+            
+            .result-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-chart-line"></i>
+                    Break-even Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate your business break-even point. Determine how many units you need to sell to cover all costs and start making profit.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-dollar-sign"></i>
+                        Business Costs & Pricing
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="fixedCosts">Fixed Costs per Month (Rs)</label>
+                        <input type="number" id="fixedCosts" class="form-input" placeholder="5000" step="0.01" min="0">
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">Rent, salaries, insurance, utilities, etc.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="variableCostPerUnit">Variable Cost per Unit (Rs)</label>
+                        <input type="number" id="variableCostPerUnit" class="form-input" placeholder="15.00" step="0.01" min="0">
+                                                <small style="color: var(--text-muted); font-size: 0.75rem;">Materials, labor, shipping per unit</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="sellingPrice">Selling Price per Unit (Rs)</label>
+                        <input type="number" id="sellingPrice" class="form-input" placeholder="25.00" step="0.01" min="0">
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">Price you charge customers</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="targetProfit">Target Monthly Profit (Rs)</label>
+                        <input type="number" id="targetProfit" class="form-input" placeholder="2000" step="0.01" min="0" value="0">
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">Optional: desired profit amount</small>
+                    </div>
+                    
+                    <div class="input-group">
+                        <button class="btn" onclick="calculateBreakEven()">
+                            <i class="fas fa-calculator"></i>
+                            Calculate
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearInputs()">
+                            <i class="fas fa-refresh"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i>
+                        Break-even Analysis
+                    </h3>
+                    
+                    <div id="results" style="display: none;">
+                        <div class="breakeven-highlight">
+                            <div class="breakeven-amount" id="breakEvenUnits">0</div>
+                            <div class="breakeven-text">Units to Break Even</div>
+                        </div>
+                        
+                        <div class="result-grid">
+                            <div class="result-card">
+                                <div class="result-label">Break-even Revenue</div>
+                                <div class="result-value" id="breakEvenRevenue">$0</div>
+                                <div class="result-description">Monthly revenue needed</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Contribution Margin</div>
+                                <div class="result-value" id="contributionMargin">$0</div>
+                                <div class="result-description">Per unit profit</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Margin Percentage</div>
+                                <div class="result-value" id="marginPercentage">0%</div>
+                                <div class="result-description">Contribution margin %</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Target Units</div>
+                                <div class="result-value" id="targetUnits">0</div>
+                                <div class="result-description">For target profit</div>
+                            </div>
+                        </div>
+                        
+                        <div class="breakdown-section">
+                            <h4>Financial Breakdown</h4>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Fixed Costs (Monthly)</span>
+                                <span class="breakdown-value" id="displayFixedCosts">$0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Variable Cost per Unit</span>
+                                <span class="breakdown-value" id="displayVariableCost">$0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Selling Price per Unit</span>
+                                <span class="breakdown-value" id="displaySellingPrice">$0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Contribution per Unit</span>
+                                <span class="breakdown-value" id="displayContribution">$0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-section" id="analysisSection">
+                            <h4>Business Analysis</h4>
+                            <p id="analysisText"></p>
+                        </div>
+                    </div>
+                    
+                    <div id="placeholder" class="placeholder-message">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Enter your business costs and pricing to calculate break-even point</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Understanding Break-even Analysis
+                </h3>
+                <ul>
+                    <li><strong>Break-even Point:</strong> The number of units you must sell to cover all costs (no profit, no loss)</li>
+                    <li><strong>Fixed Costs:</strong> Expenses that don't change with production volume (rent, salaries, insurance)</li>
+                    <li><strong>Variable Costs:</strong> Expenses that change with each unit produced (materials, labor, shipping)</li>
+                    <li><strong>Contribution Margin:</strong> Selling price minus variable cost per unit</li>
+                    <li><strong>Formula:</strong> Break-even Units = Fixed Costs ÷ Contribution Margin per Unit</li>
+                    <li><strong>Target Profit:</strong> Add desired profit to fixed costs to find units needed for profit goal</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Utility Functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function formatCurrencyPrecise(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(num);
+        }
+
+        function formatPercentage(num) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'percent',
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1
+            }).format(num / 100);
+        }
+
+        function showError(message) {
+            alert(message); // Simple error display
+        }
+
+        // Break-even Calculations
+        function calculateBreakEven() {
+            try {
+                const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+                const variableCostPerUnit = parseFloat(document.getElementById('variableCostPerUnit').value);
+                const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
+                const targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;
+
+                // Validation
+                if (!fixedCosts || !variableCostPerUnit || !sellingPrice) {
+                    showError('Please fill in all required fields (fixed costs, variable cost per unit, and selling price).');
+                    return;
+                }
+
+                if (fixedCosts <= 0 || variableCostPerUnit < 0 || sellingPrice <= 0) {
+                    showError('Please enter positive values for costs and selling price.');
+                    return;
+                }
+
+                if (sellingPrice <= variableCostPerUnit) {
+                    showError('Selling price must be greater than variable cost per unit to make a profit.');
+                    return;
+                }
+
+                // Calculate contribution margin
+                const contributionMargin = sellingPrice - variableCostPerUnit;
+                const marginPercentage = (contributionMargin / sellingPrice) * 100;
+
+                // Calculate break-even point
+                const breakEvenUnits = Math.ceil(fixedCosts / contributionMargin);
+                const breakEvenRevenue = breakEvenUnits * sellingPrice;
+
+                // Calculate units needed for target profit
+                const targetUnits = targetProfit > 0 ? Math.ceil((fixedCosts + targetProfit) / contributionMargin) : breakEvenUnits;
+
+                // Update display
+                document.getElementById('breakEvenUnits').textContent = formatNumber(breakEvenUnits);
+                document.getElementById('breakEvenRevenue').textContent = formatCurrency(breakEvenRevenue);
+                document.getElementById('contributionMargin').textContent = formatCurrencyPrecise(contributionMargin);
+                document.getElementById('marginPercentage').textContent = formatPercentage(marginPercentage);
+                document.getElementById('targetUnits').textContent = formatNumber(targetUnits);
+
+                // Update breakdown
+                document.getElementById('displayFixedCosts').textContent = formatCurrency(fixedCosts);
+                document.getElementById('displayVariableCost').textContent = formatCurrencyPrecise(variableCostPerUnit);
+                document.getElementById('displaySellingPrice').textContent = formatCurrencyPrecise(sellingPrice);
+                document.getElementById('displayContribution').textContent = formatCurrencyPrecise(contributionMargin);
+
+                // Generate analysis
+                generateAnalysis(breakEvenUnits, contributionMargin, marginPercentage, targetProfit, targetUnits);
+
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('placeholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating break-even point. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function generateAnalysis(breakEvenUnits, contributionMargin, marginPercentage, targetProfit, targetUnits) {
+            let analysis = '';
+            
+            if (marginPercentage < 20) {
+                analysis = `Your contribution margin is ${formatPercentage(marginPercentage)}, which is relatively low. Consider increasing your selling price or reducing variable costs to improve profitability.`;
+            } else if (marginPercentage < 40) {
+                analysis = `Your contribution margin of ${formatPercentage(marginPercentage)} is moderate. You need to sell ${formatNumber(breakEvenUnits)} units monthly to break even.`;
+            } else {
+                analysis = `Excellent! Your contribution margin of ${formatPercentage(marginPercentage)} is strong. You only need ${formatNumber(breakEvenUnits)} units to break even.`;
+            }
+
+            if (targetProfit > 0) {
+                const additionalUnits = targetUnits - breakEvenUnits;
+                analysis += ` To achieve your target profit of ${formatCurrency(targetProfit)}, you need to sell ${formatNumber(additionalUnits)} additional units beyond break-even.`;
+            }
+
+            document.getElementById('analysisText').textContent = analysis;
+        }
+
+        function clearInputs() {
+            document.getElementById('fixedCosts').value = '';
+            document.getElementById('variableCostPerUnit').value = '';
+            document.getElementById('sellingPrice').value = '';
+            document.getElementById('targetProfit').value = '0';
+            
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('placeholder').style.display = 'block';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                calculateBreakEven();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+        });
+    </script>
+</body>
+</html>
+
+

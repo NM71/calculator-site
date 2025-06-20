@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hourly to Salary Converter - CalcHub</title>
+    <meta name="description" content="Convert between hourly wages and annual salary. Calculate weekly, monthly, and yearly earnings with overtime and tax considerations.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--success-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-muted);
+            color: white;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .salary-highlight {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .salary-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .salary-text {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .breakdown-section {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown-section h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .breakdown-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+                        align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-section li {
+            color: var(--text-secondary);
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .info-section li::before {
+            content: "•";
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .salary-amount {
+                font-size: 1.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .salary-amount {
+                font-size: 1.5rem;
+            }
+            
+            .result-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-money-bill-wave"></i>
+                    Salary Converter
+                </h1>
+                <p class="calculator-description">
+                    Convert between hourly wages and annual salary. Calculate weekly, monthly, and yearly earnings with overtime considerations.
+                </p>
+            </div>
+
+            <div class="calculator-tabs">
+                <button class="tab-btn active" onclick="switchTab('hourly-to-salary')">Hourly to Salary</button>
+                <button class="tab-btn" onclick="switchTab('salary-to-hourly')">Salary to Hourly</button>
+            </div>
+
+            <!-- Hourly to Salary Tab -->
+            <div id="hourly-to-salary" class="tab-content active">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-clock"></i>
+                            Hourly Wage Details
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="hourlyWage">Hourly Wage (Rs)</label>
+                            <input type="number" id="hourlyWage" class="form-input" placeholder="25.00" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="hoursPerWeek">Hours per Week</label>
+                            <input type="number" id="hoursPerWeek" class="form-input" placeholder="40" value="40" step="0.5" min="0" max="168">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="weeksPerYear">Weeks per Year</label>
+                            <input type="number" id="weeksPerYear" class="form-input" placeholder="52" value="52" step="1" min="1" max="52">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="overtimeHours">Overtime Hours per Week</label>
+                            <input type="number" id="overtimeHours" class="form-input" placeholder="0" value="0" step="0.5" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="overtimeRate">Overtime Rate Multiplier</label>
+                            <input type="number" id="overtimeRate" class="form-input" placeholder="1.5" value="1.5" step="0.1" min="1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateHourlyToSalary()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearHourlyInputs()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Salary Breakdown
+                        </h3>
+                        
+                        <div id="hourlyResults" style="display: none;">
+                            <div class="salary-highlight">
+                                <div class="salary-amount" id="annualSalary">$0</div>
+                                <div class="salary-text">Annual Salary</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Monthly Salary</div>
+                                    <div class="result-value" id="monthlySalary">$0</div>
+                                    <div class="result-description">Before taxes</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Weekly Salary</div>
+                                    <div class="result-value" id="weeklySalary">$0</div>
+                                    <div class="result-description">Before taxes</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Daily Salary</div>
+                                    <div class="result-value" id="dailySalary">$0</div>
+                                    <div class="result-description">5 days per week</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Overtime Earnings</div>
+                                    <div class="result-value" id="overtimeEarnings">$0</div>
+                                    <div class="result-description">Annual overtime</div>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-section">
+                                <h4>Annual Breakdown</h4>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Regular Hours</span>
+                                    <span class="breakdown-value" id="regularHours">0 hours</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Regular Earnings</span>
+                                    <span class="breakdown-value" id="regularEarnings">$0</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Overtime Hours</span>
+                                    <span class="breakdown-value" id="overtimeHoursTotal">0 hours</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Total Earnings</span>
+                                    <span class="breakdown-value" id="totalEarnings">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="hourlyPlaceholder" class="placeholder-message">
+                            <i class="fas fa-clock"></i>
+                            <p>Enter your hourly wage and work schedule to calculate your annual salary</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salary to Hourly Tab -->
+            <div id="salary-to-hourly" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-dollar-sign"></i>
+                            Salary Details
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="annualSalaryInput">Annual Salary (Rs)</label>
+                            <input type="number" id="annualSalaryInput" class="form-input" placeholder="50000" step="100" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="salaryHoursPerWeek">Hours per Week</label>
+                            <input type="number" id="salaryHoursPerWeek" class="form-input" placeholder="40" value="40" step="0.5" min="0" max="168">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="salaryWeeksPerYear">Weeks per Year</label>
+                            <input type="number" id="salaryWeeksPerYear" class="form-input" placeholder="52" value="52" step="1" min="1" max="52">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="vacationDays">Vacation Days per Year</label>
+                            <input type="number" id="vacationDays" class="form-input" placeholder="0" value="0" step="1" min="0" max="365">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="sickDays">Sick Days per Year</label>
+                            <input type="number" id="sickDays" class="form-input" placeholder="0" value="0" step="1" min="0" max="365">
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateSalaryToHourly()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearSalaryInputs()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Hourly Rate Breakdown
+                        </h3>
+                        
+                        <div id="salaryResults" style="display: none;">
+                            <div class="salary-highlight">
+                                <div class="salary-amount" id="hourlyRate">$0.00</div>
+                                <div class="salary-text">Hourly Rate</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Monthly Rate</div>
+                                    <div class="result-value" id="monthlyRate">$0</div>
+                                    <div class="result-description">Monthly equivalent</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Weekly Rate</div>
+                                    <div class="result-value" id="weeklyRate">$0</div>
+                                    <div class="result-description">Weekly equivalent</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Daily Rate</div>
+                                    <div class="result-value" id="dailyRate">$0</div>
+                                    <div class="result-description">Daily equivalent</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Working Hours</div>
+                                    <div class="result-value" id="totalWorkingHours">0</div>
+                                    <div class="result-description">Annual hours</div>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-section">
+                                <h4>Time Breakdown</h4>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Total Working Days</span>
+                                    <span class="breakdown-value" id="workingDays">0 days</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Vacation Days</span>
+                                    <span class="breakdown-value" id="vacationDaysUsed">0 days</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Sick Days</span>
+                                    <span class="breakdown-value" id="sickDaysUsed">0 days</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Net Working Days</span>
+                                    <span class="breakdown-value" id="netWorkingDays">0 days</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="salaryPlaceholder" class="placeholder-message">
+                            <i class="fas fa-dollar-sign"></i>
+                            <p>Enter your annual salary and work schedule to calculate your hourly rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    How to Use This Calculator
+                </h3>
+                <ul>
+                                        <li><strong>Hourly to Salary:</strong> Enter your hourly wage, weekly hours, and any overtime to calculate your annual salary</li>
+                    <li><strong>Salary to Hourly:</strong> Enter your annual salary and work schedule to find your equivalent hourly rate</li>
+                    <li><strong>Overtime:</strong> Include overtime hours and rate multiplier (typically 1.5x) for accurate calculations</li>
+                    <li><strong>Vacation/Sick Days:</strong> Account for paid time off to get a more accurate hourly rate from salary</li>
+                    <li><strong>Working Weeks:</strong> Adjust for unpaid vacation time or seasonal work schedules</li>
+                    <li><strong>Note:</strong> All calculations are before taxes and other deductions</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Tab Management
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Utility Functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function formatCurrencyPrecise(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'PKR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(num);
+        }
+
+        function showError(message) {
+            alert(message);
+        }
+
+        // Hourly to Salary Calculations
+        function calculateHourlyToSalary() {
+            try {
+                const hourlyWage = parseFloat(document.getElementById('hourlyWage').value);
+                const hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value);
+                const weeksPerYear = parseFloat(document.getElementById('weeksPerYear').value);
+                const overtimeHours = parseFloat(document.getElementById('overtimeHours').value) || 0;
+                const overtimeRate = parseFloat(document.getElementById('overtimeRate').value) || 1.5;
+
+                // Validation
+                if (!hourlyWage || !hoursPerWeek || !weeksPerYear) {
+                    showError('Please fill in hourly wage, hours per week, and weeks per year.');
+                    return;
+                }
+
+                if (hourlyWage <= 0 || hoursPerWeek <= 0 || weeksPerYear <= 0) {
+                    showError('Please enter positive values for all required fields.');
+                    return;
+                }
+
+                if (hoursPerWeek > 168) {
+                    showError('Hours per week cannot exceed 168 (24 hours × 7 days).');
+                    return;
+                }
+
+                // Calculate regular and overtime earnings
+                const regularHoursPerWeek = Math.max(0, hoursPerWeek - overtimeHours);
+                const regularHoursPerYear = regularHoursPerWeek * weeksPerYear;
+                const overtimeHoursPerYear = overtimeHours * weeksPerYear;
+                
+                const regularEarnings = regularHoursPerYear * hourlyWage;
+                const overtimeEarnings = overtimeHoursPerYear * hourlyWage * overtimeRate;
+                const totalAnnualSalary = regularEarnings + overtimeEarnings;
+
+                // Calculate other periods
+                const monthlySalary = totalAnnualSalary / 12;
+                const weeklySalary = totalAnnualSalary / weeksPerYear;
+                const dailySalary = weeklySalary / 5; // Assuming 5 working days per week
+
+                // Update display
+                document.getElementById('annualSalary').textContent = formatCurrency(totalAnnualSalary);
+                document.getElementById('monthlySalary').textContent = formatCurrency(monthlySalary);
+                document.getElementById('weeklySalary').textContent = formatCurrency(weeklySalary);
+                document.getElementById('dailySalary').textContent = formatCurrency(dailySalary);
+                document.getElementById('overtimeEarnings').textContent = formatCurrency(overtimeEarnings);
+
+                // Update breakdown
+                document.getElementById('regularHours').textContent = formatNumber(regularHoursPerYear) + ' hours';
+                document.getElementById('regularEarnings').textContent = formatCurrency(regularEarnings);
+                document.getElementById('overtimeHoursTotal').textContent = formatNumber(overtimeHoursPerYear) + ' hours';
+                document.getElementById('totalEarnings').textContent = formatCurrency(totalAnnualSalary);
+
+                // Show results
+                document.getElementById('hourlyResults').style.display = 'block';
+                document.getElementById('hourlyPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating salary. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        // Salary to Hourly Calculations
+        function calculateSalaryToHourly() {
+            try {
+                const annualSalary = parseFloat(document.getElementById('annualSalaryInput').value);
+                const hoursPerWeek = parseFloat(document.getElementById('salaryHoursPerWeek').value);
+                const weeksPerYear = parseFloat(document.getElementById('salaryWeeksPerYear').value);
+                const vacationDays = parseFloat(document.getElementById('vacationDays').value) || 0;
+                const sickDays = parseFloat(document.getElementById('sickDays').value) || 0;
+
+                // Validation
+                if (!annualSalary || !hoursPerWeek || !weeksPerYear) {
+                    showError('Please fill in annual salary, hours per week, and weeks per year.');
+                    return;
+                }
+
+                if (annualSalary <= 0 || hoursPerWeek <= 0 || weeksPerYear <= 0) {
+                    showError('Please enter positive values for all required fields.');
+                    return;
+                }
+
+                if (hoursPerWeek > 168) {
+                    showError('Hours per week cannot exceed 168 (24 hours × 7 days).');
+                    return;
+                }
+
+                // Calculate working time
+                const totalWorkingDays = (weeksPerYear * 5); // Assuming 5 working days per week
+                const totalOffDays = vacationDays + sickDays;
+                const netWorkingDays = Math.max(0, totalWorkingDays - totalOffDays);
+                const totalWorkingHours = (netWorkingDays / 5) * hoursPerWeek; // Convert back to weeks then to hours
+
+                if (totalWorkingHours <= 0) {
+                    showError('Total working hours must be greater than zero. Please check your vacation and sick days.');
+                    return;
+                }
+
+                // Calculate rates
+                const hourlyRate = annualSalary / totalWorkingHours;
+                const monthlyRate = annualSalary / 12;
+                const weeklyRate = annualSalary / weeksPerYear;
+                const dailyRate = weeklyRate / 5; // Assuming 5 working days per week
+
+                // Update display
+                document.getElementById('hourlyRate').textContent = formatCurrencyPrecise(hourlyRate);
+                document.getElementById('monthlyRate').textContent = formatCurrency(monthlyRate);
+                document.getElementById('weeklyRate').textContent = formatCurrency(weeklyRate);
+                document.getElementById('dailyRate').textContent = formatCurrency(dailyRate);
+                document.getElementById('totalWorkingHours').textContent = formatNumber(totalWorkingHours);
+
+                // Update breakdown
+                document.getElementById('workingDays').textContent = formatNumber(totalWorkingDays) + ' days';
+                document.getElementById('vacationDaysUsed').textContent = formatNumber(vacationDays) + ' days';
+                document.getElementById('sickDaysUsed').textContent = formatNumber(sickDays) + ' days';
+                document.getElementById('netWorkingDays').textContent = formatNumber(netWorkingDays) + ' days';
+
+                // Show results
+                document.getElementById('salaryResults').style.display = 'block';
+                document.getElementById('salaryPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating hourly rate. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        // Clear Functions
+        function clearHourlyInputs() {
+            document.getElementById('hourlyWage').value = '';
+            document.getElementById('hoursPerWeek').value = '40';
+            document.getElementById('weeksPerYear').value = '52';
+            document.getElementById('overtimeHours').value = '0';
+            document.getElementById('overtimeRate').value = '1.5';
+            
+            document.getElementById('hourlyResults').style.display = 'none';
+            document.getElementById('hourlyPlaceholder').style.display = 'block';
+        }
+
+        function clearSalaryInputs() {
+            document.getElementById('annualSalaryInput').value = '';
+            document.getElementById('salaryHoursPerWeek').value = '40';
+            document.getElementById('salaryWeeksPerYear').value = '52';
+            document.getElementById('vacationDays').value = '0';
+            document.getElementById('sickDays').value = '0';
+            
+            document.getElementById('salaryResults').style.display = 'none';
+            document.getElementById('salaryPlaceholder').style.display = 'block';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                const activeTab = document.querySelector('.tab-content.active');
+                if (activeTab.id === 'hourly-to-salary') {
+                    calculateHourlyToSalary();
+                } else {
+                    calculateSalaryToHourly();
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+        });
+    </script>
+</body>
+</html>
+
+
