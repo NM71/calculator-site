@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Duration Calculator - CalcHub</title>
+    <meta name="description" content="Calculate time differences, add or subtract time periods, and convert between different time formats. Perfect for project planning and time tracking.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .calculator-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mode-selector {
+            margin-bottom: 2rem;
+        }
+
+        .mode-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mode-tab {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .mode-tab.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .mode-tab:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .mode-info {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .mode-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .calculation-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .time-input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .datetime-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input,
+        .form-select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .time-operation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .operation-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .operation-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .operation-toggle {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            margin: 0 0.5rem;
+        }
+
+        .operation-toggle.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .quick-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-display {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+        }
+
+        .result-main {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .result-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .breakdown-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .breakdown-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .breakdown-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .conversion-results {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .conversion-results h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .conversion-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .conversion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+        }
+
+        .conversion-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .conversion-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            background-color: var(--info-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .copy-btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .actions-section {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-clear {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-clear:hover {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .btn-now {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-now:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .info-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+        }
+
+        .info-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .info-content {
+            display: none;
+        }
+
+        .info-content.active {
+            display: block;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .example-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+        }
+
+        .example-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .example-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tips-list li::before {
+            content: "⏰";
+            position: absolute;
+            left: 0;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .mode-tabs {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .time-input-group {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .datetime-input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-breakdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .actions-section {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+            
+            .result-main {
+                font-size: 2rem;
+            }
+            
+            .time-input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-breakdown {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-clock"></i>
+                    Time Duration Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate time differences between dates, add or subtract time periods, and convert between different time formats for project planning and time tracking.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-wrapper">
+                    <!-- Mode Selector -->
+                    <div class="mode-selector">
+                        <div class="mode-tabs">
+                            <button class="mode-tab active" data-mode="difference">
+                                <i class="fas fa-minus"></i>
+                                Difference
+                            </button>
+                            <button class="mode-tab" data-mode="add-subtract">
+                                <i class="fas fa-plus"></i>
+                                Add/Subtract
+                            </button>
+                            <button class="mode-tab" data-mode="convert">
+                                <i class="fas fa-exchange-alt"></i>
+                                Convert
+                            </button>
+                        </div>
+                        
+                        <div class="mode-info" id="modeInfo">
+                            <h4>Time Difference Mode</h4>
+                            <p>Calculate the duration between two dates and times.</p>
+                        </div>
+                    </div>
+
+                    <!-- Time Difference Mode -->
+                    <div class="calculation-section" id="differenceMode">
+                        <h3 class="section-title">Calculate Time Difference</h3>
+                        
+                        <div class="datetime-input-group">
+                            <div class="form-group">
+                                <label class="form-label">Start Date & Time</label>
+                                <input type="datetime-local" id="startDateTime" class="form-input" onchange="calculateDifference()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Date & Time</label>
+                                <input type="datetime-local" id="endDateTime" class="form-input" onchange="calculateDifference()">
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <button class="quick-btn" onclick="setCurrentTime('start')">Set Start to Now</button>
+                            <button class="quick-btn" onclick="setCurrentTime('end')">Set End to Now</button>
+                            <button class="quick-btn" onclick="addDays('end', 1)">Add 1 Day to End</button>
+                            <button class="quick-btn" onclick="addDays('end', 7)">Add 1 Week to End</button>
+                        </div>
+                    </div>
+
+                    <!-- Add/Subtract Mode -->
+                    <div class="calculation-section" id="addSubtractMode" style="display: none;">
+                        <h3 class="section-title">Add or Subtract Time</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Base Date & Time</label>
+                            <input type="datetime-local" id="baseDateTime" class="form-input" onchange="calculateAddSubtract()">
+                        </div>
+
+                        <div class="time-operation">
+                            <button class="operation-toggle active" id="addBtn" onclick="toggleOperation('add')">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                            <button class="operation-toggle" id="subtractBtn" onclick="toggleOperation('subtract')">
+                                <i class="fas fa-minus"></i> Subtract
+                            </button>
+                        </div>
+
+                        <div class="time-input-group">
+                            <div class="form-group">
+                                <label class="form-label">Years</label>
+                                <input type="number" id="years" class="form-input" min="0" value="0" onchange="calculateAddSubtract()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Months</label>
+                                <input type="number" id="months" class="form-input" min="0" value="0" onchange="calculateAddSubtract()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Days</label>
+                                <input type="number" id="days" class="form-input" min="0" value="0" onchange="calculateAddSubtract()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Hours</label>
+                                <input type="number" id="hours" class="form-input" min="0" value="0" onchange="calculateAddSubtract()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Minutes</label>
+                                <input type="number" id="minutes" class="form-input" min="0" value="0" onchange="calculateAddSubtract()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Seconds</label>
+                                <input type="number" id="seconds" class="form-input" min="0" value="0" onchange="calculateAddSubtract()">
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <button class="quick-btn" onclick="setCurrentTime('base')">Set to Now</button>
+                            <button class="quick-btn" onclick="addQuickTime(1, 0, 0, 0, 0, 0)">Add 1 Day</button>
+                            <button class="quick-btn" onclick="addQuickTime(0, 0, 0, 8, 0, 0)">Add 8 Hours</button>
+                            <button class="quick-btn" onclick="clearTimeInputs()">Clear Time</button>
+                        </div>
+                    </div>
+
+                    <!-- Convert Mode -->
+                    <div class="calculation-section" id="convertMode" style="display: none;">
+                        <h3 class="section-title">Convert Time Duration</h3>
+                        
+                        <div class="time-input-group">
+                            <div class="form-group">
+                                <label class="form-label">Days</label>
+                                <input type="number" id="convertDays" class="form-input" min="0" step="0.1" value="0" onchange="calculateConversions()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Hours</label>
+                                <input type="number" id="convertHours" class="form-input" min="0" step="0.1" value="0" onchange="calculateConversions()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Minutes</label>
+                                <input type="number" id="convertMinutes" class="form-input" min="0" step="0.1" value="0" onchange="calculateConversions()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Seconds</label>
+                                <input type="number" id="convertSeconds" class="form-input" min="0" step="0.1" value="0" onchange="calculateConversions()">
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <button class="quick-btn" onclick="setConvertTime(1, 0, 0, 0)">1 Day</button>
+                            <button class="quick-btn" onclick="setConvertTime(0, 8, 0, 0)">8 Hours</button>
+                            <button class="quick-btn" onclick="setConvertTime(0, 0, 90, 0)">90 Minutes</button>
+                            <button class="quick-btn" onclick="clearConvertInputs()">Clear All</button>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions-section">
+                        <button class="action-btn btn-clear" onclick="clearAll()">
+                            <i class="fas fa-trash"></i>
+                            Clear All
+                        </button>
+                        <button class="action-btn btn-now" onclick="setAllToNow()">
+                            <i class="fas fa-clock"></i>
+                            Set to Now
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <div class="result-display">
+                        <div class="result-main" id="resultMain">0 seconds</div>
+                        <div class="result-subtitle" id="resultSubtitle">Enter values to calculate</div>
+                        
+                        <div class="result-breakdown" id="resultBreakdown">
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="breakdownYears">0</div>
+                                <div class="breakdown-label">Years</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="breakdownMonths">0</div>
+                                <div class="breakdown-label">Months</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="breakdownDays">0</div>
+                                <div class="breakdown-label">Days</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="breakdownHours">0</div>
+                                <div class="breakdown-label">Hours</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="breakdownMinutes">0</div>
+                                <div class="breakdown-label">Minutes</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="breakdownSeconds">0</div>
+                                <div class="breakdown-label">Seconds</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="conversion-results" id="conversionResults">
+                        <h4>Time Conversions</h4>
+                        <div class="conversion-list" id="conversionList">
+                            <!-- Conversions will be populated dynamically -->
+                        </div>
+                        <button class="copy-btn" onclick="copyResults()">
+                            <i class="fas fa-copy"></i>
+                            Copy Results
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>Time Calculator Guide</h3>
+                <div class="info-tabs">
+                    <button class="info-tab active" data-tab="examples">Examples</button>
+                    <button class="info-tab" data-tab="tips">Tips & Uses</button>
+                    <button class="info-tab" data-tab="formats">Time Formats</button>
+                </div>
+
+                <div class="info-content active" id="examples">
+                    <div class="examples-grid">
+                        <div class="example-card">
+                            <div class="example-title">Project Duration</div>
+                            <div class="example-description">
+                                Calculate how long a project took from start date (Jan 1, 2024 9:00 AM) to completion date (Jan 15, 2024 5:30 PM).
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-title">Work Hours</div>
+                            <div class="example-description">
+                                Find total working hours between clock-in and clock-out times, excluding breaks and lunch periods.
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-title">Age Calculation</div>
+                            <div class="example-description">
+                                Calculate exact age in years, months, and days from birth date to current date.
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-title">Event Planning</div>
+                            <div class="example-description">
+                                Add specific time periods to a start date to find when tasks should be completed.
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-title">Time Zone Planning</div>
+                            <div class="example-description">
+                                Calculate meeting times across different time zones by adding or subtracting hours.
+                            </div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-title">Deadline Tracking</div>
+                            <div class="example-description">
+                                Find how much time remains until a deadline or how much time has passed since an event.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-content" id="tips">
+                    <ul class="tips-list">
+                        <li>Use the "Set to Now" buttons to quickly input current date and time</li>
+                        <li>For work hour calculations, use the difference mode with start and end times</li>
+                        <li>The add/subtract mode is perfect for project planning and scheduling</li>
+                        <li>Convert mode helps when you need time in different units (e.g., hours to minutes)</li>
+                        <li>Results are automatically updated as you change input values</li>
+                        <li>Copy results to clipboard for use in other applications</li>
+                        <li>All calculations account for leap years and varying month lengths</li>
+                        <li>Use quick action buttons for common time periods</li>
+                        <li>Results show both exact breakdown and total conversions</li>
+                        <li>Perfect for time tracking, project management, and scheduling</li>
+                    </ul>
+                </div>
+
+                <div class="info-content" id="formats">
+                    <h4>Supported Time Formats:</h4>
+                    
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Input Formats</h5>
+                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; margin-left: 1rem;">
+                            <li>Date and Time: YYYY-MM-DD HH:MM</li>
+                            <li>24-hour format supported</li>
+                            <li>Automatic handling of daylight saving time</li>
+                            <li>Leap year calculations included</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Output Formats</h5>
+                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; margin-left: 1rem;">
+                            <li>Years, Months, Days, Hours, Minutes, Seconds</li>
+                            <li>Total days, hours, minutes, seconds</li>
+                            <li>Decimal representations (e.g., 1.5 days)</li>
+                            <li>Business days and work hours</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Special Features</h5>
+                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; margin-left: 1rem;">
+                            <li>Automatic leap year handling</li>
+                            <li>Month-end date adjustments</li>
+                            <li>Negative time differences supported</li>
+                            <li>Precision up to seconds</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                if (this.themeToggle) {
+                    this.themeToggle.addEventListener('click', () => this.toggleTheme());
+                }
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                if (this.themeToggle) {
+                    const icon = this.themeToggle.querySelector('i');
+                    if (this.theme === 'dark') {
+                        icon.className = 'fas fa-sun';
+                    } else {
+                        icon.className = 'fas fa-moon';
+                    }
+                }
+            }
+        }
+
+        // Time Duration Calculator Logic
+        class TimeDurationCalculator {
+            constructor() {
+                this.currentMode = 'difference';
+                this.operation = 'add';
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setDefaultValues();
+                this.calculateDifference();
+            }
+
+            setupEventListeners() {
+                // Mode tabs
+                document.querySelectorAll('.mode-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchMode(e.target.closest('.mode-tab').dataset.mode);
+                    });
+                });
+
+                // Info tabs
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchInfoTab(e.target.dataset.tab);
+                    });
+                });
+            }
+
+            setDefaultValues() {
+                const now = new Date();
+                const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                
+                document.getElementById('startDateTime').value = this.formatDateTimeLocal(now);
+                document.getElementById('endDateTime').value = this.formatDateTimeLocal(tomorrow);
+                document.getElementById('baseDateTime').value = this.formatDateTimeLocal(now);
+            }
+
+            formatDateTimeLocal(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+
+            switchMode(mode) {
+                this.currentMode = mode;
+                
+                // Update active tab
+                document.querySelectorAll('.mode-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+                
+                // Update mode info and show/hide sections
+                this.updateModeInfo();
+                this.showModeSection();
+                
+                // Calculate based on current mode
+                this.performCalculation();
+            }
+
+            updateModeInfo() {
+                const modeInfo = document.getElementById('modeInfo');
+                
+                const modeDescriptions = {
+                    'difference': {
+                        title: 'Time Difference Mode',
+                        description: 'Calculate the duration between two dates and times.'
+                    },
+                    'add-subtract': {
+                        title: 'Add/Subtract Time Mode',
+                        description: 'Add or subtract time periods from a base date and time.'
+                    },
+                    'convert': {
+                        title: 'Time Conversion Mode',
+                        description: 'Convert time durations between different units.'
+                    }
+                };
+                
+                const mode = modeDescriptions[this.currentMode];
+                modeInfo.innerHTML = `
+                    <h4>${mode.title}</h4>
+                    <p>${mode.description}</p>
+                `;
+            }
+
+            showModeSection() {
+                // Hide all mode sections
+                document.getElementById('differenceMode').style.display = 'none';
+                document.getElementById('addSubtractMode').style.display = 'none';
+                document.getElementById('convertMode').style.display = 'none';
+                
+                // Show current mode section
+                switch (this.currentMode) {
+                    case 'difference':
+                        document.getElementById('differenceMode').style.display = 'block';
+                        break;
+                    case 'add-subtract':
+                        document.getElementById('addSubtractMode').style.display = 'block';
+                        break;
+                    case 'convert':
+                        document.getElementById('convertMode').style.display = 'block';
+                        break;
+                }
+            }
+
+            switchInfoTab(tabName) {
+                // Update active tab
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // Update active content
+                document.querySelectorAll('.info-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+            }
+
+            performCalculation() {
+                switch (this.currentMode) {
+                    case 'difference':
+                        this.calculateDifference();
+                        break;
+                    
+                    case 'add-subtract':
+                        this.calculateAddSubtract();
+                        break;
+                    case 'convert':
+                        this.calculateConversions();
+                        break;
+                }
+            }
+
+            calculateDifference() {
+                const startInput = document.getElementById('startDateTime').value;
+                const endInput = document.getElementById('endDateTime').value;
+                
+                if (!startInput || !endInput) {
+                    this.updateDisplay('Enter both start and end times', 'Please fill in both date and time fields');
+                    return;
+                }
+                
+                const startDate = new Date(startInput);
+                const endDate = new Date(endInput);
+                
+                if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                    this.updateDisplay('Invalid dates', 'Please enter valid dates and times');
+                    return;
+                }
+                
+                const diffMs = Math.abs(endDate.getTime() - startDate.getTime());
+                const isNegative = endDate.getTime() < startDate.getTime();
+                
+                const breakdown = this.calculateTimeBreakdown(diffMs);
+                const mainText = this.formatMainResult(breakdown, isNegative);
+                const subtitle = `From ${this.formatDisplayDate(startDate)} to ${this.formatDisplayDate(endDate)}`;
+                
+                this.updateDisplay(mainText, subtitle, breakdown);
+                this.updateConversions(diffMs);
+            }
+
+            calculateAddSubtract() {
+                const baseInput = document.getElementById('baseDateTime').value;
+                
+                if (!baseInput) {
+                    this.updateDisplay('Enter base date and time', 'Please fill in the base date and time field');
+                    return;
+                }
+                
+                const baseDate = new Date(baseInput);
+                
+                if (isNaN(baseDate.getTime())) {
+                    this.updateDisplay('Invalid date', 'Please enter a valid base date and time');
+                    return;
+                }
+                
+                const years = parseInt(document.getElementById('years').value) || 0;
+                const months = parseInt(document.getElementById('months').value) || 0;
+                const days = parseInt(document.getElementById('days').value) || 0;
+                const hours = parseInt(document.getElementById('hours').value) || 0;
+                const minutes = parseInt(document.getElementById('minutes').value) || 0;
+                const seconds = parseInt(document.getElementById('seconds').value) || 0;
+                
+                const resultDate = new Date(baseDate);
+                
+                if (this.operation === 'add') {
+                    resultDate.setFullYear(resultDate.getFullYear() + years);
+                    resultDate.setMonth(resultDate.getMonth() + months);
+                    resultDate.setDate(resultDate.getDate() + days);
+                    resultDate.setHours(resultDate.getHours() + hours);
+                    resultDate.setMinutes(resultDate.getMinutes() + minutes);
+                    resultDate.setSeconds(resultDate.getSeconds() + seconds);
+                } else {
+                    resultDate.setFullYear(resultDate.getFullYear() - years);
+                    resultDate.setMonth(resultDate.getMonth() - months);
+                    resultDate.setDate(resultDate.getDate() - days);
+                    resultDate.setHours(resultDate.getHours() - hours);
+                    resultDate.setMinutes(resultDate.getMinutes() - minutes);
+                    resultDate.setSeconds(resultDate.getSeconds() - seconds);
+                }
+                
+                const diffMs = Math.abs(resultDate.getTime() - baseDate.getTime());
+                const breakdown = this.calculateTimeBreakdown(diffMs);
+                
+                const mainText = this.formatDisplayDate(resultDate);
+                const subtitle = `${this.operation === 'add' ? 'Added' : 'Subtracted'} ${years}y ${months}m ${days}d ${hours}h ${minutes}min ${seconds}s`;
+                
+                this.updateDisplay(mainText, subtitle, breakdown);
+                this.updateConversions(diffMs);
+            }
+
+            calculateConversions() {
+                const days = parseFloat(document.getElementById('convertDays').value) || 0;
+                const hours = parseFloat(document.getElementById('convertHours').value) || 0;
+                const minutes = parseFloat(document.getElementById('convertMinutes').value) || 0;
+                const seconds = parseFloat(document.getElementById('convertSeconds').value) || 0;
+                
+                const totalMs = (days * 24 * 60 * 60 * 1000) + 
+                               (hours * 60 * 60 * 1000) + 
+                               (minutes * 60 * 1000) + 
+                               (seconds * 1000);
+                
+                const breakdown = this.calculateTimeBreakdown(totalMs);
+                const mainText = this.formatMainResult(breakdown, false);
+                const subtitle = 'Time conversion result';
+                
+                this.updateDisplay(mainText, subtitle, breakdown);
+                this.updateConversions(totalMs);
+            }
+
+            calculateTimeBreakdown(milliseconds) {
+                const totalSeconds = Math.floor(milliseconds / 1000);
+                const totalMinutes = Math.floor(totalSeconds / 60);
+                const totalHours = Math.floor(totalMinutes / 60);
+                const totalDays = Math.floor(totalHours / 24);
+                const totalWeeks = Math.floor(totalDays / 7);
+                const totalMonths = Math.floor(totalDays / 30.44); // Average month length
+                const totalYears = Math.floor(totalDays / 365.25); // Account for leap years
+                
+                return {
+                    years: Math.floor(totalDays / 365.25),
+                    months: Math.floor((totalDays % 365.25) / 30.44),
+                    weeks: Math.floor((totalDays % 30.44) / 7),
+                    days: Math.floor(totalDays % 7),
+                    hours: Math.floor(totalHours % 24),
+                    minutes: Math.floor(totalMinutes % 60),
+                    seconds: totalSeconds % 60,
+                    totalDays,
+                    totalHours,
+                    totalMinutes,
+                    totalSeconds,
+                    totalWeeks,
+                    totalMonths,
+                    totalYears,
+                    milliseconds
+                };
+            }
+
+            formatMainResult(breakdown, isNegative = false) {
+                const prefix = isNegative ? '-' : '';
+                
+                if (breakdown.totalYears > 0) {
+                    return `${prefix}${breakdown.years} years, ${breakdown.months} months`;
+                } else if (breakdown.totalMonths > 0) {
+                    return `${prefix}${breakdown.months} months, ${breakdown.days} days`;
+                } else if (breakdown.totalDays > 0) {
+                    return `${prefix}${breakdown.totalDays} days, ${breakdown.hours} hours`;
+                } else if (breakdown.totalHours > 0) {
+                    return `${prefix}${breakdown.totalHours} hours, ${breakdown.minutes} minutes`;
+                } else if (breakdown.totalMinutes > 0) {
+                    return `${prefix}${breakdown.totalMinutes} minutes, ${breakdown.seconds} seconds`;
+                } else {
+                    return `${prefix}${breakdown.totalSeconds} seconds`;
+                }
+            }
+
+            formatDisplayDate(date) {
+                return date.toLocaleString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            updateDisplay(mainText, subtitle, breakdown = null) {
+                document.getElementById('resultMain').textContent = mainText;
+                document.getElementById('resultSubtitle').textContent = subtitle;
+                
+                if (breakdown) {
+                    document.getElementById('breakdownYears').textContent = breakdown.years || 0;
+                    document.getElementById('breakdownMonths').textContent = breakdown.months || 0;
+                    document.getElementById('breakdownDays').textContent = breakdown.days || 0;
+                    document.getElementById('breakdownHours').textContent = breakdown.hours || 0;
+                    document.getElementById('breakdownMinutes').textContent = breakdown.minutes || 0;
+                    document.getElementById('breakdownSeconds').textContent = breakdown.seconds || 0;
+                } else {
+                    // Clear breakdown
+                    ['Years', 'Months', 'Days', 'Hours', 'Minutes', 'Seconds'].forEach(unit => {
+                        document.getElementById(`breakdown${unit}`).textContent = '0';
+                    });
+                }
+            }
+
+            updateConversions(milliseconds) {
+                const breakdown = this.calculateTimeBreakdown(milliseconds);
+                
+                const conversions = [
+                    { label: 'Total Years', value: (breakdown.totalDays / 365.25).toFixed(2) },
+                    { label: 'Total Months', value: (breakdown.totalDays / 30.44).toFixed(2) },
+                    { label: 'Total Weeks', value: (breakdown.totalDays / 7).toFixed(2) },
+                    { label: 'Total Days', value: breakdown.totalDays.toLocaleString() },
+                    { label: 'Total Hours', value: breakdown.totalHours.toLocaleString() },
+                    { label: 'Total Minutes', value: breakdown.totalMinutes.toLocaleString() },
+                    { label: 'Total Seconds', value: breakdown.totalSeconds.toLocaleString() },
+                    { label: 'Business Days', value: Math.floor(breakdown.totalDays * 5/7).toLocaleString() },
+                    { label: 'Work Hours (8h/day)', value: Math.floor(breakdown.totalHours / 8).toLocaleString() }
+                ];
+                
+                const conversionList = document.getElementById('conversionList');
+                conversionList.innerHTML = conversions.map(conv => `
+                    <div class="conversion-item">
+                        <span class="conversion-label">${conv.label}</span>
+                        <span class="conversion-value">${conv.value}</span>
+                    </div>
+                `).join('');
+            }
+
+            toggleOperation(operation) {
+                this.operation = operation;
+                
+                document.getElementById('addBtn').classList.remove('active');
+                document.getElementById('subtractBtn').classList.remove('active');
+                document.getElementById(`${operation}Btn`).classList.add('active');
+                
+                this.calculateAddSubtract();
+            }
+
+            // Utility functions
+            setCurrentTime(field) {
+                const now = new Date();
+                const formatted = this.formatDateTimeLocal(now);
+                
+                switch (field) {
+                    case 'start':
+                        document.getElementById('startDateTime').value = formatted;
+                        break;
+                    case 'end':
+                        document.getElementById('endDateTime').value = formatted;
+                        break;
+                    case 'base':
+                        document.getElementById('baseDateTime').value = formatted;
+                        break;
+                }
+                
+                this.performCalculation();
+            }
+
+            addDays(field, days) {
+                const input = field === 'end' ? document.getElementById('endDateTime') : document.getElementById('startDateTime');
+                const currentDate = new Date(input.value || new Date());
+                currentDate.setDate(currentDate.getDate() + days);
+                input.value = this.formatDateTimeLocal(currentDate);
+                this.performCalculation();
+            }
+
+            addQuickTime(years, months, days, hours, minutes, seconds) {
+                document.getElementById('years').value = years;
+                document.getElementById('months').value = months;
+                document.getElementById('days').value = days;
+                document.getElementById('hours').value = hours;
+                document.getElementById('minutes').value = minutes;
+                document.getElementById('seconds').value = seconds;
+                this.calculateAddSubtract();
+            }
+
+            setConvertTime(days, hours, minutes, seconds) {
+                document.getElementById('convertDays').value = days;
+                document.getElementById('convertHours').value = hours;
+                document.getElementById('convertMinutes').value = minutes;
+                document.getElementById('convertSeconds').value = seconds;
+                this.calculateConversions();
+            }
+
+            clearTimeInputs() {
+                ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].forEach(id => {
+                    document.getElementById(id).value = 0;
+                });
+                this.calculateAddSubtract();
+            }
+
+            clearConvertInputs() {
+                ['convertDays', 'convertHours', 'convertMinutes', 'convertSeconds'].forEach(id => {
+                    document.getElementById(id).value = 0;
+                });
+                this.calculateConversions();
+            }
+
+            clearAll() {
+                // Clear all inputs
+                const now = new Date();
+                const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                
+                document.getElementById('startDateTime').value = this.formatDateTimeLocal(now);
+                document.getElementById('endDateTime').value = this.formatDateTimeLocal(tomorrow);
+                document.getElementById('baseDateTime').value = this.formatDateTimeLocal(now);
+                
+                ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].forEach(id => {
+                    document.getElementById(id).value = 0;
+                });
+                
+                ['convertDays', 'convertHours', 'convertMinutes', 'convertSeconds'].forEach(id => {
+                    document.getElementById(id).value = 0;
+                });
+                
+                this.performCalculation();
+                this.showToast('All fields cleared!', 'info');
+            }
+
+            setAllToNow() {
+                const now = new Date();
+                const formatted = this.formatDateTimeLocal(now);
+                
+                document.getElementById('startDateTime').value = formatted;
+                document.getElementById('endDateTime').value = formatted;
+                document.getElementById('baseDateTime').value = formatted;
+                
+                this.performCalculation();
+                this.showToast('All times set to now!', 'success');
+            }
+
+            copyResults() {
+                const mainResult = document.getElementById('resultMain').textContent;
+                const subtitle = document.getElementById('resultSubtitle').textContent;
+                const conversions = Array.from(document.querySelectorAll('.conversion-item')).map(item => {
+                    const label = item.querySelector('.conversion-label').textContent;
+                    const value = item.querySelector('.conversion-value').textContent;
+                    return `${label}: ${value}`;
+                }).join('\n');
+                
+                const fullResult = `${mainResult}\n${subtitle}\n\nConversions:\n${conversions}`;
+                
+                navigator.clipboard.writeText(fullResult).then(() => {
+                    this.showToast('Results copied to clipboard!', 'success');
+                }).catch(() => {
+                    this.showToast('Could not copy to clipboard', 'error');
+                });
+            }
+
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.textContent = message;
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--primary-color);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: var(--radius);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 1000;
+                    transform: translateX(100%);
+                    transition: transform 0.3
+                    transition: transform 0.3s ease;
+                `;
+
+                if (type === 'success') {
+                    toast.style.background = 'var(--success-color)';
+                } else if (type === 'error') {
+                    toast.style.background = 'var(--error-color)';
+                } else if (type === 'warning') {
+                    toast.style.background = 'var(--warning-color)';
+                }
+
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(toast)) {
+                            document.body.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Global functions for onclick handlers
+        let timeCalculator;
+
+        function calculateDifference() {
+            timeCalculator.calculateDifference();
+        }
+
+        function calculateAddSubtract() {
+            timeCalculator.calculateAddSubtract();
+        }
+
+        function calculateConversions() {
+            timeCalculator.calculateConversions();
+        }
+
+        function toggleOperation(operation) {
+            timeCalculator.toggleOperation(operation);
+        }
+
+        function setCurrentTime(field) {
+            timeCalculator.setCurrentTime(field);
+        }
+
+        function addDays(field, days) {
+            timeCalculator.addDays(field, days);
+        }
+
+        function addQuickTime(years, months, days, hours, minutes, seconds) {
+            timeCalculator.addQuickTime(years, months, days, hours, minutes, seconds);
+        }
+
+        function setConvertTime(days, hours, minutes, seconds) {
+            timeCalculator.setConvertTime(days, hours, minutes, seconds);
+        }
+
+        function clearTimeInputs() {
+            timeCalculator.clearTimeInputs();
+        }
+
+        function clearConvertInputs() {
+            timeCalculator.clearConvertInputs();
+        }
+
+        function clearAll() {
+            timeCalculator.clearAll();
+        }
+
+        function setAllToNow() {
+            timeCalculator.setAllToNow();
+        }
+
+        function copyResults() {
+            timeCalculator.copyResults();
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            timeCalculator = new TimeDurationCalculator();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case '1':
+                        e.preventDefault();
+                        timeCalculator.switchMode('difference');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        timeCalculator.switchMode('add-subtract');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        timeCalculator.switchMode('convert');
+                        break;
+                    case 'n':
+                        e.preventDefault();
+                        setAllToNow();
+                        break;
+                    case 'c':
+                        e.preventDefault();
+                        copyResults();
+                        break;
+                    case 'Backspace':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                }
+            }
+            
+            // Quick shortcuts without Ctrl
+            if (e.key === 'Escape') {
+                clearAll();
+            }
+        });
+
+        // Auto-save functionality
+        function saveCalculatorState() {
+            const state = {
+                mode: timeCalculator.currentMode,
+                operation: timeCalculator.operation,
+                startDateTime: document.getElementById('startDateTime').value,
+                endDateTime: document.getElementById('endDateTime').value,
+                baseDateTime: document.getElementById('baseDateTime').value,
+                years: document.getElementById('years').value,
+                months: document.getElementById('months').value,
+                days: document.getElementById('days').value,
+                hours: document.getElementById('hours').value,
+                minutes: document.getElementById('minutes').value,
+                seconds: document.getElementById('seconds').value,
+                convertDays: document.getElementById('convertDays').value,
+                convertHours: document.getElementById('convertHours').value,
+                convertMinutes: document.getElementById('convertMinutes').value,
+                convertSeconds: document.getElementById('convertSeconds').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('time-calculator-state', JSON.stringify(state));
+        }
+
+        function loadCalculatorState() {
+            const savedState = localStorage.getItem('time-calculator-state');
+            if (savedState) {
+                try {
+                    const state = JSON.parse(savedState);
+                    
+                    // Restore input values
+                    if (state.startDateTime) document.getElementById('startDateTime').value = state.startDateTime;
+                    if (state.endDateTime) document.getElementById('endDateTime').value = state.endDateTime;
+                    if (state.baseDateTime) document.getElementById('baseDateTime').value = state.baseDateTime;
+                    if (state.years) document.getElementById('years').value = state.years;
+                    if (state.months) document.getElementById('months').value = state.months;
+                    if (state.days) document.getElementById('days').value = state.days;
+                    if (state.hours) document.getElementById('hours').value = state.hours;
+                    if (state.minutes) document.getElementById('minutes').value = state.minutes;
+                    if (state.seconds) document.getElementById('seconds').value = state.seconds;
+                    if (state.convertDays) document.getElementById('convertDays').value = state.convertDays;
+                    if (state.convertHours) document.getElementById('convertHours').value = state.convertHours;
+                    if (state.convertMinutes) document.getElementById('convertMinutes').value = state.convertMinutes;
+                    if (state.convertSeconds) document.getElementById('convertSeconds').value = state.convertSeconds;
+                    
+                    // Restore mode and operation
+                    if (state.mode) {
+                        timeCalculator.switchMode(state.mode);
+                    }
+                    if (state.operation) {
+                        timeCalculator.toggleOperation(state.operation);
+                    }
+                    
+                    // Recalculate
+                    timeCalculator.performCalculation();
+                } catch (e) {
+                    console.log('Could not load saved state');
+                }
+            }
+        }
+
+        // Auto-save on input changes
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('form-input')) {
+                setTimeout(saveCalculatorState, 500);
+            }
+        });
+
+        // Load saved state after initialization
+        window.addEventListener('load', () => {
+            setTimeout(loadCalculatorState, 1000);
+        });
+
+        // Additional utility functions for advanced calculations
+        function calculateBusinessDays(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            let businessDays = 0;
+            
+            const currentDate = new Date(start);
+            while (currentDate <= end) {
+                const dayOfWeek = currentDate.getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Not Sunday (0) or Saturday (6)
+                    businessDays++;
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            return businessDays;
+        }
+
+        function calculateWorkingHours(startDate, endDate, hoursPerDay = 8) {
+            const businessDays = calculateBusinessDays(startDate, endDate);
+            return businessDays * hoursPerDay;
+        }
+
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
+
+        function getDaysInMonth(year, month) {
+            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if (month === 1 && isLeapYear(year)) {
+                return 29;
+            }
+            return daysInMonth[month];
+        }
+
+        // Export functionality
+        function exportResults() {
+            const mainResult = document.getElementById('resultMain').textContent;
+            const subtitle = document.getElementById('resultSubtitle').textContent;
+            const conversions = Array.from(document.querySelectorAll('.conversion-item')).map(item => {
+                const label = item.querySelector('.conversion-label').textContent;
+                const value = item.querySelector('.conversion-value').textContent;
+                return { label, value };
+            });
+            
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                mode: timeCalculator.currentMode,
+                result: {
+                    main: mainResult,
+                    subtitle: subtitle
+                },
+                conversions: conversions,
+                inputs: {
+                    startDateTime: document.getElementById('startDateTime').value,
+                    endDateTime: document.getElementById('endDateTime').value,
+                    baseDateTime: document.getElementById('baseDateTime').value,
+                    timeToAdd: {
+                        years: document.getElementById('years').value,
+                        months: document.getElementById('months').value,
+                        days: document.getElementById('days').value,
+                        hours: document.getElementById('hours').value,
+                        minutes: document.getElementById('minutes').value,
+                        seconds: document.getElementById('seconds').value
+                    },
+                    convertValues: {
+                        days: document.getElementById('convertDays').value,
+                        hours: document.getElementById('convertHours').value,
+                        minutes: document.getElementById('convertMinutes').value,
+                        seconds: document.getElementById('convertSeconds').value
+                    }
+                }
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `time-calculation-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            timeCalculator.showToast('Results exported successfully!', 'success');
+        }
+
+        // Add export button functionality
+        window.addEventListener('load', () => {
+            const actionsSection = document.querySelector('.actions-section');
+            if (actionsSection) {
+                const exportBtn = document.createElement('button');
+                exportBtn.className = 'action-btn btn-now';
+                exportBtn.innerHTML = '<i class="fas fa-download"></i> Export Results';
+                exportBtn.onclick = exportResults;
+                actionsSection.appendChild(exportBtn);
+            }
+        });
+
+        // Performance optimization: debounce calculations
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Apply debouncing to calculation functions
+        const debouncedCalculateDifference = debounce(() => timeCalculator.calculateDifference(), 300);
+        const debouncedCalculateAddSubtract = debounce(() => timeCalculator.calculateAddSubtract(), 300);
+        const debouncedCalculateConversions = debounce(() => timeCalculator.calculateConversions(), 300);
+
+        // Update global functions to use debounced versions
+        function calculateDifference() {
+            debouncedCalculateDifference();
+        }
+
+        function calculateAddSubtract() {
+            debouncedCalculateAddSubtract();
+        }
+
+        function calculateConversions() {
+            debouncedCalculateConversions();
+        }
+    </script>
+</body>
+</html>
