@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator - CalcHub</title>
+    <meta name="description" content="Calculate your GPA for US, UK, Pakistan, and India grading systems. Support for multiple grading scales and credit hours.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .calculator-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .country-selector {
+            margin-bottom: 2rem;
+        }
+
+        .country-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .country-tab {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .country-tab.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .country-tab:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .country-info {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .country-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .country-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .grade-scale {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .grade-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .courses-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .add-course-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .add-course-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .courses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .course-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .course-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input,
+        .form-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .remove-btn {
+            background-color: var(--error-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-btn:hover {
+            background-color: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .gpa-display {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .gpa-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .gpa-scale {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .gpa-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .gpa-excellent {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .gpa-good {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .gpa-average {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        .gpa-poor {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .grade-breakdown {
+            margin-top: 2rem;
+        }
+
+        .breakdown-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem
+                    }
+
+        .breakdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+        }
+
+        .breakdown-grade {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .actions-section {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-clear {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-clear:hover {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .btn-export {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-export:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .info-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+        }
+
+        .info-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .info-content {
+            display: none;
+        }
+
+        .info-content.active {
+            display: block;
+        }
+
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .grading-table th,
+        .grading-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grading-table th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .grading-table td {
+            color: var(--text-secondary);
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tips-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .country-tabs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .course-item {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-section {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+            
+            .country-tabs {
+                grid-template-columns: 1fr;
+            }
+            
+            .gpa-value {
+                font-size: 2.5rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-graduation-cap"></i>
+                    GPA Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate your Grade Point Average for US, UK, Pakistan, and India grading systems with support for credit hours and different grading scales.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-wrapper">
+                    <!-- Country Selector -->
+                    <div class="country-selector">
+                        <div class="country-tabs">
+                            <button class="country-tab active" data-country="us">
+                                <i class="fas fa-flag-usa"></i>
+                                <span>USA</span>
+                            </button>
+                            <button class="country-tab" data-country="uk">
+                                <i class="fas fa-flag"></i>
+                                <span>UK</span>
+                            </button>
+                            <button class="country-tab" data-country="pakistan">
+                                <i class="fas fa-flag"></i>
+                                <span>Pakistan</span>
+                            </button>
+                            <button class="country-tab" data-country="india">
+                                <i class="fas fa-flag"></i>
+                                <span>India</span>
+                            </button>
+                        </div>
+                        
+                        <div class="country-info" id="countryInfo">
+                            <h4>United States (4.0 Scale)</h4>
+                            <p>Standard US grading system with 4.0 scale. A = 4.0, B = 3.0, C = 2.0, D = 1.0, F = 0.0</p>
+                            <div class="grade-scale">
+                                <span class="grade-item">A: 4.0</span>
+                                <span class="grade-item">B: 3.0</span>
+                                <span class="grade-item">C: 2.0</span>
+                                <span class="grade-item">D: 1.0</span>
+                                <span class="grade-item">F: 0.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Courses Section -->
+                    <div class="courses-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Your Courses</h3>
+                            <button class="add-course-btn" onclick="addCourse()">
+                                <i class="fas fa-plus"></i>
+                                Add Course
+                            </button>
+                        </div>
+                        
+                        <div class="courses-list" id="coursesList">
+                            <!-- Courses will be added dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions-section">
+                        <button class="action-btn btn-clear" onclick="clearAllCourses()">
+                            <i class="fas fa-trash"></i>
+                            Clear All
+                        </button>
+                        <button class="action-btn btn-export" onclick="exportResults()">
+                            <i class="fas fa-download"></i>
+                            Export Results
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <div class="gpa-display">
+                        <div class="gpa-value" id="gpaValue">0.00</div>
+                        <div class="gpa-scale" id="gpaScale">out of 4.0</div>
+                        <div class="gpa-status" id="gpaStatus">Add courses to calculate</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalCourses">0</div>
+                            <div class="stat-label">Total Courses</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalCredits">0</div>
+                            <div class="stat-label">Total Credits</div>
+                        </div>
+                    </div>
+
+                    <div class="grade-breakdown">
+                        <h4 class="breakdown-title">Grade Distribution</h4>
+                        <div class="breakdown-list" id="gradeBreakdown">
+                            <!-- Grade breakdown will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>Grading Systems Information</h3>
+                <div class="info-tabs">
+                    <button class="info-tab active" data-tab="scales">Grading Scales</button>
+                    <button class="info-tab" data-tab="tips">Tips & Guidelines</button>
+                    <button class="info-tab" data-tab="conversion">Grade Conversion</button>
+                </div>
+
+                <div class="info-content active" id="scales">
+                    <table class="grading-table">
+                        <thead>
+                            <tr>
+                                <th>Country</th>
+                                <th>Scale</th>
+                                <th>Excellent</th>
+                                <th>Good</th>
+                                <th>Average</th>
+                                <th>Poor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>USA</td>
+                                <td>4.0</td>
+                                <td>3.5-4.0</td>
+                                <td>3.0-3.4</td>
+                                <td>2.0-2.9</td>
+                                <td>Below 2.0</td>
+                            </tr>
+                            <tr>
+                                <td>UK</td>
+                                <td>4.0</td>
+                                <td>3.7-4.0</td>
+                                <td>3.3-3.6</td>
+                                <td>2.7-3.2</td>
+                                <td>Below 2.7</td>
+                            </tr>
+                            <tr>
+                                <td>Pakistan</td>
+                                <td>4.0</td>
+                                <td>3.5-4.0</td>
+                                <td>3.0-3.4</td>
+                                <td>2.5-2.9</td>
+                                <td>Below 2.5</td>
+                            </tr>
+                            <tr>
+                                <td>India</td>
+                                <td>10.0</td>
+                                <td>8.5-10.0</td>
+                                <td>7.0-8.4</td>
+                                <td>6.0-6.9</td>
+                                <td>Below 6.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-content" id="tips">
+                    <ul class="tips-list">
+                        <li>Always include credit hours for accurate GPA calculation</li>
+                        <li>Higher credit courses have more impact on your overall GPA</li>
+                        <li>Focus on improving grades in high-credit courses</li>
+                        <li>Maintain consistent performance across all subjects</li>
+                        <li>Use this calculator to plan your academic goals</li>
+                        <li>Consider retaking courses with low grades if allowed</li>
+                        <li>Keep track of your GPA each semester</li>
+                    </ul>
+                </div>
+
+                <div class="info-content" id="conversion">
+                    <p><strong>Grade Conversion Guidelines:</strong></p>
+                    <table class="grading-table">
+                        <thead>
+                            <tr>
+                                <th>Letter Grade</th>
+                                <th>Percentage</th>
+                                <th>US (4.0)</th>
+                                <th>UK (4.0)</th>
+                                <th>Pakistan (4.0)</th>
+                                <th>India (10.0)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A+</td>
+                                <td>97-100%</td>
+                                <td>4.0</td>
+                                                                <td>4.0</td>
+                                <td>4.0</td>
+                                <td>10.0</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>93-96%</td>
+                                <td>4.0</td>
+                                <td>4.0</td>
+                                <td>4.0</td>
+                                <td>9.0</td>
+                            </tr>
+                            <tr>
+                                <td>A-</td>
+                                <td>90-92%</td>
+                                <td>3.7</td>
+                                <td>3.7</td>
+                                <td>3.7</td>
+                                <td>8.5</td>
+                            </tr>
+                            <tr>
+                                <td>B+</td>
+                                <td>87-89%</td>
+                                <td>3.3</td>
+                                <td>3.3</td>
+                                <td>3.3</td>
+                                <td>8.0</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>83-86%</td>
+                                <td>3.0</td>
+                                <td>3.0</td>
+                                <td>3.0</td>
+                                <td>7.0</td>
+                            </tr>
+                            <tr>
+                                <td>B-</td>
+                                <td>80-82%</td>
+                                <td>2.7</td>
+                                <td>2.7</td>
+                                <td>2.7</td>
+                                <td>6.5</td>
+                            </tr>
+                            <tr>
+                                <td>C+</td>
+                                <td>77-79%</td>
+                                <td>2.3</td>
+                                <td>2.3</td>
+                                <td>2.3</td>
+                                <td>6.0</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>73-76%</td>
+                                <td>2.0</td>
+                                <td>2.0</td>
+                                <td>2.0</td>
+                                <td>5.5</td>
+                            </tr>
+                            <tr>
+                                <td>C-</td>
+                                <td>70-72%</td>
+                                <td>1.7</td>
+                                <td>1.7</td>
+                                <td>1.7</td>
+                                <td>5.0</td>
+                            </tr>
+                            <tr>
+                                <td>D+</td>
+                                <td>67-69%</td>
+                                <td>1.3</td>
+                                <td>1.3</td>
+                                <td>1.3</td>
+                                <td>4.5</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>65-66%</td>
+                                <td>1.0</td>
+                                <td>1.0</td>
+                                <td>1.0</td>
+                                <td>4.0</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>Below 65%</td>
+                                <td>0.0</td>
+                                <td>0.0</td>
+                                <td>0.0</td>
+                                <td>0.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                if (this.themeToggle) {
+                    this.themeToggle.addEventListener('click', () => this.toggleTheme());
+                }
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                if (this.themeToggle) {
+                    const icon = this.themeToggle.querySelector('i');
+                    if (this.theme === 'dark') {
+                        icon.className = 'fas fa-sun';
+                    } else {
+                        icon.className = 'fas fa-moon';
+                    }
+                }
+            }
+        }
+
+        // GPA Calculator Logic
+        class GPACalculator {
+            constructor() {
+                this.courses = [];
+                this.currentCountry = 'us';
+                this.gradingSystems = {
+                    us: {
+                        name: 'United States (4.0 Scale)',
+                        description: 'Standard US grading system with 4.0 scale. A = 4.0, B = 3.0, C = 2.0, D = 1.0, F = 0.0',
+                        scale: 4.0,
+                        grades: {
+                            'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+                            'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+                            'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+                            'D+': 1.3, 'D': 1.0, 'F': 0.0
+                        },
+                        gradeItems: ['A+: 4.0', 'A: 4.0', 'A-: 3.7', 'B+: 3.3', 'B: 3.0', 'B-: 2.7', 'C+: 2.3', 'C: 2.0', 'C-: 1.7', 'D+: 1.3', 'D: 1.0', 'F: 0.0']
+                    },
+                    uk: {
+                        name: 'United Kingdom (4.0 Scale)',
+                        description: 'UK grading system adapted to 4.0 scale. First Class = 4.0, Upper Second = 3.3, Lower Second = 2.7, Third = 2.0',
+                        scale: 4.0,
+                        grades: {
+                            'First': 4.0, 'A': 4.0, 'A-': 3.7,
+                            'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+                            'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+                            'D+': 1.3, 'D': 1.0, 'F': 0.0
+                        },
+                        gradeItems: ['First: 4.0', 'A: 4.0', 'A-: 3.7', 'B+: 3.3', 'B: 3.0', 'B-: 2.7', 'C+: 2.3', 'C: 2.0', 'C-: 1.7', 'D+: 1.3', 'D: 1.0', 'F: 0.0']
+                    },
+                    pakistan: {
+                        name: 'Pakistan (4.0 Scale)',
+                        description: 'Pakistani grading system with 4.0 scale. A+ = 4.0, A = 4.0, B+ = 3.3, B = 3.0, C = 2.0, D = 1.0, F = 0.0',
+                        scale: 4.0,
+                        grades: {
+                            'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+                            'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+                            'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+                            'D+': 1.3, 'D': 1.0, 'F': 0.0
+                        },
+                        gradeItems: ['A+: 4.0', 'A: 4.0', 'A-: 3.7', 'B+: 3.3', 'B: 3.0', 'B-: 2.7', 'C+: 2.3', 'C: 2.0', 'C-: 1.7', 'D+: 1.3', 'D: 1.0', 'F: 0.0']
+                    },
+                    india: {
+                        name: 'India (10.0 Scale)',
+                        description: 'Indian grading system with 10.0 scale. O = 10.0, A+ = 9.0, A = 8.0, B+ = 7.0, B = 6.0, C = 5.0, F = 0.0',
+                        scale: 10.0,
+                        grades: {
+                            'O': 10.0, 'A+': 9.0, 'A': 8.0,
+                            'B+': 7.0, 'B': 6.0, 'C+': 5.5,
+                            'C': 5.0, 'D': 4.0, 'F': 0.0
+                        },
+                        gradeItems: ['O: 10.0', 'A+: 9.0', 'A: 8.0', 'B+: 7.0', 'B: 6.0', 'C+: 5.5', 'C: 5.0', 'D: 4.0', 'F: 0.0']
+                    }
+                };
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateCountryInfo();
+                this.addCourse(); // Add initial course
+                this.calculateGPA();
+            }
+
+            setupEventListeners() {
+                // Country tabs
+                document.querySelectorAll('.country-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchCountry(e.target.closest('.country-tab').dataset.country);
+                    });
+                });
+
+                // Info tabs
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchInfoTab(e.target.dataset.tab);
+                    });
+                });
+            }
+
+            switchCountry(country) {
+                this.currentCountry = country;
+                
+                // Update active tab
+                document.querySelectorAll('.country-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-country="${country}"]`).classList.add('active');
+                
+                // Update country info
+                this.updateCountryInfo();
+                
+                // Recalculate GPA with new system
+                this.calculateGPA();
+            }
+
+            updateCountryInfo() {
+                const system = this.gradingSystems[this.currentCountry];
+                const countryInfo = document.getElementById('countryInfo');
+                
+                countryInfo.innerHTML = `
+                    <h4>${system.name}</h4>
+                    <p>${system.description}</p>
+                    <div class="grade-scale">
+                        ${system.gradeItems.map(item => `<span class="grade-item">${item}</span>`).join('')}
+                    </div>
+                `;
+            }
+
+            switchInfoTab(tabName) {
+                // Update active tab
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // Update active content
+                document.querySelectorAll('.info-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+            }
+
+            addCourse() {
+                const courseId = Date.now();
+                const course = {
+                    id: courseId,
+                    name: '',
+                    grade: '',
+                    credits: 3
+                };
+                
+                this.courses.push(course);
+                this.renderCourses();
+                this.calculateGPA();
+            }
+
+            removeCourse(courseId) {
+                this.courses = this.courses.filter(course => course.id !== courseId);
+                this.renderCourses();
+                this.calculateGPA();
+            }
+
+            updateCourse(courseId, field, value) {
+                const course = this.courses.find(c => c.id === courseId);
+                if (course) {
+                    course[field] = value;
+                    this.calculateGPA();
+                }
+            }
+
+            renderCourses() {
+                const coursesList = document.getElementById('coursesList');
+                const system = this.gradingSystems[this.currentCountry];
+                
+                coursesList.innerHTML = this.courses.map(course => `
+                    <div class="course-item">
+                        <div class="form-group">
+                            <label class="form-label">Course Name</label>
+                            <input type="text" class="form-input" placeholder="e.g., Mathematics" 
+                                   value="${course.name}" 
+                                   onchange="gpaCalculator.updateCourse(${course.id}, 'name', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Grade</label>
+                            <select class="form-select" onchange="gpaCalculator.updateCourse(${course.id}, 'grade', this.value)">
+                                <option value="">Select Grade</option>
+                                ${Object.keys(system.grades).map(grade => 
+                                    `<option value="${grade}" ${course.grade === grade ? 'selected' : ''}>${grade}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Credits</label>
+                            <input type="number" class="form-input" min="0.5" max="10" step="0.5" 
+                                   value="${course.credits}" 
+                                   onchange="gpaCalculator.updateCourse(${course.id},
+                                                                   'credits', parseFloat(this.value))">
+                        </div>
+                        <button class="remove-btn" onclick="gpaCalculator.removeCourse(${course.id})" 
+                                title="Remove Course">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            calculateGPA() {
+                const system = this.gradingSystems[this.currentCountry];
+                let totalPoints = 0;
+                let totalCredits = 0;
+                let validCourses = 0;
+                const gradeCount = {};
+
+                // Initialize grade count
+                Object.keys(system.grades).forEach(grade => {
+                    gradeCount[grade] = 0;
+                });
+
+                // Calculate total points and credits
+                this.courses.forEach(course => {
+                    if (course.grade && course.credits > 0) {
+                        const gradePoints = system.grades[course.grade];
+                        totalPoints += gradePoints * course.credits;
+                        totalCredits += course.credits;
+                        validCourses++;
+                        gradeCount[course.grade]++;
+                    }
+                });
+
+                // Calculate GPA
+                const gpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+
+                // Update display
+                this.updateGPADisplay(gpa, system.scale, validCourses, totalCredits, gradeCount);
+            }
+
+            updateGPADisplay(gpa, scale, totalCourses, totalCredits, gradeCount) {
+                // Update GPA value
+                document.getElementById('gpaValue').textContent = gpa.toFixed(2);
+                document.getElementById('gpaScale').textContent = `out of ${scale.toFixed(1)}`;
+
+                // Update GPA status
+                const status = this.getGPAStatus(gpa, scale);
+                const statusElement = document.getElementById('gpaStatus');
+                statusElement.textContent = status.text;
+                statusElement.className = `gpa-status ${status.class}`;
+
+                // Update stats
+                document.getElementById('totalCourses').textContent = totalCourses;
+                document.getElementById('totalCredits').textContent = totalCredits.toFixed(1);
+
+                // Update grade breakdown
+                this.updateGradeBreakdown(gradeCount);
+            }
+
+            getGPAStatus(gpa, scale) {
+                const percentage = (gpa / scale) * 100;
+                
+                if (this.currentCountry === 'india') {
+                    if (gpa >= 8.5) return { text: 'Excellent', class: 'gpa-excellent' };
+                    if (gpa >= 7.0) return { text: 'Good', class: 'gpa-good' };
+                    if (gpa >= 6.0) return { text: 'Average', class: 'gpa-average' };
+                    if (gpa > 0) return { text: 'Needs Improvement', class: 'gpa-poor' };
+                } else {
+                    if (gpa >= 3.5) return { text: 'Excellent', class: 'gpa-excellent' };
+                    if (gpa >= 3.0) return { text: 'Good', class: 'gpa-good' };
+                    if (gpa >= 2.0) return { text: 'Average', class: 'gpa-average' };
+                    if (gpa > 0) return { text: 'Needs Improvement', class: 'gpa-poor' };
+                }
+                
+                return { text: 'Add courses to calculate', class: 'gpa-average' };
+            }
+
+            updateGradeBreakdown(gradeCount) {
+                const breakdownList = document.getElementById('gradeBreakdown');
+                const system = this.gradingSystems[this.currentCountry];
+                
+                const breakdown = Object.entries(gradeCount)
+                    .filter(([grade, count]) => count > 0)
+                    .map(([grade, count]) => `
+                        <div class="breakdown-item">
+                            <span class="breakdown-grade">Grade ${grade} (${system.grades[grade].toFixed(1)})</span>
+                            <span class="breakdown-count">${count} course${count > 1 ? 's' : ''}</span>
+                        </div>
+                    `).join('');
+
+                breakdownList.innerHTML = breakdown || '<div class="breakdown-item"><span class="breakdown-grade">No grades entered</span><span class="breakdown-count">-</span></div>';
+            }
+
+            clearAllCourses() {
+                if (confirm('Are you sure you want to clear all courses?')) {
+                    this.courses = [];
+                    this.renderCourses();
+                    this.addCourse(); // Add one empty course
+                    this.calculateGPA();
+                }
+            }
+
+            exportResults() {
+                const system = this.gradingSystems[this.currentCountry];
+                let totalPoints = 0;
+                let totalCredits = 0;
+                
+                this.courses.forEach(course => {
+                    if (course.grade && course.credits > 0) {
+                        totalPoints += system.grades[course.grade] * course.credits;
+                        totalCredits += course.credits;
+                    }
+                });
+
+                const gpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+                const status = this.getGPAStatus(gpa, system.scale);
+
+                const exportData = {
+                    timestamp: new Date().toISOString(),
+                    country: this.currentCountry,
+                    gradingSystem: system.name,
+                    gpa: gpa.toFixed(2),
+                    scale: system.scale,
+                    status: status.text,
+                    totalCourses: this.courses.filter(c => c.grade && c.credits > 0).length,
+                    totalCredits: totalCredits.toFixed(1),
+                    courses: this.courses.filter(c => c.name || c.grade).map(course => ({
+                        name: course.name || 'Unnamed Course',
+                        grade: course.grade || 'Not Set',
+                        credits: course.credits,
+                        gradePoints: course.grade ? system.grades[course.grade] : 0
+                    }))
+                };
+
+                // Create and download file
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `gpa-calculation-${this.currentCountry}-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                // Show success message
+                this.showToast('GPA calculation exported successfully!', 'success');
+            }
+
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.textContent = message;
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--primary-color);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: var(--radius);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 1000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+
+                if (type === 'success') {
+                    toast.style.background = 'var(--success-color)';
+                } else if (type === 'error') {
+                    toast.style.background = 'var(--error-color)';
+                }
+
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(toast)) {
+                            document.body.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Global functions for onclick handlers
+        function addCourse() {
+            gpaCalculator.addCourse();
+        }
+
+        function clearAllCourses() {
+            gpaCalculator.clearAllCourses();
+        }
+
+        function exportResults() {
+            gpaCalculator.exportResults();
+        }
+
+        // Initialize everything when DOM is loaded
+        let gpaCalculator;
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            gpaCalculator = new GPACalculator();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'n':
+                        e.preventDefault();
+                        addCourse();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        exportResults();
+                        break;
+                    case 'Backspace':
+                        if (e.shiftKey) {
+                            e.preventDefault();
+                            clearAllCourses();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Auto-save to localStorage
+        setInterval(() => {
+            if (gpaCalculator && gpaCalculator.courses.length > 0) {
+                localStorage.setItem('gpa-calculator-data', JSON.stringify({
+                    country: gpaCalculator.currentCountry,
+                    courses: gpaCalculator.courses
+                }));
+            }
+        }, 5000);
+
+        // Load saved data on page load
+        window.addEventListener('load', () => {
+            const savedData = localStorage.getItem('gpa-calculator-data');
+            if (savedData && gpaCalculator) {
+                try {
+                    const data = JSON.parse(savedData);
+                    if (data.courses && data.courses.length > 0) {
+                        gpaCalculator.courses = data.courses;
+                        if (data.country) {
+                            gpaCalculator.switchCountry(data.country);
+                        }
+                        gpaCalculator.renderCourses();
+                        gpaCalculator.calculateGPA();
+                    }
+                } catch (e) {
+                    console.log('Could not load saved data');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+

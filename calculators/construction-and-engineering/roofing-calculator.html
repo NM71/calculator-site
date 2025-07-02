@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roofing Calculator - CalcHub</title>
+    <meta name="description" content="Calculate roofing materials needed including shingles, underlayment, nails, and costs. Estimate for gable, hip, and shed roofs.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: #dc2626;
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+                .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+            transform: translateY(-1px);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-highlight {
+            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-text {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .placeholder-message p {
+            font-size: 1.125rem;
+        }
+
+        .material-breakdown {
+            background-color: var(--success-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .material-breakdown h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .material-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.875rem;
+        }
+
+        .material-item:last-child {
+            border-bottom: none;
+        }
+
+        .cost-breakdown {
+            background-color: var(--info-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cost-breakdown h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.875rem;
+        }
+
+        .cost-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tips-section {
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tips-section h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .tips-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-section li {
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            opacity: 0.95;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .tips-section li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        .roof-diagram {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .roof-diagram svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-amount {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .result-amount {
+                font-size: 1.75rem;
+            }
+            
+            .result-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-home"></i>
+                    Roofing Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate roofing materials needed including shingles, underlayment, nails, and costs. Get accurate estimates for your roofing project.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-ruler-combined"></i>
+                        Roof Dimensions
+                    </h3>
+                    
+                    <div class="roof-diagram">
+                        <svg width="200" height="120" viewBox="0 0 200 120">
+                            <polygon points="20,100 100,20 180,100" fill="none" stroke="var(--primary-color)" stroke-width="2"/>
+                            <line x1="20" y1="100" x2="180" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+                            <line x1="100" y1="20" x2="100" y2="100" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="100" y="115" text-anchor="middle" fill="var(--text-secondary)" font-size="10">Length</text>
+                            <text x="60" y="65" text-anchor="middle" fill="var(--text-secondary)" font-size="10">Width</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="roofLength">Roof Length (ft)</label>
+                        <input type="number" id="roofLength" class="form-input" placeholder="40" step="0.1" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="roofWidth">Roof Width (ft)</label>
+                        <input type="number" id="roofWidth" class="form-input" placeholder="30" step="0.1" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="roofPitch">Roof Pitch</label>
+                        <select id="roofPitch" class="form-select">
+                            <option value="1.00">Flat (0/12)</option>
+                            <option value="1.01">1/12</option>
+                            <option value="1.02">2/12</option>
+                            <option value="1.03">3/12</option>
+                            <option value="1.05" selected>4/12</option>
+                            <option value="1.08">5/12</option>
+                            <option value="1.12">6/12</option>
+                            <option value="1.16">7/12</option>
+                            <option value="1.20">8/12</option>
+                            <option value="1.25">9/12</option>
+                            <option value="1.30">10/12</option>
+                            <option value="1.36">11/12</option>
+                            <option value="1.41">12/12 (45°)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="roofComplexity">Roof Complexity</label>
+                        <select id="roofComplexity" class="form-select">
+                            <option value="1.00">Simple (Rectangle)</option>
+                            <option value="1.10" selected>Average (Some angles)</option>
+                                                        <option value="1.20">Complex (Many angles/dormers)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="shingleType">Shingle Type</label>
+                        <select id="shingleType" class="form-select">
+                            <option value="3tab">3-Tab Asphalt</option>
+                            <option value="architectural" selected>Architectural Asphalt</option>
+                            <option value="premium">Premium Asphalt</option>
+                            <option value="wood">Wood Shingles</option>
+                            <option value="metal">Metal Roofing</option>
+                            <option value="tile">Clay/Concrete Tile</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="wastePercentage">Waste Factor (%)</label>
+                        <select id="wastePercentage" class="form-select">
+                            <option value="10" selected>10% (Standard)</option>
+                            <option value="15">15% (Complex roof)</option>
+                            <option value="20">20% (Very complex)</option>
+                        </select>
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">
+                        <i class="fas fa-dollar-sign"></i>
+                        Material Costs
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="shinglePrice">Shingles (per square)</label>
+                        <input type="number" id="shinglePrice" class="form-input" placeholder="120" step="1" min="0">
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">1 square = 100 sq ft</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="underlaymentPrice">Underlayment (per square)</label>
+                        <input type="number" id="underlaymentPrice" class="form-input" placeholder="25" step="1" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="laborRate">Labor Rate (per square)</label>
+                        <input type="number" id="laborRate" class="form-input" placeholder="200" step="1" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <button class="btn" onclick="calculateRoofing()">
+                            <i class="fas fa-calculator"></i>
+                            Calculate
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearInputs()">
+                            <i class="fas fa-refresh"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i>
+                        Material Requirements
+                    </h3>
+                    
+                    <div id="results" style="display: none;">
+                        <div class="result-highlight">
+                            <div class="result-amount" id="totalSquares">0</div>
+                            <div class="result-text">Squares Needed</div>
+                        </div>
+                        
+                        <div class="result-grid">
+                            <div class="result-card">
+                                <div class="result-label">Roof Area</div>
+                                <div class="result-value" id="roofArea">0 sq ft</div>
+                                <div class="result-description">Total surface</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Bundles</div>
+                                <div class="result-value" id="shingleBundles">0</div>
+                                <div class="result-description">Shingle bundles</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Ridge Cap</div>
+                                <div class="result-value" id="ridgeCap">0 ft</div>
+                                <div class="result-description">Linear feet</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Starter Strip</div>
+                                <div class="result-value" id="starterStrip">0 ft</div>
+                                <div class="result-description">Linear feet</div>
+                            </div>
+                        </div>
+                        
+                        <div class="material-breakdown">
+                            <h4><i class="fas fa-list"></i> Material List</h4>
+                            <div class="material-item">
+                                <span>Shingles:</span>
+                                <span id="shinglesNeeded">0 squares</span>
+                            </div>
+                            <div class="material-item">
+                                <span>Underlayment:</span>
+                                <span id="underlaymentNeeded">0 squares</span>
+                            </div>
+                            <div class="material-item">
+                                <span>Roofing Nails:</span>
+                                <span id="nailsNeeded">0 lbs</span>
+                            </div>
+                            <div class="material-item">
+                                <span>Drip Edge:</span>
+                                <span id="dripEdge">0 ft</span>
+                            </div>
+                            <div class="material-item">
+                                <span>Flashing:</span>
+                                <span id="flashing">0 ft</span>
+                            </div>
+                        </div>
+                        
+                        <div class="cost-breakdown">
+                            <h4><i class="fas fa-dollar-sign"></i> Cost Estimate</h4>
+                            <div class="cost-item">
+                                <span>Shingles:</span>
+                                <span id="shinglesCost">$0</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Underlayment:</span>
+                                <span id="underlaymentCost">$0</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Other Materials:</span>
+                                <span id="otherMaterialsCost">$0</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Labor:</span>
+                                <span id="laborCost">$0</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Total Project Cost:</span>
+                                <span id="totalCost">$0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="tips-section">
+                            <h4><i class="fas fa-lightbulb"></i> Installation Tips</h4>
+                            <ul>
+                                <li>Start installation from the bottom edge</li>
+                                <li>Overlap shingles by 6 inches minimum</li>
+                                <li>Use proper nail placement (5-6 nails per shingle)</li>
+                                <li>Install drip edge before underlayment</li>
+                                <li>Check local building codes for requirements</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div id="placeholder" class="placeholder-message">
+                        <i class="fas fa-home"></i>
+                        <p>Enter roof dimensions to calculate material requirements</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Roofing Guide
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Shingle Types</h4>
+                        <ul>
+                            <li>3-Tab: Basic, economical option</li>
+                            <li>Architectural: Enhanced durability</li>
+                            <li>Premium: Highest quality, longest lasting</li>
+                            <li>Wood: Natural, requires maintenance</li>
+                            <li>Metal: Durable, energy efficient</li>
+                            <li>Tile: Long-lasting, heavy material</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Roof Pitch Guide</h4>
+                        <ul>
+                            <li>Low slope: 2/12 to 4/12</li>
+                            <li>Conventional: 4/12 to 9/12</li>
+                            <li>High slope: 9/12 and above</li>
+                            <li>Steeper = more material needed</li>
+                            <li>Affects drainage and snow load</li>
+                            <li>Impacts installation difficulty</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Coverage Standards</h4>
+                        <ul>
+                            <li>1 Square = 100 square feet</li>
+                            <li>3-Tab: 3 bundles per square</li>
+                            <li>Architectural: 3-4 bundles per square</li>
+                            <li>Add 10-20% for waste</li>
+                            <li>Ridge cap: 35 linear feet per bundle</li>
+                            <li>Starter strip: 105 linear feet per bundle</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Installation Notes</h4>
+                        <ul>
+                            <li>Weather conditions matter</li>
+                            <li>Proper ventilation required</li>
+                            <li>Safety equipment essential</li>
+                            <li>Permits may be required</li>
+                            <li>Consider professional installation</li>
+                            <li>Warranty varies by material</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Roofing calculation functions
+        function calculateRoofing() {
+            try {
+                const length = parseFloat(document.getElementById('roofLength').value);
+                const width = parseFloat(document.getElementById('roofWidth').value);
+                const pitch = parseFloat(document.getElementById('roofPitch').value);
+                const complexity = parseFloat(document.getElementById('roofComplexity').value);
+                const shingleType = document.getElementById('shingleType').value;
+                const wastePercentage = parseFloat(document.getElementById('wastePercentage').value) / 100;
+                
+                const shinglePrice = parseFloat(document.getElementById('shinglePrice').value) || getDefaultPrice(shingleType);
+                const underlaymentPrice = parseFloat(document.getElementById('underlaymentPrice').value) || 25;
+                const laborRate = parseFloat(document.getElementById('laborRate').value) || 200;
+
+                if (!length || !width) {
+                    showError('Please enter roof length and width.');
+                    return;
+                }
+
+                if (length <= 0 || width <= 0) {
+                    showError('Please enter positive values for dimensions.');
+                    return;
+                }
+
+                // Calculate base area
+                const baseArea = length * width;
+                
+                // Adjust for pitch
+                const adjustedArea = baseArea * pitch;
+                
+                // Adjust for complexity
+                const totalArea = adjustedArea * complexity;
+                
+                // Add waste
+                const finalArea = totalArea * (1 + wastePercentage);
+                
+                // Calculate squares (100 sq ft each)
+                const squares = finalArea / 100;
+                
+                // Calculate materials
+                const bundles = getBundlesPerSquare(shingleType) * squares;
+                const ridgeLength = (length + width) * 0.5; // Approximate ridge length
+                const starterStripLength = (length + width) * 2; // Perimeter
+                const dripEdgeLength = starterStripLength;
+                const flashingLength = ridgeLength * 0.3; // Approximate
+                const nailsNeeded = squares * 2.5; // 2.5 lbs per square average
+                
+                // Calculate costs
+                const shinglesCost = squares * shinglePrice;
+                const underlaymentCost = squares * underlaymentPrice;
+                const otherMaterialsCost = calculateOtherMaterials(squares, ridgeLength, dripEdgeLength);
+                const laborCost = squares * laborRate;
+                const totalCost = shinglesCost + underlaymentCost + otherMaterialsCost + laborCost;
+
+                // Update display
+                updateResults({
+                    totalArea: Math.round(finalArea),
+                    squares: Math.round(squares * 10) / 10,
+                    bundles: Math.ceil(bundles),
+                    ridgeLength: Math.round(ridgeLength),
+                    starterStripLength: Math.round(starterStripLength),
+                    dripEdgeLength: Math.round(dripEdgeLength),
+                    flashingLength: Math.round(flashingLength),
+                    nailsNeeded: Math.round(nailsNeeded),
+                    shinglesCost,
+                    underlaymentCost,
+                    otherMaterialsCost,
+                    laborCost,
+                    totalCost
+                });
+
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('placeholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating roofing requirements. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function getDefaultPrice(shingleType) {
+            const prices = {
+                '3tab': 90,
+                'architectural': 120,
+                                'premium': 180,
+                'wood': 250,
+                'metal': 300,
+                'tile': 400
+            };
+            return prices[shingleType] || 120;
+        }
+
+        function getBundlesPerSquare(shingleType) {
+            const bundles = {
+                '3tab': 3,
+                'architectural': 3,
+                'premium': 4,
+                'wood': 4,
+                'metal': 1,
+                'tile': 1
+            };
+            return bundles[shingleType] || 3;
+        }
+
+        function calculateOtherMaterials(squares, ridgeLength, dripEdgeLength) {
+            // Estimate costs for nails, ridge cap, drip edge, flashing, etc.
+            const nailsCost = squares * 15; // $15 per square for nails
+            const ridgeCapCost = (ridgeLength / 35) * 45; // Ridge cap bundles
+            const dripEdgeCost = dripEdgeLength * 2; // $2 per linear foot
+            const flashingCost = ridgeLength * 0.3 * 8; // $8 per linear foot for flashing
+            const miscCost = squares * 10; // Miscellaneous materials
+            
+            return nailsCost + ridgeCapCost + dripEdgeCost + flashingCost + miscCost;
+        }
+
+        function updateResults(data) {
+            document.getElementById('totalSquares').textContent = data.squares;
+            document.getElementById('roofArea').textContent = data.totalArea + ' sq ft';
+            document.getElementById('shingleBundles').textContent = data.bundles;
+            document.getElementById('ridgeCap').textContent = data.ridgeLength + ' ft';
+            document.getElementById('starterStrip').textContent = data.starterStripLength + ' ft';
+            
+            // Material list
+            document.getElementById('shinglesNeeded').textContent = data.squares + ' squares';
+            document.getElementById('underlaymentNeeded').textContent = data.squares + ' squares';
+            document.getElementById('nailsNeeded').textContent = data.nailsNeeded + ' lbs';
+            document.getElementById('dripEdge').textContent = data.dripEdgeLength + ' ft';
+            document.getElementById('flashing').textContent = data.flashingLength + ' ft';
+            
+            // Cost breakdown
+            document.getElementById('shinglesCost').textContent = '$' + Math.round(data.shinglesCost).toLocaleString();
+            document.getElementById('underlaymentCost').textContent = '$' + Math.round(data.underlaymentCost).toLocaleString();
+            document.getElementById('otherMaterialsCost').textContent = '$' + Math.round(data.otherMaterialsCost).toLocaleString();
+            document.getElementById('laborCost').textContent = '$' + Math.round(data.laborCost).toLocaleString();
+            document.getElementById('totalCost').textContent = '$' + Math.round(data.totalCost).toLocaleString();
+        }
+
+        function clearInputs() {
+            ['roofLength', 'roofWidth', 'shinglePrice', 'underlaymentPrice', 'laborRate'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            
+            // Reset selects to defaults
+            document.getElementById('roofPitch').value = '1.05';
+            document.getElementById('roofComplexity').value = '1.10';
+            document.getElementById('shingleType').value = 'architectural';
+            document.getElementById('wastePercentage').value = '10';
+            
+            // Hide results
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('placeholder').style.display = 'block';
+        }
+
+        function showError(message) {
+            alert(message);
+        }
+
+        // Auto-update prices when shingle type changes
+        function updateShinglePrice() {
+            const shingleType = document.getElementById('shingleType').value;
+            const priceInput = document.getElementById('shinglePrice');
+            
+            if (!priceInput.value) {
+                priceInput.value = getDefaultPrice(shingleType);
+            }
+        }
+
+        // Auto-calculation with debounce
+        let calculationTimeout;
+        function debounceCalculate() {
+            clearTimeout(calculationTimeout);
+            calculationTimeout = setTimeout(() => {
+                const length = document.getElementById('roofLength').value;
+                const width = document.getElementById('roofWidth').value;
+                
+                if (length && width) {
+                    calculateRoofing();
+                }
+            }, 1000);
+        }
+
+        // Add event listeners for auto-calculation
+        function addAutoCalculation() {
+            const inputs = ['roofLength', 'roofWidth', 'roofPitch', 'roofComplexity', 'shingleType', 'wastePercentage', 'shinglePrice', 'underlaymentPrice', 'laborRate'];
+            
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', debounceCalculate);
+                    element.addEventListener('change', debounceCalculate);
+                }
+            });
+            
+            // Special handler for shingle type change
+            document.getElementById('shingleType').addEventListener('change', updateShinglePrice);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                calculateRoofing();
+            } else if (e.key === 'Escape') {
+                clearInputs();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            addAutoCalculation();
+            
+            // Set default prices
+            updateShinglePrice();
+        });
+    </script>
+</body>
+</html>
+
+

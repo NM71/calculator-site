@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area & Volume Calculator - CalcHub</title>
+    <meta name="description" content="Calculate area and volume for various shapes including rectangles, circles, triangles, spheres, cylinders, and more.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--warning-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-muted);
+            color: white;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-highlight {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-text {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .formula-section {
+            background-color: var(--info-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .formula-section h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .formula-section p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+                        border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-amount {
+                font-size: 2rem;
+            }
+            
+            .calculator-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab-btn {
+                min-width: 100px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .result-amount {
+                font-size: 1.75rem;
+            }
+            
+            .result-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-ruler-combined"></i>
+                    Area & Volume Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate area and volume for various geometric shapes including rectangles, circles, triangles, spheres, cylinders, and more.
+                </p>
+            </div>
+
+            <div class="calculator-tabs">
+                <button class="tab-btn active" onclick="switchTab('rectangle')">Rectangle</button>
+                <button class="tab-btn" onclick="switchTab('circle')">Circle</button>
+                <button class="tab-btn" onclick="switchTab('triangle')">Triangle</button>
+                <button class="tab-btn" onclick="switchTab('sphere')">Sphere</button>
+                <button class="tab-btn" onclick="switchTab('cylinder')">Cylinder</button>
+                <button class="tab-btn" onclick="switchTab('cube')">Cube</button>
+            </div>
+
+            <!-- Rectangle Tab -->
+            <div id="rectangle" class="tab-content active">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-square"></i>
+                            Rectangle Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="rectLength">Length</label>
+                            <input type="number" id="rectLength" class="form-input" placeholder="10" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="rectWidth">Width</label>
+                            <input type="number" id="rectWidth" class="form-input" placeholder="5" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="rectUnit">Unit</label>
+                            <select id="rectUnit" class="form-select">
+                                <option value="ft">Feet (ft)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="in">Inches (in)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="yd">Yards (yd)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateRectangle()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearRectangle()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                        
+                        <div class="formula-section">
+                            <h4>Formula</h4>
+                            <p>Area = Length × Width</p>
+                            <p>Perimeter = 2 × (Length + Width)</p>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Results
+                        </h3>
+                        
+                        <div id="rectangleResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="rectArea">0</div>
+                                <div class="result-text">Area</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Perimeter</div>
+                                    <div class="result-value" id="rectPerimeter">0</div>
+                                    <div class="result-description">Distance around</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Diagonal</div>
+                                    <div class="result-value" id="rectDiagonal">0</div>
+                                    <div class="result-description">Corner to corner</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="rectanglePlaceholder" class="placeholder-message">
+                            <i class="fas fa-square"></i>
+                            <p>Enter rectangle dimensions to calculate area and perimeter</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Circle Tab -->
+            <div id="circle" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-circle"></i>
+                            Circle Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="circleRadius">Radius</label>
+                            <input type="number" id="circleRadius" class="form-input" placeholder="5" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="circleUnit">Unit</label>
+                            <select id="circleUnit" class="form-select">
+                                <option value="ft">Feet (ft)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="in">Inches (in)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="yd">Yards (yd)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateCircle()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearCircle()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                        
+                        <div class="formula-section">
+                            <h4>Formula</h4>
+                            <p>Area = π × r²</p>
+                            <p>Circumference = 2 × π × r</p>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Results
+                        </h3>
+                        
+                        <div id="circleResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="circleArea">0</div>
+                                <div class="result-text">Area</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Circumference</div>
+                                    <div class="result-value" id="circleCircumference">0</div>
+                                    <div class="result-description">Distance around</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Diameter</div>
+                                    <div class="result-value" id="circleDiameter">0</div>
+                                    <div class="result-description">Across center</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="circlePlaceholder" class="placeholder-message">
+                            <i class="fas fa-circle"></i>
+                            <p>Enter circle radius to calculate area and circumference</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Triangle Tab -->
+            <div id="triangle" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-play"></i>
+                            Triangle Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="triangleBase">Base</label>
+                            <input type="number" id="triangleBase" class="form-input" placeholder="8" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="triangleHeight">Height</label>
+                            <input type="number" id="triangleHeight" class="form-input" placeholder="6" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="triangleSide1">Side 1 (optional)</label>
+                            <input type="number" id="triangleSide1" class="form-input" placeholder="Optional" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="triangleSide2">Side 2 (optional)</label>
+                            <input type="number" id="triangleSide2" class="form-input" placeholder="Optional" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="triangleUnit">Unit</label>
+                            <select id="triangleUnit" class="form-select">
+                                <option value="ft">Feet (ft)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="in">Inches (in)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="yd">Yards (yd)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateTriangle()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearTriangle()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                        
+                        <div class="formula-section">
+                            <h4>Formula</h4>
+                            <p>Area = (Base × Height) ÷ 2</p>
+                            <p>Perimeter = Side1 + Side2 + Side3</p>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Results
+                        </h3>
+                        
+                        <div id="triangleResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="triangleArea">0</div>
+                                <div class="result-text">Area</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Perimeter</div>
+                                    <div class="result-value" id="trianglePerimeter">0</div>
+                                    <div class="result-description">Distance around</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Third Side</div>
+                                    <div class="result-value" id="triangleThirdSide">0</div>
+                                    <div class="result-description">Calculated side</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="trianglePlaceholder" class="placeholder-message">
+                            <i class="fas fa-play"></i>
+                            <p>Enter triangle base and height to calculate area</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Sphere Tab -->
+            <div id="sphere" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-globe"></i>
+                            Sphere Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="sphereRadius">Radius</label>
+                            <input type="number" id="sphereRadius" class="form-input" placeholder="3" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="sphereUnit">Unit</label>
+                            <select id="sphereUnit" class="form-select">
+                                <option value="ft">Feet (ft)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="in">Inches (in)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="yd">Yards (yd)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateSphere()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearSphere()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                        
+                        <div class="formula-section">
+                            <h4>Formula</h4>
+                            <p>Volume = (4/3) × π × r³</p>
+                            <p>Surface Area = 4 × π × r²</p>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Results
+                        </h3>
+                        
+                        <div id="sphereResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="sphereVolume">0</div>
+                                <div class="result-text">Volume</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Surface Area</div>
+                                    <div class="result-value" id="sphereSurfaceArea">0</div>
+                                    <div class="result-description">Total surface</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Diameter</div>
+                                    <div class="result-value" id="sphereDiameter">0</div>
+                                    <div class="result-description">Across center</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="spherePlaceholder" class="placeholder-message">
+                            <i class="fas fa-globe"></i>
+                            <p>Enter sphere radius to calculate volume and surface area</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cylinder Tab -->
+            <div id="cylinder" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-database"></i>
+                            Cylinder Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cylinderRadius">Radius</label>
+                            <input type="number" id="cylinderRadius" class="form-input" placeholder="2" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cylinderHeight">Height</label>
+                            <input type="number" id="cylinderHeight" class="form-input" placeholder="5" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cylinderUnit">Unit</label>
+                            <select id="cylinderUnit" class="form-select">
+                                <option value="ft">Feet (ft)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="in">Inches (in)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="yd">Yards (yd)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateCylinder()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearCylinder()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                        
+                        <div class="formula-section">
+                            <h4>Formula</h4>
+                            <p>Volume = π × r² × h</p>
+                            <p>Surface Area = 2π × r × (r + h)</p>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Results
+                        </h3>
+                        
+                        <div id="cylinderResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="cylinderVolume">0</div>
+                                <div class="result-text">Volume</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Surface Area</div>
+                                    <div class="result-value" id="cylinderSurfaceArea">0</div>
+                                    <div class="result-description">Total surface</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Base Area</div>
+                                    <div class="result-value" id="cylinderBaseArea">0</div>
+                                    <div class="result-description">Circle area</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="cylinderPlaceholder" class="placeholder-message">
+                            <i class="fas fa-database"></i>
+                            <p>Enter cylinder radius and height to calculate volume</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cube Tab -->
+            <div id="cube" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-cube"></i>
+                            Cube Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cubeSide">Side Length</label>
+                            <input type="number" id="cubeSide" class="form-input" placeholder="4" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cubeUnit">Unit</label>
+                            <select id="cubeUnit" class="form-select">
+                                <option value="ft">Feet (ft)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="in">Inches (in)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="yd">Yards (yd)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateCube()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearCube()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                        
+                        <div class="formula-section">
+                            <h4>Formula</h4>
+                            <p>Volume = side³</p>
+                            <p>Surface Area = 6 × side²</p>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Results
+                        </h3>
+                        
+                        <div id="cubeResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="cubeVolume">0</div>
+                                <div class="result-text">Volume</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Surface Area</div>
+                                    <div class="result-value" id="cubeSurfaceArea">0</div>
+                                    <div class="result-description">Total surface</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">Face Area</div>
+                                    <div class="result-value" id="cubeFaceArea">0</div>
+                                    <div class="result-description">One face</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="cubePlaceholder" class="placeholder-message">
+                            <i class="fas fa-cube"></i>
+                            <p>Enter cube side length to calculate volume and surface area</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Shape Information
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>2D Shapes (Area)</h4>
+                        <ul>
+                            <li>Rectangle: Length × Width</li>
+                            <li>Circle: π × radius²</li>
+                            <li>Triangle: (Base × Height) ÷ 2</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>3D Shapes (Volume)</h4>
+                        <ul>
+                            <li>Cube: side³</li>
+                            <li>Sphere: (4/3) × π × radius³</li>
+                            <li>Cylinder: π × radius² × height</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Common Units</h4>
+                        <ul>
+                            <li>Area: ft², m², in², cm²</li>
+                            <li>Volume: ft³, m³, in³, cm³</li>
+                            <li>Length: ft, m, in, cm, yd</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Applications</h4>
+                        <ul>
+                            <li>Construction planning</li>
+                            <li>Material estimation</li>
+                            <li>Space planning</li>
+                            <li>Engineering design</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Tab Management
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Utility Functions
+        function formatNumber(num, decimals = 2) {
+            return parseFloat(num).toFixed(decimals);
+        }
+
+        function getUnitSymbol(unit, isArea = false, isVolume = false) {
+            const symbols = {
+                'ft': isVolume ? 'ft³' : isArea ? 'ft²' : 'ft',
+                'm': isVolume ? 'm³' : isArea ? 'm²' : 'm',
+                'in': isVolume ? 'in³' : isArea ? 'in²' : 'in',
+                'cm': isVolume ? 'cm³' : isArea ? 'cm²' : 'cm',
+                'yd': isVolume ? 'yd³' : isArea ? 'yd²' : 'yd'
+            };
+            return symbols[unit] || unit;
+        }
+
+        function showError(message) {
+            alert(message);
+        }
+
+        // Rectangle Calculations
+        function calculateRectangle() {
+            try {
+                const length = parseFloat(document.getElementById('rectLength').value);
+                const width = parseFloat(document.getElementById('rectWidth').value);
+                const unit = document.getElementById('rectUnit').value;
+
+                if (!length || !width) {
+                    showError('Please enter both length and width.');
+                    return;
+                }
+
+                                if (length <= 0 || width <= 0) {
+                    showError('Please enter positive values for length and width.');
+                    return;
+                }
+
+                const area = length * width;
+                const perimeter = 2 * (length + width);
+                const diagonal = Math.sqrt(length * length + width * width);
+
+                document.getElementById('rectArea').textContent = formatNumber(area) + ' ' + getUnitSymbol(unit, true);
+                document.getElementById('rectPerimeter').textContent = formatNumber(perimeter) + ' ' + getUnitSymbol(unit);
+                document.getElementById('rectDiagonal').textContent = formatNumber(diagonal) + ' ' + getUnitSymbol(unit);
+
+                document.getElementById('rectangleResults').style.display = 'block';
+                document.getElementById('rectanglePlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating rectangle. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function clearRectangle() {
+            document.getElementById('rectLength').value = '';
+            document.getElementById('rectWidth').value = '';
+            document.getElementById('rectangleResults').style.display = 'none';
+            document.getElementById('rectanglePlaceholder').style.display = 'block';
+        }
+
+        // Circle Calculations
+        function calculateCircle() {
+            try {
+                const radius = parseFloat(document.getElementById('circleRadius').value);
+                const unit = document.getElementById('circleUnit').value;
+
+                if (!radius) {
+                    showError('Please enter the radius.');
+                    return;
+                }
+
+                if (radius <= 0) {
+                    showError('Please enter a positive value for radius.');
+                    return;
+                }
+
+                const area = Math.PI * radius * radius;
+                const circumference = 2 * Math.PI * radius;
+                const diameter = 2 * radius;
+
+                document.getElementById('circleArea').textContent = formatNumber(area) + ' ' + getUnitSymbol(unit, true);
+                document.getElementById('circleCircumference').textContent = formatNumber(circumference) + ' ' + getUnitSymbol(unit);
+                document.getElementById('circleDiameter').textContent = formatNumber(diameter) + ' ' + getUnitSymbol(unit);
+
+                document.getElementById('circleResults').style.display = 'block';
+                document.getElementById('circlePlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating circle. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function clearCircle() {
+            document.getElementById('circleRadius').value = '';
+            document.getElementById('circleResults').style.display = 'none';
+            document.getElementById('circlePlaceholder').style.display = 'block';
+        }
+
+        // Triangle Calculations
+        function calculateTriangle() {
+            try {
+                const base = parseFloat(document.getElementById('triangleBase').value);
+                const height = parseFloat(document.getElementById('triangleHeight').value);
+                const side1 = parseFloat(document.getElementById('triangleSide1').value) || 0;
+                const side2 = parseFloat(document.getElementById('triangleSide2').value) || 0;
+                const unit = document.getElementById('triangleUnit').value;
+
+                if (!base || !height) {
+                    showError('Please enter both base and height.');
+                    return;
+                }
+
+                if (base <= 0 || height <= 0) {
+                    showError('Please enter positive values for base and height.');
+                    return;
+                }
+
+                const area = (base * height) / 2;
+                
+                // Calculate third side using Pythagorean theorem if two sides are given
+                let thirdSide = 0;
+                let perimeter = 0;
+                
+                if (side1 > 0 && side2 > 0) {
+                    // Calculate third side using law of cosines approximation
+                    thirdSide = Math.sqrt(side1 * side1 + side2 * side2);
+                    perimeter = side1 + side2 + thirdSide;
+                } else if (side1 > 0) {
+                    // Use base and one side to estimate
+                    thirdSide = Math.sqrt(height * height + (base/2) * (base/2));
+                    perimeter = base + side1 + thirdSide;
+                } else {
+                    // Use base and height to estimate sides
+                    thirdSide = Math.sqrt(height * height + (base/2) * (base/2));
+                    perimeter = base + 2 * thirdSide;
+                }
+
+                document.getElementById('triangleArea').textContent = formatNumber(area) + ' ' + getUnitSymbol(unit, true);
+                document.getElementById('trianglePerimeter').textContent = formatNumber(perimeter) + ' ' + getUnitSymbol(unit);
+                document.getElementById('triangleThirdSide').textContent = formatNumber(thirdSide) + ' ' + getUnitSymbol(unit);
+
+                document.getElementById('triangleResults').style.display = 'block';
+                document.getElementById('trianglePlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating triangle. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function clearTriangle() {
+            document.getElementById('triangleBase').value = '';
+            document.getElementById('triangleHeight').value = '';
+            document.getElementById('triangleSide1').value = '';
+            document.getElementById('triangleSide2').value = '';
+            document.getElementById('triangleResults').style.display = 'none';
+            document.getElementById('trianglePlaceholder').style.display = 'block';
+        }
+
+        // Sphere Calculations
+        function calculateSphere() {
+            try {
+                const radius = parseFloat(document.getElementById('sphereRadius').value);
+                const unit = document.getElementById('sphereUnit').value;
+
+                if (!radius) {
+                    showError('Please enter the radius.');
+                    return;
+                }
+
+                if (radius <= 0) {
+                    showError('Please enter a positive value for radius.');
+                    return;
+                }
+
+                const volume = (4/3) * Math.PI * radius * radius * radius;
+                const surfaceArea = 4 * Math.PI * radius * radius;
+                const diameter = 2 * radius;
+
+                document.getElementById('sphereVolume').textContent = formatNumber(volume) + ' ' + getUnitSymbol(unit, false, true);
+                document.getElementById('sphereSurfaceArea').textContent = formatNumber(surfaceArea) + ' ' + getUnitSymbol(unit, true);
+                document.getElementById('sphereDiameter').textContent = formatNumber(diameter) + ' ' + getUnitSymbol(unit);
+
+                document.getElementById('sphereResults').style.display = 'block';
+                document.getElementById('spherePlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating sphere. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function clearSphere() {
+            document.getElementById('sphereRadius').value = '';
+            document.getElementById('sphereResults').style.display = 'none';
+            document.getElementById('spherePlaceholder').style.display = 'block';
+        }
+
+        // Cylinder Calculations
+        function calculateCylinder() {
+            try {
+                const radius = parseFloat(document.getElementById('cylinderRadius').value);
+                const height = parseFloat(document.getElementById('cylinderHeight').value);
+                const unit = document.getElementById('cylinderUnit').value;
+
+                if (!radius || !height) {
+                    showError('Please enter both radius and height.');
+                    return;
+                }
+
+                if (radius <= 0 || height <= 0) {
+                    showError('Please enter positive values for radius and height.');
+                    return;
+                }
+
+                const volume = Math.PI * radius * radius * height;
+                const surfaceArea = 2 * Math.PI * radius * (radius + height);
+                const baseArea = Math.PI * radius * radius;
+
+                document.getElementById('cylinderVolume').textContent = formatNumber(volume) + ' ' + getUnitSymbol(unit, false, true);
+                document.getElementById('cylinderSurfaceArea').textContent = formatNumber(surfaceArea) + ' ' + getUnitSymbol(unit, true);
+                document.getElementById('cylinderBaseArea').textContent = formatNumber(baseArea) + ' ' + getUnitSymbol(unit, true);
+
+                document.getElementById('cylinderResults').style.display = 'block';
+                document.getElementById('cylinderPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating cylinder. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function clearCylinder() {
+            document.getElementById('cylinderRadius').value = '';
+            document.getElementById('cylinderHeight').value = '';
+            document.getElementById('cylinderResults').style.display = 'none';
+            document.getElementById('cylinderPlaceholder').style.display = 'block';
+        }
+
+        // Cube Calculations
+        function calculateCube() {
+            try {
+                const side = parseFloat(document.getElementById('cubeSide').value);
+                const unit = document.getElementById('cubeUnit').value;
+
+                if (!side) {
+                    showError('Please enter the side length.');
+                    return;
+                }
+
+                if (side <= 0) {
+                    showError('Please enter a positive value for side length.');
+                    return;
+                }
+
+                const volume = side * side * side;
+                const surfaceArea = 6 * side * side;
+                const faceArea = side * side;
+
+                document.getElementById('cubeVolume').textContent = formatNumber(volume) + ' ' + getUnitSymbol(unit, false, true);
+                document.getElementById('cubeSurfaceArea').textContent = formatNumber(surfaceArea) + ' ' + getUnitSymbol(unit, true);
+                document.getElementById('cubeFaceArea').textContent = formatNumber(faceArea) + ' ' + getUnitSymbol(unit, true);
+
+                document.getElementById('cubeResults').style.display = 'block';
+                document.getElementById('cubePlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating cube. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function clearCube() {
+            document.getElementById('cubeSide').value = '';
+            document.getElementById('cubeResults').style.display = 'none';
+            document.getElementById('cubePlaceholder').style.display = 'block';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                const activeTab = document.querySelector('.tab-content.active');
+                const tabId = activeTab.id;
+                
+                switch(tabId) {
+                    case 'rectangle':
+                        calculateRectangle();
+                        break;
+                    case 'circle':
+                        calculateCircle();
+                        break;
+                    case 'triangle':
+                        calculateTriangle();
+                        break;
+                    case 'sphere':
+                        calculateSphere();
+                        break;
+                    case 'cylinder':
+                        calculateCylinder();
+                        break;
+                    case 'cube':
+                        calculateCube();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concrete Calculator - CalcHub</title>
+    <meta name="description" content="Calculate concrete needed for slabs, footings, driveways, and foundations. Estimate concrete volume, bags, and costs.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: #6b7280;
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .tab-btn:last-child {
+            border-right: none;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-muted);
+            color: white;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-highlight {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-text {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+                .cost-breakdown {
+            background-color: var(--info-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cost-breakdown h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.875rem;
+        }
+
+        .cost-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tips-section {
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tips-section h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .tips-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-section li {
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            opacity: 0.95;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .tips-section li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-amount {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .tab-btn:last-child {
+                border-bottom: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .result-amount {
+                font-size: 1.75rem;
+            }
+            
+            .result-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-cube"></i>
+                    Concrete Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate concrete needed for slabs, footings, driveways, and foundations. Estimate concrete volume, bags, and costs for your project.
+                </p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('slab')">Slab/Driveway</button>
+                <button class="tab-btn" onclick="switchTab('footing')">Footing</button>
+                <button class="tab-btn" onclick="switchTab('column')">Column/Post</button>
+                <button class="tab-btn" onclick="switchTab('stairs')">Stairs</button>
+            </div>
+
+            <!-- Slab/Driveway Tab -->
+            <div id="slab" class="tab-content active">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-square"></i>
+                            Slab Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="slabLength">Length (ft)</label>
+                            <input type="number" id="slabLength" class="form-input" placeholder="20" step="0.1" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="slabWidth">Width (ft)</label>
+                            <input type="number" id="slabWidth" class="form-input" placeholder="10" step="0.1" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="slabThickness">Thickness (inches)</label>
+                            <input type="number" id="slabThickness" class="form-input" placeholder="4" step="0.25" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="slabWaste">Waste Factor (%)</label>
+                            <select id="slabWaste" class="form-select">
+                                <option value="5">5% (Standard)</option>
+                                <option value="10" selected>10% (Recommended)</option>
+                                <option value="15">15% (Complex shapes)</option>
+                                <option value="20">20% (Very complex)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="slabPrice">Concrete Price (per cubic yard)</label>
+                            <input type="number" id="slabPrice" class="form-input" placeholder="150" step="1" min="0">
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateSlab()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearSlab()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Concrete Requirements
+                        </h3>
+                        
+                        <div id="slabResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="slabCubicYards">0</div>
+                                <div class="result-text">Cubic Yards Needed</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Cubic Feet</div>
+                                    <div class="result-value" id="slabCubicFeet">0</div>
+                                    <div class="result-description">Total volume</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">80lb Bags</div>
+                                    <div class="result-value" id="slab80lbBags">0</div>
+                                    <div class="result-description">Quikrete bags</div>
+                                </div>
+                            </div>
+                            
+                            <div class="cost-breakdown">
+                                <h4><i class="fas fa-dollar-sign"></i> Cost Estimate</h4>
+                                <div class="cost-item">
+                                    <span>Concrete Cost:</span>
+                                    <span id="slabConcreteCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Delivery Fee:</span>
+                                    <span id="slabDeliveryCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Total Estimated Cost:</span>
+                                    <span id="slabTotalCost">$0.00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="tips-section">
+                                <h4><i class="fas fa-lightbulb"></i> Pro Tips</h4>
+                                <ul>
+                                    <li>Order 10% extra concrete for waste</li>
+                                    <li>4" thickness for walkways, 6" for driveways</li>
+                                    <li>Use rebar for structural strength</li>
+                                    <li>Plan for proper drainage</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div id="slabPlaceholder" class="placeholder-message">
+                            <i class="fas fa-cube"></i>
+                            <p>Enter slab dimensions to calculate concrete requirements</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footing Tab -->
+            <div id="footing" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-foundation"></i>
+                            Footing Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="footingLength">Length (ft)</label>
+                            <input type="number" id="footingLength" class="form-input" placeholder="100" step="0.1" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="footingWidth">Width (ft)</label>
+                            <input type="number" id="footingWidth" class="form-input" placeholder="2" step="0.1" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="footingDepth">Depth (ft)</label>
+                            <input type="number" id="footingDepth" class="form-input" placeholder="1" step="0.1" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="footingWaste">Waste Factor (%)</label>
+                            <select id="footingWaste" class="form-select">
+                                <option value="5">5% (Standard)</option>
+                                <option value="10" selected>10% (Recommended)</option>
+                                <option value="15">15% (Complex shapes)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="footingPrice">Concrete Price (per cubic yard)</label>
+                            <input type="number" id="footingPrice" class="form-input" placeholder="150" step="1" min="0">
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateFooting()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearFooting()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Concrete Requirements
+                        </h3>
+                        
+                        <div id="footingResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="footingCubicYards">0</div>
+                                <div class="result-text">Cubic Yards Needed</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Cubic Feet</div>
+                                                                        <div class="result-value" id="footingCubicFeet">0</div>
+                                    <div class="result-description">Total volume</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">80lb Bags</div>
+                                    <div class="result-value" id="footing80lbBags">0</div>
+                                    <div class="result-description">Quikrete bags</div>
+                                </div>
+                            </div>
+                            
+                            <div class="cost-breakdown">
+                                <h4><i class="fas fa-dollar-sign"></i> Cost Estimate</h4>
+                                <div class="cost-item">
+                                    <span>Concrete Cost:</span>
+                                    <span id="footingConcreteCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Delivery Fee:</span>
+                                    <span id="footingDeliveryCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Total Estimated Cost:</span>
+                                    <span id="footingTotalCost">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="footingPlaceholder" class="placeholder-message">
+                            <i class="fas fa-foundation"></i>
+                            <p>Enter footing dimensions to calculate concrete requirements</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column Tab -->
+            <div id="column" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-columns"></i>
+                            Column Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="columnShape">Column Shape</label>
+                            <select id="columnShape" class="form-select" onchange="toggleColumnInputs()">
+                                <option value="round">Round/Cylindrical</option>
+                                <option value="square">Square</option>
+                                <option value="rectangular">Rectangular</option>
+                            </select>
+                        </div>
+                        
+                        <div id="roundInputs">
+                            <div class="form-group">
+                                <label class="form-label" for="columnDiameter">Diameter (inches)</label>
+                                <input type="number" id="columnDiameter" class="form-input" placeholder="12" step="0.1" min="0">
+                            </div>
+                        </div>
+                        
+                        <div id="squareInputs" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label" for="columnSide">Side Length (inches)</label>
+                                <input type="number" id="columnSide" class="form-input" placeholder="12" step="0.1" min="0">
+                            </div>
+                        </div>
+                        
+                        <div id="rectangularInputs" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label" for="columnLength">Length (inches)</label>
+                                <input type="number" id="columnLength" class="form-input" placeholder="16" step="0.1" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="columnWidth">Width (inches)</label>
+                                <input type="number" id="columnWidth" class="form-input" placeholder="12" step="0.1" min="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="columnHeight">Height (ft)</label>
+                            <input type="number" id="columnHeight" class="form-input" placeholder="8" step="0.1" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="columnCount">Number of Columns</label>
+                            <input type="number" id="columnCount" class="form-input" placeholder="4" min="1" max="100">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="columnWaste">Waste Factor (%)</label>
+                            <select id="columnWaste" class="form-select">
+                                <option value="5">5% (Standard)</option>
+                                <option value="10" selected>10% (Recommended)</option>
+                                <option value="15">15% (Complex project)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="columnPrice">Concrete Price (per cubic yard)</label>
+                            <input type="number" id="columnPrice" class="form-input" placeholder="150" step="1" min="0">
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateColumn()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearColumn()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Concrete Requirements
+                        </h3>
+                        
+                        <div id="columnResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="columnCubicYards">0</div>
+                                <div class="result-text">Cubic Yards Needed</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Per Column</div>
+                                    <div class="result-value" id="columnPerUnit">0 cu ft</div>
+                                    <div class="result-description">Volume each</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">80lb Bags</div>
+                                    <div class="result-value" id="column80lbBags">0</div>
+                                    <div class="result-description">Quikrete bags</div>
+                                </div>
+                            </div>
+                            
+                            <div class="cost-breakdown">
+                                <h4><i class="fas fa-dollar-sign"></i> Cost Estimate</h4>
+                                <div class="cost-item">
+                                    <span>Concrete Cost:</span>
+                                    <span id="columnConcreteCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Delivery Fee:</span>
+                                    <span id="columnDeliveryCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Total Estimated Cost:</span>
+                                    <span id="columnTotalCost">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="columnPlaceholder" class="placeholder-message">
+                            <i class="fas fa-columns"></i>
+                            <p>Enter column dimensions to calculate concrete requirements</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stairs Tab -->
+            <div id="stairs" class="tab-content">
+                <div class="calculator-container">
+                    <div class="input-section">
+                        <h3>
+                            <i class="fas fa-stairs"></i>
+                            Stairs Dimensions
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="stairsWidth">Width (ft)</label>
+                            <input type="number" id="stairsWidth" class="form-input" placeholder="4" step="0.1" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="stairsRise">Total Rise (ft)</label>
+                            <input type="number" id="stairsRise" class="form-input" placeholder="3" step="0.1" min="0">
+                            <small style="color: var(--text-muted); font-size: 0.75rem;">Total height from bottom to top</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="stairsRun">Total Run (ft)</label>
+                            <input type="number" id="stairsRun" class="form-input" placeholder="8" step="0.1" min="0">
+                            <small style="color: var(--text-muted); font-size: 0.75rem;">Total horizontal distance</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="stairsThickness">Slab Thickness (inches)</label>
+                            <input type="number" id="stairsThickness" class="form-input" placeholder="6" step="0.25" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="stairsWaste">Waste Factor (%)</label>
+                            <select id="stairsWaste" class="form-select">
+                                <option value="10">10% (Standard)</option>
+                                <option value="15" selected>15% (Recommended)</option>
+                                <option value="20">20% (Complex design)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="stairsPrice">Concrete Price (per cubic yard)</label>
+                            <input type="number" id="stairsPrice" class="form-input" placeholder="150" step="1" min="0">
+                        </div>
+                        
+                        <div class="input-group">
+                            <button class="btn" onclick="calculateStairs()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearStairs()">
+                                <i class="fas fa-refresh"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-section">
+                        <h3>
+                            <i class="fas fa-chart-bar"></i>
+                            Concrete Requirements
+                        </h3>
+                        
+                        <div id="stairsResults" style="display: none;">
+                            <div class="result-highlight">
+                                <div class="result-amount" id="stairsCubicYards">0</div>
+                                <div class="result-text">Cubic Yards Needed</div>
+                            </div>
+                            
+                            <div class="result-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Cubic Feet</div>
+                                    <div class="result-value" id="stairsCubicFeet">0</div>
+                                    <div class="result-description">Total volume</div>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-label">80lb Bags</div>
+                                    <div class="result-value" id="stairs80lbBags">0</div>
+                                    <div class="result-description">Quikrete bags</div>
+                                </div>
+                            </div>
+                            
+                            <div class="cost-breakdown">
+                                <h4><i class="fas fa-dollar-sign"></i> Cost Estimate</h4>
+                                <div class="cost-item">
+                                    <span>Concrete Cost:</span>
+                                    <span id="stairsConcreteCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Delivery Fee:</span>
+                                    <span id="stairsDeliveryCost">$0.00</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>Total Estimated Cost:</span>
+                                    <span id="stairsTotalCost">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="stairsPlaceholder" class="placeholder-message">
+                            <i class="fas fa-stairs"></i>
+                            <p>Enter stairs dimensions to calculate concrete requirements</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Concrete Calculator Guide
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Concrete Basics</h4>
+                        <ul>
+                            <li>1 cubic yard = 27 cubic feet</li>
+                            <li>80lb bag covers ~0.6 cubic feet</li>
+                            <li>60lb bag covers ~0.45 cubic feet</li>
+                            <li>Standard mix: 3000-4000 PSI</li>
+                            <li>Curing time: 28 days full strength</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Thickness Guidelines</h4>
+                        <ul>
+                            <li>Sidewalks: 4 inches</li>
+                            <li>Driveways: 4-6 inches</li>
+                            <li>Garage floors: 4-6 inches</li>
+                            <li>Basement floors: 4 inches</li>
+                            <li>Footings: 6-8 inches minimum</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Reinforcement</h4>
+                        <ul>
+                            <li>Rebar for structural loads</li>
+                            <li>Wire mesh for crack control</li>
+                            <li>Fiber reinforcement available</li>
+                            <li>Expansion joints for large slabs</li>
+                            <li>Control joints every 10 feet</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Ordering Tips</h4>
+                        <ul>
+                            <li>Order 10% extra for waste</li>
+                            <li>Minimum delivery: 1 cubic yard</li>
+                            <li>Delivery fees typically $75-150</li>
+                            <li>Schedule delivery for pour day</li>
+                                                        <li>Have tools ready before delivery</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Column shape input toggle
+        function toggleColumnInputs() {
+            const shape = document.getElementById('columnShape').value;
+            
+            document.getElementById('roundInputs').style.display = shape === 'round' ? 'block' : 'none';
+            document.getElementById('squareInputs').style.display = shape === 'square' ? 'block' : 'none';
+            document.getElementById('rectangularInputs').style.display = shape === 'rectangular' ? 'block' : 'none';
+        }
+
+        // Concrete calculation functions
+        function calculateSlab() {
+            try {
+                const length = parseFloat(document.getElementById('slabLength').value);
+                const width = parseFloat(document.getElementById('slabWidth').value);
+                const thickness = parseFloat(document.getElementById('slabThickness').value);
+                const waste = parseFloat(document.getElementById('slabWaste').value) / 100;
+                const price = parseFloat(document.getElementById('slabPrice').value) || 150;
+
+                if (!length || !width || !thickness) {
+                    showError('Please enter length, width, and thickness.');
+                    return;
+                }
+
+                if (length <= 0 || width <= 0 || thickness <= 0) {
+                    showError('Please enter positive values for all dimensions.');
+                    return;
+                }
+
+                // Calculate volume
+                const cubicFeet = (length * width * (thickness / 12)) * (1 + waste);
+                const cubicYards = cubicFeet / 27;
+                const bags80lb = Math.ceil(cubicFeet / 0.6);
+
+                // Calculate costs
+                const concreteCost = cubicYards * price;
+                const deliveryCost = cubicYards >= 1 ? 100 : 0;
+                const totalCost = concreteCost + deliveryCost;
+
+                // Update display
+                updateSlabResults(cubicYards, cubicFeet, bags80lb, concreteCost, deliveryCost, totalCost);
+
+                // Show results
+                document.getElementById('slabResults').style.display = 'block';
+                document.getElementById('slabPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating concrete requirements. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function calculateFooting() {
+            try {
+                const length = parseFloat(document.getElementById('footingLength').value);
+                const width = parseFloat(document.getElementById('footingWidth').value);
+                const depth = parseFloat(document.getElementById('footingDepth').value);
+                const waste = parseFloat(document.getElementById('footingWaste').value) / 100;
+                const price = parseFloat(document.getElementById('footingPrice').value) || 150;
+
+                if (!length || !width || !depth) {
+                    showError('Please enter length, width, and depth.');
+                    return;
+                }
+
+                if (length <= 0 || width <= 0 || depth <= 0) {
+                    showError('Please enter positive values for all dimensions.');
+                    return;
+                }
+
+                // Calculate volume
+                const cubicFeet = (length * width * depth) * (1 + waste);
+                const cubicYards = cubicFeet / 27;
+                const bags80lb = Math.ceil(cubicFeet / 0.6);
+
+                // Calculate costs
+                const concreteCost = cubicYards * price;
+                const deliveryCost = cubicYards >= 1 ? 100 : 0;
+                const totalCost = concreteCost + deliveryCost;
+
+                // Update display
+                updateFootingResults(cubicYards, cubicFeet, bags80lb, concreteCost, deliveryCost, totalCost);
+
+                // Show results
+                document.getElementById('footingResults').style.display = 'block';
+                document.getElementById('footingPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating concrete requirements. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function calculateColumn() {
+            try {
+                const shape = document.getElementById('columnShape').value;
+                const height = parseFloat(document.getElementById('columnHeight').value);
+                const count = parseInt(document.getElementById('columnCount').value) || 1;
+                const waste = parseFloat(document.getElementById('columnWaste').value) / 100;
+                const price = parseFloat(document.getElementById('columnPrice').value) || 150;
+
+                if (!height) {
+                    showError('Please enter column height.');
+                    return;
+                }
+
+                if (height <= 0) {
+                    showError('Please enter positive values for height.');
+                    return;
+                }
+
+                let crossSectionArea = 0;
+
+                if (shape === 'round') {
+                    const diameter = parseFloat(document.getElementById('columnDiameter').value);
+                    if (!diameter || diameter <= 0) {
+                        showError('Please enter a positive diameter.');
+                        return;
+                    }
+                    const radius = diameter / 2 / 12; // Convert to feet
+                    crossSectionArea = Math.PI * radius * radius;
+                } else if (shape === 'square') {
+                    const side = parseFloat(document.getElementById('columnSide').value);
+                    if (!side || side <= 0) {
+                        showError('Please enter a positive side length.');
+                        return;
+                    }
+                    const sideInFeet = side / 12; // Convert to feet
+                    crossSectionArea = sideInFeet * sideInFeet;
+                } else if (shape === 'rectangular') {
+                    const length = parseFloat(document.getElementById('columnLength').value);
+                    const width = parseFloat(document.getElementById('columnWidth').value);
+                    if (!length || !width || length <= 0 || width <= 0) {
+                        showError('Please enter positive length and width.');
+                        return;
+                    }
+                    crossSectionArea = (length / 12) * (width / 12); // Convert to feet
+                }
+
+                // Calculate volume
+                const cubicFeetPerColumn = crossSectionArea * height;
+                const totalCubicFeet = cubicFeetPerColumn * count * (1 + waste);
+                const cubicYards = totalCubicFeet / 27;
+                const bags80lb = Math.ceil(totalCubicFeet / 0.6);
+
+                // Calculate costs
+                const concreteCost = cubicYards * price;
+                const deliveryCost = cubicYards >= 1 ? 100 : 0;
+                const totalCost = concreteCost + deliveryCost;
+
+                // Update display
+                updateColumnResults(cubicYards, cubicFeetPerColumn, bags80lb, concreteCost, deliveryCost, totalCost);
+
+                // Show results
+                document.getElementById('columnResults').style.display = 'block';
+                document.getElementById('columnPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating concrete requirements. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function calculateStairs() {
+            try {
+                const width = parseFloat(document.getElementById('stairsWidth').value);
+                const rise = parseFloat(document.getElementById('stairsRise').value);
+                const run = parseFloat(document.getElementById('stairsRun').value);
+                const thickness = parseFloat(document.getElementById('stairsThickness').value);
+                const waste = parseFloat(document.getElementById('stairsWaste').value) / 100;
+                const price = parseFloat(document.getElementById('stairsPrice').value) || 150;
+
+                if (!width || !rise || !run || !thickness) {
+                    showError('Please enter width, rise, run, and thickness.');
+                    return;
+                }
+
+                if (width <= 0 || rise <= 0 || run <= 0 || thickness <= 0) {
+                    showError('Please enter positive values for all dimensions.');
+                    return;
+                }
+
+                // Simplified stairs calculation (triangular prism approximation)
+                const thicknessInFeet = thickness / 12;
+                const averageHeight = rise / 2; // Average height of triangular section
+                const cubicFeet = (width * run * averageHeight + width * run * thicknessInFeet) * (1 + waste);
+                const cubicYards = cubicFeet / 27;
+                const bags80lb = Math.ceil(cubicFeet / 0.6);
+
+                // Calculate costs
+                const concreteCost = cubicYards * price;
+                const deliveryCost = cubicYards >= 1 ? 100 : 0;
+                const totalCost = concreteCost + deliveryCost;
+
+                // Update display
+                updateStairsResults(cubicYards, cubicFeet, bags80lb, concreteCost, deliveryCost, totalCost);
+
+                // Show results
+                document.getElementById('stairsResults').style.display = 'block';
+                document.getElementById('stairsPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating concrete requirements. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        // Update result functions
+        function updateSlabResults(cubicYards, cubicFeet, bags, concreteCost, deliveryCost, totalCost) {
+            document.getElementById('slabCubicYards').textContent = cubicYards.toFixed(2);
+            document.getElementById('slabCubicFeet').textContent = Math.round(cubicFeet);
+            document.getElementById('slab80lbBags').textContent = bags;
+            document.getElementById('slabConcreteCost').textContent = '$' + concreteCost.toFixed(2);
+            document.getElementById('slabDeliveryCost').textContent = '$' + deliveryCost.toFixed(2);
+            document.getElementById('slabTotalCost').textContent = '$' + totalCost.toFixed(2);
+        }
+
+        function updateFootingResults(cubicYards, cubicFeet, bags, concreteCost, deliveryCost, totalCost) {
+            document.getElementById('footingCubicYards').textContent = cubicYards.toFixed(2);
+            document.getElementById('footingCubicFeet').textContent = Math.round(cubicFeet);
+            document.getElementById('footing80lbBags').textContent = bags;
+            document.getElementById('footingConcreteCost').textContent = '$' + concreteCost.toFixed(2);
+            document.getElementById('footingDeliveryCost').textContent = '$' + deliveryCost.toFixed(2);
+            document.getElementById('footingTotalCost').textContent = '$' + totalCost.toFixed(2);
+        }
+
+        function updateColumnResults(cubicYards, cubicFeetPerColumn, bags, concreteCost, deliveryCost, totalCost) {
+            document.getElementById('columnCubicYards').textContent = cubicYards.toFixed(2);
+            document.getElementById('columnPerUnit').textContent = cubicFeetPerColumn.toFixed(2) + ' cu ft';
+            document.getElementById('column80lbBags').textContent = bags;
+            document.getElementById('columnConcreteCost').textContent = '$' + concreteCost.toFixed(2);
+            document.getElementById('columnDeliveryCost').textContent = '$' + deliveryCost.toFixed(2);
+            document.getElementById('columnTotalCost').textContent = '$' + totalCost.toFixed(2);
+        }
+
+        function updateStairsResults(cubicYards, cubicFeet, bags, concreteCost, deliveryCost, totalCost) {
+            document.getElementById('stairsCubicYards').textContent = cubicYards.toFixed(2);
+            document.getElementById('stairsCubicFeet').textContent = Math.round(cubicFeet);
+            document.getElementById('stairs80lbBags').textContent = bags;
+            document.getElementById('stairsConcreteCost').textContent = '$' + concreteCost.toFixed(2);
+            document.getElementById('stairsDeliveryCost').textContent = '$' + deliveryCost.toFixed(2);
+            document.getElementById('stairsTotalCost').textContent = '$' + totalCost.toFixed(2);
+        }
+
+        // Clear functions
+        function clearSlab() {
+            ['slabLength', 'slabWidth', 'slabThickness', 'slabPrice'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('slabWaste').value = '10';
+            document.getElementById('slabResults').style.display = 'none';
+            document.getElementById('slabPlaceholder').style.display = 'block';
+        }
+
+        function clearFooting() {
+            ['footingLength', 'footingWidth', 'footingDepth', 'footingPrice'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('footingWaste').value = '10';
+            document.getElementById('footingResults').style.display = 'none';
+            document.getElementById('footingPlaceholder').style.display = 'block';
+        }
+
+                function clearColumn() {
+            ['columnDiameter', 'columnSide', 'columnLength', 'columnWidth', 'columnHeight', 'columnCount', 'columnPrice'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('columnShape').value = 'round';
+            document.getElementById('columnWaste').value = '10';
+            toggleColumnInputs();
+            document.getElementById('columnResults').style.display = 'none';
+            document.getElementById('columnPlaceholder').style.display = 'block';
+        }
+
+        function clearStairs() {
+            ['stairsWidth', 'stairsRise', 'stairsRun', 'stairsThickness', 'stairsPrice'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('stairsWaste').value = '15';
+            document.getElementById('stairsResults').style.display = 'none';
+            document.getElementById('stairsPlaceholder').style.display = 'block';
+        }
+
+        // Error handling
+        function showError(message) {
+            alert(message);
+        }
+
+        // Auto-calculation with debounce
+        let calculationTimeout;
+        function debounceCalculate(calculationType) {
+            clearTimeout(calculationTimeout);
+            calculationTimeout = setTimeout(() => {
+                switch(calculationType) {
+                    case 'slab':
+                        const slabLength = document.getElementById('slabLength').value;
+                        const slabWidth = document.getElementById('slabWidth').value;
+                        const slabThickness = document.getElementById('slabThickness').value;
+                        if (slabLength && slabWidth && slabThickness) {
+                            calculateSlab();
+                        }
+                        break;
+                    case 'footing':
+                        const footingLength = document.getElementById('footingLength').value;
+                        const footingWidth = document.getElementById('footingWidth').value;
+                        const footingDepth = document.getElementById('footingDepth').value;
+                        if (footingLength && footingWidth && footingDepth) {
+                            calculateFooting();
+                        }
+                        break;
+                    case 'column':
+                        const columnHeight = document.getElementById('columnHeight').value;
+                        const shape = document.getElementById('columnShape').value;
+                        let hasRequiredDimensions = false;
+                        
+                        if (shape === 'round') {
+                            hasRequiredDimensions = document.getElementById('columnDiameter').value;
+                        } else if (shape === 'square') {
+                            hasRequiredDimensions = document.getElementById('columnSide').value;
+                        } else if (shape === 'rectangular') {
+                            hasRequiredDimensions = document.getElementById('columnLength').value && 
+                                                 document.getElementById('columnWidth').value;
+                        }
+                        
+                        if (columnHeight && hasRequiredDimensions) {
+                            calculateColumn();
+                        }
+                        break;
+                    case 'stairs':
+                        const stairsWidth = document.getElementById('stairsWidth').value;
+                        const stairsRise = document.getElementById('stairsRise').value;
+                        const stairsRun = document.getElementById('stairsRun').value;
+                        const stairsThickness = document.getElementById('stairsThickness').value;
+                        if (stairsWidth && stairsRise && stairsRun && stairsThickness) {
+                            calculateStairs();
+                        }
+                        break;
+                }
+            }, 1000);
+        }
+
+        // Add event listeners for auto-calculation
+        function addAutoCalculation() {
+            // Slab inputs
+            ['slabLength', 'slabWidth', 'slabThickness', 'slabWaste', 'slabPrice'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', () => debounceCalculate('slab'));
+                    element.addEventListener('change', () => debounceCalculate('slab'));
+                }
+            });
+
+            // Footing inputs
+            ['footingLength', 'footingWidth', 'footingDepth', 'footingWaste', 'footingPrice'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', () => debounceCalculate('footing'));
+                    element.addEventListener('change', () => debounceCalculate('footing'));
+                }
+            });
+
+            // Column inputs
+            ['columnDiameter', 'columnSide', 'columnLength', 'columnWidth', 'columnHeight', 'columnCount', 'columnShape', 'columnWaste', 'columnPrice'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', () => debounceCalculate('column'));
+                    element.addEventListener('change', () => debounceCalculate('column'));
+                }
+            });
+
+            // Stairs inputs
+            ['stairsWidth', 'stairsRise', 'stairsRun', 'stairsThickness', 'stairsWaste', 'stairsPrice'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', () => debounceCalculate('stairs'));
+                    element.addEventListener('change', () => debounceCalculate('stairs'));
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                const activeTab = document.querySelector('.tab-content.active').id;
+                switch(activeTab) {
+                    case 'slab':
+                        calculateSlab();
+                        break;
+                    case 'footing':
+                        calculateFooting();
+                        break;
+                    case 'column':
+                        calculateColumn();
+                        break;
+                    case 'stairs':
+                        calculateStairs();
+                        break;
+                }
+            } else if (e.key === 'Escape') {
+                const activeTab = document.querySelector('.tab-content.active').id;
+                switch(activeTab) {
+                    case 'slab':
+                        clearSlab();
+                        break;
+                    case 'footing':
+                        clearFooting();
+                        break;
+                    case 'column':
+                        clearColumn();
+                        break;
+                    case 'stairs':
+                        clearStairs();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            addAutoCalculation();
+            
+            // Set default values
+            document.getElementById('slabPrice').value = '150';
+            document.getElementById('footingPrice').value = '150';
+            document.getElementById('columnPrice').value = '150';
+            document.getElementById('stairsPrice').value = '150';
+            document.getElementById('columnCount').value = '1';
+        });
+    </script>
+</body>
+</html>
+

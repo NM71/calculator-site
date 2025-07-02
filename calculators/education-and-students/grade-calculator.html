@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator - CalcHub</title>
+    <meta name="description" content="Calculate your current grade, required scores for target grades, and track your academic progress with weighted assignments and exams.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .calculator-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mode-selector {
+            margin-bottom: 2rem;
+        }
+
+        .mode-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mode-tab {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .mode-tab.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .mode-tab:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .mode-info {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .mode-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .assignments-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .add-assignment-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .add-assignment-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .assignments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .assignment-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .assignment-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input,
+        .form-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .remove-btn {
+            background-color: var(--error-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-btn:hover {
+            background-color: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .target-grade-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .target-grade-section h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .target-input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .current-grade-display {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+        }
+
+        .current-grade-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .current-grade-letter {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .current-grade-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .grade-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .grade-excellent {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .grade-good {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .grade-average {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .grade-poor {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+                        color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .required-scores {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+        }
+
+        .required-scores h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .required-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .required-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+        }
+
+        .required-grade {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .required-score {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .impossible {
+            color: var(--error-color) !important;
+        }
+
+        .easy {
+            color: var(--success-color) !important;
+        }
+
+        .actions-section {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-clear {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-clear:hover {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .btn-save {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .info-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+        }
+
+        .info-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .info-content {
+            display: none;
+        }
+
+        .info-content.active {
+            display: block;
+        }
+
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .grading-table th,
+        .grading-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grading-table th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .grading-table td {
+            color: var(--text-secondary);
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tips-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .assignment-item {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .target-input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-section {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+            
+            .mode-tabs {
+                grid-template-columns: 1fr;
+            }
+            
+            .current-grade-value {
+                font-size: 2.5rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-chart-line"></i>
+                    Grade Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate your current grade, determine what scores you need for target grades, and track your academic progress with weighted assignments.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-wrapper">
+                    <!-- Mode Selector -->
+                    <div class="mode-selector">
+                        <div class="mode-tabs">
+                            <button class="mode-tab active" data-mode="current">
+                                <i class="fas fa-chart-bar"></i>
+                                Current Grade
+                            </button>
+                            <button class="mode-tab" data-mode="target">
+                                <i class="fas fa-bullseye"></i>
+                                Target Grade
+                            </button>
+                        </div>
+                        
+                        <div class="mode-info" id="modeInfo">
+                            <h4>Current Grade Mode</h4>
+                            <p>Calculate your current grade based on completed assignments, tests, and their weights.</p>
+                        </div>
+                    </div>
+
+                    <!-- Assignments Section -->
+                    <div class="assignments-section">
+                        <div class="section-header">
+                            <h3 class="section-title">Assignments & Tests</h3>
+                            <button class="add-assignment-btn" onclick="addAssignment()">
+                                <i class="fas fa-plus"></i>
+                                Add Assignment
+                            </button>
+                        </div>
+                        
+                        <div class="assignments-list" id="assignmentsList">
+                            <!-- Assignments will be added dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Target Grade Section (hidden by default) -->
+                    <div class="target-grade-section" id="targetGradeSection" style="display: none;">
+                        <h4>Target Grade Settings</h4>
+                        <div class="target-input-group">
+                            <div class="form-group">
+                                <label class="form-label">Target Grade (%)</label>
+                                <input type="number" id="targetGrade" class="form-input" min="0" max="100" value="90" onchange="calculateGrades()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Remaining Assignment Weight (%)</label>
+                                <input type="number" id="remainingWeight" class="form-input" min="0" max="100" value="30" onchange="calculateGrades()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions-section">
+                        <button class="action-btn btn-clear" onclick="clearAllAssignments()">
+                            <i class="fas fa-trash"></i>
+                            Clear All
+                        </button>
+                        <button class="action-btn btn-save" onclick="saveGradeData()">
+                            <i class="fas fa-save"></i>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <div class="current-grade-display">
+                        <div class="current-grade-value" id="currentGradeValue">0.0</div>
+                        <div class="current-grade-letter" id="currentGradeLetter">F</div>
+                        <div class="current-grade-label">Current Grade</div>
+                        <div class="grade-status" id="gradeStatus">Add assignments to calculate</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalAssignments">0</div>
+                            <div class="stat-label">Total Assignments</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalWeight">0%</div>
+                            <div class="stat-label">Total Weight</div>
+                        </div>
+                    </div>
+
+                    <div class="required-scores" id="requiredScores" style="display: none;">
+                        <h4>Required Scores for Target Grades</h4>
+                        <div class="required-list" id="requiredList">
+                            <!-- Required scores will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>Grade Calculator Guide</h3>
+                <div class="info-tabs">
+                    <button class="info-tab active" data-tab="grading">Grading Scale</button>
+                    <button class="info-tab" data-tab="tips">Tips & Strategies</button>
+                    <button class="info-tab" data-tab="examples">Examples</button>
+                </div>
+
+                <div class="info-content active" id="grading">
+                    <table class="grading-table">
+                        <thead>
+                            <tr>
+                                <th>Letter Grade</th>
+                                <th>Percentage Range</th>
+                                <th>GPA Points</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A+</td>
+                                <td>97-100%</td>
+                                <td>4.0</td>
+                                <td>Excellent</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>93-96%</td>
+                                <td>4.0</td>
+                                <td>Excellent</td>
+                            </tr>
+                            <tr>
+                                <td>A-</td>
+                                <td>90-92%</td>
+                                <td>3.7</td>
+                                <td>Very Good</td>
+                            </tr>
+                            <tr>
+                                <td>B+</td>
+                                <td>87-89%</td>
+                                <td>3.3</td>
+                                <td>Good</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>83-86%</td>
+                                <td>3.0</td>
+                                <td>Good</td>
+                            </tr>
+                            <tr>
+                                <td>B-</td>
+                                <td>80-82%</td>
+                                <td>2.7</td>
+                                <td>Above Average</td>
+                            </tr>
+                            <tr>
+                                <td>C+</td>
+                                <td>77-79%</td>
+                                <td>2.3</td>
+                                <td>Average</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>73-76%</td>
+                                <td>2.0</td>
+                                <td>Average</td>
+                            </tr>
+                            <tr>
+                                <td>C-</td>
+                                <td>70-72%</td>
+                                <td>1.7</td>
+                                <td>Below Average</td>
+                            </tr>
+                            <tr>
+                                <td>D+</td>
+                                <td>67-69%</td>
+                                <td>1.3</td>
+                                <td>Poor</td>
+                            </tr>
+                            <tr>
+                                                                <td>D</td>
+                                <td>65-66%</td>
+                                <td>1.0</td>
+                                <td>Poor</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>Below 65%</td>
+                                <td>0.0</td>
+                                <td>Failing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-content" id="tips">
+                    <ul class="tips-list">
+                        <li>Focus on high-weight assignments like final exams and major projects</li>
+                        <li>Use the target grade mode to plan what scores you need</li>
+                        <li>Keep track of all assignment weights to ensure they add up to 100%</li>
+                        <li>Prioritize studying for assignments with higher point values</li>
+                        <li>Don't neglect smaller assignments - they can add up significantly</li>
+                        <li>Calculate your grade regularly to stay on track</li>
+                        <li>If you're struggling, focus on upcoming high-weight assignments</li>
+                        <li>Consider extra credit opportunities if available</li>
+                        <li>Communicate with your instructor if you're having difficulties</li>
+                    </ul>
+                </div>
+
+                <div class="info-content" id="examples">
+                    <h4>Example Scenarios:</h4>
+                    
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Scenario 1: Mid-semester Check</h5>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">
+                            You have completed 3 quizzes (10% each), 1 midterm exam (30%), and 2 homework assignments (10% each). 
+                            Your remaining work includes a final exam (30%). Use the calculator to see what final exam score you need for your target grade.
+                        </p>
+                    </div>
+
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Scenario 2: Final Grade Planning</h5>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">
+                            You want to achieve a B+ (87%) in your course. You've completed most assignments but have a final project worth 25% remaining. 
+                            Enter your completed work and set target grade to 87% to see what you need on the final project.
+                        </p>
+                    </div>
+
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Scenario 3: Grade Recovery</h5>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">
+                            You performed poorly on early assignments but want to improve your final grade. 
+                            Enter all your current scores and see what's possible with remaining assignments to set realistic goals.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                if (this.themeToggle) {
+                    this.themeToggle.addEventListener('click', () => this.toggleTheme());
+                }
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                if (this.themeToggle) {
+                    const icon = this.themeToggle.querySelector('i');
+                    if (this.theme === 'dark') {
+                        icon.className = 'fas fa-sun';
+                    } else {
+                        icon.className = 'fas fa-moon';
+                    }
+                }
+            }
+        }
+
+        // Grade Calculator Logic
+        class GradeCalculator {
+            constructor() {
+                this.assignments = [];
+                this.currentMode = 'current';
+                this.gradeScale = {
+                    'A+': { min: 97, max: 100 },
+                    'A': { min: 93, max: 96 },
+                    'A-': { min: 90, max: 92 },
+                    'B+': { min: 87, max: 89 },
+                    'B': { min: 83, max: 86 },
+                    'B-': { min: 80, max: 82 },
+                    'C+': { min: 77, max: 79 },
+                    'C': { min: 73, max: 76 },
+                    'C-': { min: 70, max: 72 },
+                    'D+': { min: 67, max: 69 },
+                    'D': { min: 65, max: 66 },
+                    'F': { min: 0, max: 64 }
+                };
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.addAssignment(); // Add initial assignment
+                this.calculateGrades();
+            }
+
+            setupEventListeners() {
+                // Mode tabs
+                document.querySelectorAll('.mode-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchMode(e.target.closest('.mode-tab').dataset.mode);
+                    });
+                });
+
+                // Info tabs
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchInfoTab(e.target.dataset.tab);
+                    });
+                });
+            }
+
+            switchMode(mode) {
+                this.currentMode = mode;
+                
+                // Update active tab
+                document.querySelectorAll('.mode-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+                
+                // Update mode info
+                this.updateModeInfo();
+                
+                // Show/hide target grade section
+                const targetSection = document.getElementById('targetGradeSection');
+                const requiredScores = document.getElementById('requiredScores');
+                
+                if (mode === 'target') {
+                    targetSection.style.display = 'block';
+                    requiredScores.style.display = 'block';
+                } else {
+                    targetSection.style.display = 'none';
+                    requiredScores.style.display = 'none';
+                }
+                
+                this.calculateGrades();
+            }
+
+            updateModeInfo() {
+                const modeInfo = document.getElementById('modeInfo');
+                
+                if (this.currentMode === 'current') {
+                    modeInfo.innerHTML = `
+                        <h4>Current Grade Mode</h4>
+                        <p>Calculate your current grade based on completed assignments, tests, and their weights.</p>
+                    `;
+                } else {
+                    modeInfo.innerHTML = `
+                        <h4>Target Grade Mode</h4>
+                        <p>Determine what scores you need on remaining assignments to achieve your target grade.</p>
+                    `;
+                }
+            }
+
+            switchInfoTab(tabName) {
+                // Update active tab
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // Update active content
+                document.querySelectorAll('.info-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+            }
+
+            addAssignment() {
+                const assignmentId = Date.now();
+                const assignment = {
+                    id: assignmentId,
+                    name: '',
+                    score: '',
+                    maxScore: 100,
+                    weight: 10,
+                    type: 'assignment'
+                };
+                
+                this.assignments.push(assignment);
+                this.renderAssignments();
+                this.calculateGrades();
+            }
+
+            removeAssignment(assignmentId) {
+                this.assignments = this.assignments.filter(assignment => assignment.id !== assignmentId);
+                this.renderAssignments();
+                this.calculateGrades();
+            }
+
+            updateAssignment(assignmentId, field, value) {
+                const assignment = this.assignments.find(a => a.id === assignmentId);
+                if (assignment) {
+                    assignment[field] = value;
+                    this.calculateGrades();
+                }
+            }
+
+            renderAssignments() {
+                const assignmentsList = document.getElementById('assignmentsList');
+                
+                assignmentsList.innerHTML = this.assignments.map(assignment => `
+                    <div class="assignment-item">
+                        <div class="form-group">
+                            <label class="form-label">Assignment Name</label>
+                            <input type="text" class="form-input" placeholder="e.g., Quiz 1, Midterm Exam" 
+                                   value="${assignment.name}" 
+                                   onchange="gradeCalculator.updateAssignment(${assignment.id}, 'name', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Score</label>
+                            <input type="number" class="form-input" min="0" step="0.1" 
+                                   placeholder="Points earned" 
+                                   value="${assignment.score}" 
+                                   onchange="gradeCalculator.updateAssignment(${assignment.id}, 'score', parseFloat(this.value) || '')">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Max Score</label>
+                            <input type="number" class="form-input" min="1" step="0.1" 
+                                   value="${assignment.maxScore}" 
+                                   onchange="gradeCalculator.updateAssignment(${assignment.id}, 'maxScore', parseFloat(this.value) || 100)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Weight (%)</label>
+                            <input type="number" class="form-input" min="0" max="100" step="0.1" 
+                                   value="${assignment.weight}" 
+                                   onchange="gradeCalculator.updateAssignment(${assignment.id}, 'weight', parseFloat(this.value) || 0)">
+                        </div>
+                        <button class="remove-btn" onclick="gradeCalculator.removeAssignment(${assignment.id})" 
+                                title="Remove Assignment">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            calculateGrades() {
+                let totalWeightedScore = 0;
+                let totalWeight = 0;
+                let completedWeight = 0;
+                let validAssignments = 0;
+
+                // Calculate current grade from completed assignments
+                this.assignments.forEach(assignment => {
+                    if (assignment.score !== '' && assignment.score !== null && assignment.maxScore > 0 && assignment.weight > 0) {
+                        const percentage = (assignment.score / assignment.maxScore) * 100;
+                        totalWeightedScore += percentage * (assignment.weight / 100);
+                        completedWeight += assignment.weight;
+                        validAssignments++;
+                    }
+                    if (assignment.weight > 0) {
+                        totalWeight += assignment.weight;
+                    }
+                });
+
+                // Calculate current grade
+                const currentGrade = completedWeight > 0 ? (totalWeightedScore / completedWeight) * 100 : 0;
+
+                // Update display
+                this.updateGradeDisplay(currentGrade, validAssignments, totalWeight, completedWeight);
+
+                // Calculate required scores if in target mode
+                if (this.currentMode === 'target') {
+                    this.calculateRequiredScores(totalWeightedScore, completedWeight);
+                }
+            }
+
+            updateGradeDisplay(currentGrade, totalAssignments, totalWeight, completedWeight) {
+                // Update current grade value
+                document.getElementById('currentGradeValue').textContent = currentGrade.toFixed(1) + '%';
+                
+                // Update letter grade
+                const letterGrade = this.getLetterGrade(currentGrade);
+                document.getElementById('currentGradeLetter').textContent = letterGrade;
+
+                // Update grade status
+                const status = this.getGradeStatus(currentGrade);
+                const statusElement = document.getElementById('gradeStatus');
+                statusElement.textContent = status.text;
+                statusElement.className = `grade-status ${status.class}`;
+
+                // Update stats
+                document.getElementById('totalAssignments').textContent = totalAssignments;
+                document.getElementById('totalWeight').textContent = totalWeight.toFixed(1) + '%';
+            }
+
+            getLetterGrade(percentage) {
+                for (const [letter, range] of Object.entries(this.gradeScale)) {
+                    if (percentage >= range.min && percentage <= range.max) {
+                        return letter;
+                    }
+                }
+                return 'F';
+            }
+
+            getGradeStatus(grade) {
+                if (grade >= 90) return { text: 'Excellent', class: 'grade-excellent' };
+                if (grade >= 80) return { text: 'Good', class: 'grade-good' };
+                if (grade >= 70) return { text: 'Average', class: 'grade-average' };
+                if (grade > 0) return { text: 'Needs Improvement', class: 'grade-poor' };
+                return { text: 'Add assignments to calculate', class: 'grade-average' };
+            }
+
+            calculateRequiredScores(currentWeightedScore, completedWeight) {
+                const targetGrade = parseFloat(document.getElementById('targetGrade').value) || 90;
+                const remainingWeight = parseFloat(document.getElementById('remainingWeight').value) || 30;
+                
+                const requiredList = document.getElementById('requiredList');
+                                const targetGrades = [
+                    { grade: 'A+ (97%)', percentage: 97 },
+                    { grade: 'A (93%)', percentage: 93 },
+                    { grade: 'A- (90%)', percentage: 90 },
+                    { grade: 'B+ (87%)', percentage: 87 },
+                    { grade: 'B (83%)', percentage: 83 },
+                    { grade: 'B- (80%)', percentage: 80 },
+                    { grade: 'C+ (77%)', percentage: 77 },
+                    { grade: 'C (73%)', percentage: 73 }
+                ];
+
+                const requiredScores = targetGrades.map(target => {
+                    const requiredTotalScore = target.percentage;
+                    const requiredRemainingScore = ((requiredTotalScore - currentWeightedScore) / remainingWeight) * 100;
+                    
+                    let scoreClass = '';
+                    let scoreText = '';
+                    
+                    if (requiredRemainingScore > 100) {
+                        scoreClass = 'impossible';
+                        scoreText = 'Impossible';
+                    } else if (requiredRemainingScore < 0) {
+                        scoreClass = 'easy';
+                        scoreText = 'Already Achieved';
+                    } else if (requiredRemainingScore <= 60) {
+                        scoreClass = 'easy';
+                        scoreText = requiredRemainingScore.toFixed(1) + '%';
+                    } else if (requiredRemainingScore <= 85) {
+                        scoreText = requiredRemainingScore.toFixed(1) + '%';
+                    } else {
+                        scoreText = requiredRemainingScore.toFixed(1) + '%';
+                    }
+
+                    return {
+                        grade: target.grade,
+                        score: scoreText,
+                        class: scoreClass
+                    };
+                });
+
+                requiredList.innerHTML = requiredScores.map(item => `
+                    <div class="required-item">
+                        <span class="required-grade">${item.grade}</span>
+                        <span class="required-score ${item.class}">${item.score}</span>
+                    </div>
+                `).join('');
+            }
+
+            clearAllAssignments() {
+                if (confirm('Are you sure you want to clear all assignments?')) {
+                    this.assignments = [];
+                    this.renderAssignments();
+                    this.addAssignment(); // Add one empty assignment
+                    this.calculateGrades();
+                    this.showToast('All assignments cleared!', 'info');
+                }
+            }
+
+            saveGradeData() {
+                const gradeData = {
+                    timestamp: new Date().toISOString(),
+                    mode: this.currentMode,
+                    assignments: this.assignments.filter(a => a.name || a.score !== ''),
+                    targetGrade: document.getElementById('targetGrade').value,
+                    remainingWeight: document.getElementById('remainingWeight').value
+                };
+
+                // Save to localStorage
+                localStorage.setItem('grade-calculator-data', JSON.stringify(gradeData));
+
+                // Create and download file
+                const dataStr = JSON.stringify(gradeData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `grade-calculation-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                this.showToast('Grade data saved successfully!', 'success');
+            }
+
+            loadSavedData() {
+                const savedData = localStorage.getItem('grade-calculator-data');
+                if (savedData) {
+                    try {
+                        const data = JSON.parse(savedData);
+                        if (data.assignments && data.assignments.length > 0) {
+                            this.assignments = data.assignments;
+                            this.renderAssignments();
+                            
+                            if (data.targetGrade) {
+                                document.getElementById('targetGrade').value = data.targetGrade;
+                            }
+                            if (data.remainingWeight) {
+                                document.getElementById('remainingWeight').value = data.remainingWeight;
+                            }
+                            if (data.mode) {
+                                this.switchMode(data.mode);
+                            }
+                            
+                            this.calculateGrades();
+                            this.showToast('Previous data loaded!', 'info');
+                        }
+                    } catch (e) {
+                        console.log('Could not load saved data');
+                    }
+                }
+            }
+
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.textContent = message;
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--primary-color);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: var(--radius);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 1000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+
+                if (type === 'success') {
+                    toast.style.background = 'var(--success-color)';
+                } else if (type === 'error') {
+                    toast.style.background = 'var(--error-color)';
+                } else if (type === 'warning') {
+                    toast.style.background = 'var(--warning-color)';
+                }
+
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(toast)) {
+                            document.body.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Auto-save functionality
+            startAutoSave() {
+                setInterval(() => {
+                    if (this.assignments.length > 0) {
+                        const gradeData = {
+                            timestamp: new Date().toISOString(),
+                            mode: this.currentMode,
+                            assignments: this.assignments,
+                            targetGrade: document.getElementById('targetGrade').value,
+                            remainingWeight: document.getElementById('remainingWeight').value
+                        };
+                        localStorage.setItem('grade-calculator-autosave', JSON.stringify(gradeData));
+                    }
+                }, 10000); // Auto-save every 10 seconds
+            }
+        }
+
+        // Global functions for onclick handlers
+        function addAssignment() {
+            gradeCalculator.addAssignment();
+        }
+
+        function clearAllAssignments() {
+            gradeCalculator.clearAllAssignments();
+        }
+
+        function saveGradeData() {
+            gradeCalculator.saveGradeData();
+        }
+
+        function calculateGrades() {
+            gradeCalculator.calculateGrades();
+        }
+
+        // Initialize everything when DOM is loaded
+        let gradeCalculator;
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            gradeCalculator = new GradeCalculator();
+            
+            // Load saved data after a short delay
+            setTimeout(() => {
+                gradeCalculator.loadSavedData();
+                gradeCalculator.startAutoSave();
+            }, 500);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'n':
+                        e.preventDefault();
+                        addAssignment();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        saveGradeData();
+                        break;
+                    case '1':
+                        e.preventDefault();
+                        gradeCalculator.switchMode('current');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        gradeCalculator.switchMode('target');
+                        break;
+                    case 'Backspace':
+                        if (e.shiftKey) {
+                            e.preventDefault();
+                            clearAllAssignments();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Import functionality
+        function importGradeData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            if (data.assignments) {
+                                gradeCalculator.assignments = data.assignments;
+                                gradeCalculator.renderAssignments();
+                                
+                                if (data.targetGrade) {
+                                    document.getElementById('targetGrade').value = data.targetGrade;
+                                }
+                                if (data.remainingWeight) {
+                                    document.getElementById('remainingWeight').value = data.remainingWeight;
+                                }
+                                if (data.mode) {
+                                    gradeCalculator.switchMode(data.mode);
+                                }
+                                
+                                gradeCalculator.calculateGrades();
+                                gradeCalculator.showToast('Data imported successfully!', 'success');
+                            }
+                        } catch (error) {
+                            gradeCalculator.showToast('Error importing data!', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // Add import button functionality
+        window.addEventListener('load', () => {
+            // Add import button to actions section
+            const actionsSection = document.querySelector('.actions-section');
+            if (actionsSection) {
+                const importBtn = document.createElement('button');
+                importBtn.className = 'action-btn btn-save';
+                importBtn.innerHTML = '<i class="fas fa-upload"></i> Import Data';
+                importBtn.onclick = importGradeData;
+                actionsSection.appendChild(importBtn);
+            }
+        });
+
+        // Validation helpers
+        function validateAssignmentData() {
+            let totalWeight = 0;
+            let hasErrors = false;
+            
+            gradeCalculator.assignments.forEach(assignment => {
+                if (assignment.weight > 0) {
+                    totalWeight += assignment.weight;
+                }
+                
+                if (assignment.score > assignment.maxScore) {
+                    hasErrors = true;
+                }
+            });
+            
+            if (totalWeight > 100) {
+                gradeCalculator.showToast('Warning: Total weight exceeds 100%', 'warning');
+            }
+            
+            if (hasErrors) {
+                gradeCalculator.showToast('Warning: Some scores exceed maximum points', 'warning');
+            }
+        }
+
+        // Add validation on input changes
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('form-input')) {
+                setTimeout(validateAssignmentData, 500);
+            }
+        });
+    </script>
+</body>
+</html>
+
+

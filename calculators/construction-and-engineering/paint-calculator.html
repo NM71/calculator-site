@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint Calculator - CalcHub</title>
+    <meta name="description" content="Calculate paint needed for walls, rooms, and surfaces. Estimate paint coverage, costs, and materials required.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+                .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--success-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .input-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--radius) - 0.25rem);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-muted);
+            color: white;
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-highlight {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-text {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 1rem;
+        }
+
+        .placeholder-message i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .cost-breakdown {
+            background-color: var(--info-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cost-breakdown h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.875rem;
+        }
+
+        .cost-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tips-section {
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tips-section h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .tips-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-section li {
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            opacity: 0.95;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .tips-section li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: var(--bg-secondary);
+            border-radius: calc(var(--radius) - 0.25rem);
+            padding: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-amount {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .result-amount {
+                font-size: 1.75rem;
+            }
+            
+            .result-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-paint-roller"></i>
+                    Paint Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate paint needed for walls, rooms, and surfaces. Estimate paint coverage, costs, and materials required for your painting project.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="input-section">
+                    <h3>
+                        <i class="fas fa-home"></i>
+                        Room Dimensions
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="roomLength">Room Length (ft)</label>
+                                                <input type="number" id="roomLength" class="form-input" placeholder="12" step="0.1" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="roomWidth">Room Width (ft)</label>
+                        <input type="number" id="roomWidth" class="form-input" placeholder="10" step="0.1" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="roomHeight">Room Height (ft)</label>
+                        <input type="number" id="roomHeight" class="form-input" placeholder="8" step="0.1" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="doors">Number of Doors</label>
+                        <input type="number" id="doors" class="form-input" placeholder="2" min="0" max="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="windows">Number of Windows</label>
+                        <input type="number" id="windows" class="form-input" placeholder="3" min="0" max="20">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="coats">Number of Coats</label>
+                        <select id="coats" class="form-select">
+                            <option value="1">1 Coat</option>
+                            <option value="2" selected>2 Coats (Recommended)</option>
+                            <option value="3">3 Coats</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="paintType">Paint Type</label>
+                        <select id="paintType" class="form-select">
+                            <option value="latex">Latex/Water-based</option>
+                            <option value="oil">Oil-based</option>
+                            <option value="primer">Primer</option>
+                            <option value="ceiling">Ceiling Paint</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="coverage">Paint Coverage (sq ft per gallon)</label>
+                        <input type="number" id="coverage" class="form-input" placeholder="350" min="200" max="500">
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">Typical range: 300-400 sq ft per gallon</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="paintPrice">Paint Price per Gallon ($)</label>
+                        <input type="number" id="paintPrice" class="form-input" placeholder="45" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <button class="btn" onclick="calculatePaint()">
+                            <i class="fas fa-calculator"></i>
+                            Calculate Paint
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearInputs()">
+                            <i class="fas fa-refresh"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i>
+                        Paint Requirements
+                    </h3>
+                    
+                    <div id="paintResults" style="display: none;">
+                        <div class="result-highlight">
+                            <div class="result-amount" id="totalGallons">0</div>
+                            <div class="result-text">Gallons Needed</div>
+                        </div>
+                        
+                        <div class="result-grid">
+                            <div class="result-card">
+                                <div class="result-label">Wall Area</div>
+                                <div class="result-value" id="wallArea">0 sq ft</div>
+                                <div class="result-description">Total paintable area</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Paint Quarts</div>
+                                <div class="result-value" id="totalQuarts">0</div>
+                                <div class="result-description">Alternative measure</div>
+                            </div>
+                        </div>
+                        
+                        <div class="cost-breakdown" id="costBreakdown">
+                            <h4><i class="fas fa-dollar-sign"></i> Cost Breakdown</h4>
+                            <div class="cost-item">
+                                <span>Paint Cost:</span>
+                                <span id="paintCost">$0.00</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Estimated Supplies:</span>
+                                <span id="suppliesCost">$0.00</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>Total Estimated Cost:</span>
+                                <span id="totalCost">$0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="tips-section">
+                            <h4><i class="fas fa-lightbulb"></i> Pro Tips</h4>
+                            <ul>
+                                <li>Buy 10-15% extra paint for touch-ups</li>
+                                <li>Use primer on new or dark surfaces</li>
+                                <li>Quality brushes and rollers improve coverage</li>
+                                <li>Two thin coats are better than one thick coat</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div id="paintPlaceholder" class="placeholder-message">
+                        <i class="fas fa-paint-roller"></i>
+                        <p>Enter room dimensions to calculate paint requirements</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Paint Calculator Guide
+                </h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Coverage Guidelines</h4>
+                        <ul>
+                            <li>Flat paint: 350-400 sq ft/gallon</li>
+                            <li>Eggshell/Satin: 300-350 sq ft/gallon</li>
+                            <li>Semi-gloss: 300-350 sq ft/gallon</li>
+                            <li>Gloss paint: 300-325 sq ft/gallon</li>
+                            <li>Primer: 200-300 sq ft/gallon</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Surface Preparation</h4>
+                        <ul>
+                            <li>Clean walls before painting</li>
+                            <li>Fill holes and cracks</li>
+                            <li>Sand glossy surfaces</li>
+                            <li>Use primer on new drywall</li>
+                            <li>Remove loose or peeling paint</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Paint Types</h4>
+                        <ul>
+                            <li>Latex: Easy cleanup, low odor</li>
+                            <li>Oil-based: Durable, smooth finish</li>
+                            <li>Primer: Seals and prepares surface</li>
+                            <li>Ceiling: Flat finish, spatter-resistant</li>
+                            <li>Specialty: Textured, magnetic, etc.</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Tools & Supplies</h4>
+                        <ul>
+                            <li>Brushes: 2-3 inch angled</li>
+                            <li>Rollers: 9 inch with extension</li>
+                            <li>Drop cloths and plastic sheeting</li>
+                            <li>Painter's tape</li>
+                            <li>Paint trays and liners</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                const icon = this.themeToggle.querySelector('i');
+                if (this.theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            }
+        }
+
+        // Paint Calculator Logic
+        function calculatePaint() {
+            try {
+                // Get input values
+                const length = parseFloat(document.getElementById('roomLength').value);
+                const width = parseFloat(document.getElementById('roomWidth').value);
+                const height = parseFloat(document.getElementById('roomHeight').value);
+                const doors = parseInt(document.getElementById('doors').value) || 0;
+                const windows = parseInt(document.getElementById('windows').value) || 0;
+                const coats = parseInt(document.getElementById('coats').value) || 2;
+                const paintType = document.getElementById('paintType').value;
+                const coverage = parseFloat(document.getElementById('coverage').value) || getDefaultCoverage(paintType);
+                const paintPrice = parseFloat(document.getElementById('paintPrice').value) || 45;
+
+                // Validate inputs
+                if (!length || !width || !height) {
+                    showError('Please enter room length, width, and height.');
+                    return;
+                }
+
+                if (length <= 0 || width <= 0 || height <= 0) {
+                    showError('Please enter positive values for room dimensions.');
+                    return;
+                }
+
+                // Calculate areas
+                const wallArea = calculateWallArea(length, width, height, doors, windows);
+                const totalAreaToPaint = wallArea * coats;
+                const gallonsNeeded = Math.ceil((totalAreaToPaint / coverage) * 10) / 10; // Round up to nearest 0.1
+                const quartsNeeded = Math.ceil(gallonsNeeded * 4);
+
+                // Calculate costs
+                const paintCost = gallonsNeeded * paintPrice;
+                const suppliesCost = calculateSuppliesCost(wallArea);
+                const totalCost = paintCost + suppliesCost;
+
+                // Update display
+                updateResults(gallonsNeeded, quartsNeeded, wallArea, paintCost, suppliesCost, totalCost);
+
+                // Show results
+                document.getElementById('paintResults').style.display = 'block';
+                document.getElementById('paintPlaceholder').style.display = 'none';
+
+            } catch (error) {
+                showError('Error calculating paint requirements. Please check your inputs.');
+                console.error('Calculation error:', error);
+            }
+        }
+
+        function calculateWallArea(length, width, height, doors, windows) {
+            // Calculate total wall area
+            const wallArea = 2 * (length + width) * height;
+            
+            // Subtract door area (standard door: 21 sq ft)
+            const doorArea = doors * 21;
+            
+            // Subtract window area (average window: 15 sq ft)
+            const windowArea = windows * 15;
+            
+            // Return net paintable area
+            return Math.max(wallArea - doorArea - windowArea, 0);
+        }
+
+        function getDefaultCoverage(paintType) {
+            const coverageMap = {
+                'latex': 350,
+                'oil': 325,
+                'primer': 250,
+                'ceiling': 375
+            };
+            return coverageMap[paintType] || 350;
+        }
+
+        function calculateSuppliesCost(wallArea) {
+            // Estimate supplies cost based on wall area
+            const baseSupplies = 25; // Basic supplies
+            const additionalSupplies = Math.floor(wallArea / 200) * 10; // Additional supplies for larger areas
+            return baseSupplies + additionalSupplies;
+        }
+
+        function updateResults(gallons, quarts, area, paintCost, suppliesCost, totalCost) {
+            document.getElementById('totalGallons').textContent = gallons.toFixed(1);
+            document.getElementById('totalQuarts').textContent = quarts;
+            document.getElementById('wallArea').textContent = Math.round(area) + ' sq ft';
+            document.getElementById('paintCost').textContent = '$' + paintCost.toFixed(2);
+            document.getElementById('suppliesCost').textContent = '$' + suppliesCost.toFixed(2);
+            document.getElementById('totalCost').textContent = '$' + totalCost.toFixed(2);
+        }
+
+        function clearInputs() {
+            // Clear all input fields
+            document.getElementById('roomLength').value = '';
+            document.getElementById('roomWidth').value = '';
+            document.getElementById('roomHeight').value = '';
+            document.getElementById('doors').value = '';
+            document.getElementById('windows').value = '';
+            document.getElementById('coats').value = '2';
+            document.getElementById('paintType').value = 'latex';
+            document.getElementById('coverage').value = '';
+            document.getElementById('paintPrice').value = '';
+
+            // Hide results
+            document.getElementById('paintResults').style.display = 'none';
+            document.getElementById('paintPlaceholder').style.display = 'block';
+        }
+
+        function showError(message) {
+            alert(message);
+        }
+
+        // Auto-update coverage when paint type changes
+        document.getElementById('paintType').addEventListener('change', function() {
+            const paintType = this.value;
+            const coverageInput = document.getElementById('coverage');
+            if (!coverageInput.value) {
+                coverageInput.value = getDefaultCoverage(paintType);
+            }
+        });
+
+        // Auto-calculate on input change (with debounce)
+        let calculateTimeout;
+        function debounceCalculate() {
+            clearTimeout(calculateTimeout);
+            calculateTimeout = setTimeout(() => {
+                const length = document.getElementById('roomLength').value;
+                const width = document.getElementById('roomWidth').value;
+                const height = document.getElementById('roomHeight').value;
+                
+                                if (length && width && height) {
+                    calculatePaint();
+                }
+            }, 1000);
+        }
+
+        // Add event listeners for auto-calculation
+        ['roomLength', 'roomWidth', 'roomHeight', 'doors', 'windows', 'coats', 'paintType', 'coverage', 'paintPrice'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', debounceCalculate);
+                element.addEventListener('change', debounceCalculate);
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                calculatePaint();
+            } else if (e.key === 'Escape') {
+                clearInputs();
+            }
+        });
+
+        // Initialize default values
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            
+            // Set default coverage based on initial paint type
+            const paintType = document.getElementById('paintType').value;
+            const coverageInput = document.getElementById('coverage');
+            if (!coverageInput.value) {
+                coverageInput.value = getDefaultCoverage(paintType);
+            }
+        });
+    </script>
+</body>
+</html>
+
+
