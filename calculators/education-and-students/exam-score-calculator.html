@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Exam Score Calculator - CalcHub</title>
+    <meta name="description" content="Calculate what score you need on your final exam to achieve your desired grade. Supports both absolute and relative grading systems with class curves.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.2s ease-in-out;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .calculator-page {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .calculator-title i {
+            color: var(--primary-color);
+        }
+
+        .calculator-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .calculator-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .grading-mode-selector {
+            margin-bottom: 2rem;
+        }
+
+        .mode-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mode-tab {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .mode-tab.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .mode-tab:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .mode-info {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .mode-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .input-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input,
+        .form-select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .input-help {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .relative-grading-section {
+            display: none;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .relative-grading-section.active {
+            display: block;
+        }
+
+        .calculate-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .calculate-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .results-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-display {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 2px solid var(--border-color);
+        }
+
+        .result-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .status-achievable {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .status-challenging {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .status-impossible {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .status-excellent {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .grade-scenarios {
+            margin-bottom: 2rem;
+        }
+
+        .scenarios-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .scenario-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .scenario-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .scenario-grade {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .scenario-score {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .impossible {
+            color: var(--error-color) !important;
+        }
+
+        .easy {
+            color: var(--success-color) !important;
+        }
+
+        .challenging {
+            color: var(--warning-color) !important;
+        }
+
+        .study-tips {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+        }
+
+        .study-tips h4 {
+            color: var(--text-primary);
+                        margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tips-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        .actions-section {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-clear {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-clear:hover {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .btn-save {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .info-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .info-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .info-tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .info-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .info-content {
+            display: none;
+        }
+
+        .info-content.active {
+            display: block;
+        }
+
+        .formula-box {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .formula-box code {
+            background-color: var(--bg-card);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .curve-info {
+            background-color: var(--info-color);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+        }
+
+        .curve-info h5 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .curve-info p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .percentile-display {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .percentile-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .percentile-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .calculator-title {
+                font-size: 2rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-section {
+                flex-direction: column;
+            }
+            
+            .result-value {
+                font-size: 2.5rem;
+            }
+
+            .mode-tabs {
+                grid-template-columns: 1fr;
+            }
+
+            .info-tabs {
+                flex-direction: column;
+            }
+
+            .info-tab {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+            
+            .result-value {
+                font-size: 2rem;
+            }
+        }
+
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>CalcHub</span>
+            </a>
+            <div class="nav-actions">
+                <a href="../../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <div class="calculator-page">
+            <div class="calculator-header">
+                <h1 class="calculator-title">
+                    <i class="fas fa-graduation-cap"></i>
+                    Final Exam Score Calculator
+                </h1>
+                <p class="calculator-description">
+                    Calculate what score you need on your final exam to achieve your desired grade. Supports both absolute grading and relative grading with class curves and percentile rankings.
+                </p>
+            </div>
+
+            <div class="calculator-container">
+                <div class="calculator-wrapper">
+                    <!-- Grading Mode Selector -->
+                    <div class="grading-mode-selector">
+                        <div class="mode-tabs">
+                            <button class="mode-tab active" data-mode="absolute">
+                                <i class="fas fa-percentage"></i>
+                                Absolute Grading
+                            </button>
+                            <button class="mode-tab" data-mode="relative">
+                                <i class="fas fa-chart-line"></i>
+                                Relative Grading
+                            </button>
+                        </div>
+                        
+                        <div class="mode-info" id="modeInfo">
+                            <h4>Absolute Grading Mode</h4>
+                            <p>Calculate based on fixed percentage thresholds (e.g., 90% = A, 80% = B). Your grade depends only on your raw score.</p>
+                        </div>
+                    </div>
+
+                    <!-- Current Grade Input -->
+                    <div class="input-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-line"></i>
+                            Current Grade Information
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Current Grade (%)</label>
+                                <input type="number" id="currentGrade" class="form-input" min="0" max="100" step="0.1" placeholder="85.5" onchange="calculateFinalScore()">
+                                <div class="input-help">Your grade before the final exam</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Final Exam Weight (%)</label>
+                                <input type="number" id="finalWeight" class="form-input" min="0" max="100" step="0.1" placeholder="30" onchange="calculateFinalScore()">
+                                <div class="input-help">How much the final exam counts toward your grade</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Grade Input -->
+                    <div class="input-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-bullseye"></i>
+                            Target Grade
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Desired Final Grade (%)</label>
+                                <input type="number" id="targetGrade" class="form-input" min="0" max="100" step="0.1" placeholder="90" onchange="calculateFinalScore()">
+                                <div class="input-help">The grade you want to achieve in the course</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Grading System</label>
+                                <select id="gradingSystem" class="form-select" onchange="updateGradingSystem()">
+                                    <option value="standard">Standard (A=90%, B=80%, etc.)</option>
+                                    <option value="strict">Strict (A=93%, B=85%, etc.)</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <div class="input-help">Select your school's grading scale</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Relative Grading Section -->
+                    <div class="relative-grading-section" id="relativeGradingSection">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-users"></i>
+                            Class Curve Information
+                        </h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Current Class Rank</label>
+                                <input type="number" id="currentRank" class="form-input" min="1" placeholder="15" onchange="calculateFinalScore()">
+                                <div class="input-help">Your current position in class (1 = highest)</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Total Students</label>
+                                <input type="number" id="totalStudents" class="form-input" min="1" placeholder="50" onchange="calculateFinalScore()">
+                                <div class="input-help">Total number of students in class</div>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Target Percentile</label>
+                                <input type="number" id="targetPercentile" class="form-input" min="0" max="100" step="0.1" placeholder="85" onchange="calculateFinalScore()">
+                                <div class="input-help">Percentile you want to achieve (85 = top 15%)</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Grade Distribution</label>
+                                <select id="gradeDistribution" class="form-select" onchange="calculateFinalScore()">
+                                    <option value="normal">Normal Distribution</option>
+                                    <option value="competitive">Competitive (Top-heavy)</option>
+                                    <option value="lenient">Lenient (Bottom-heavy)</option>
+                                    <option value="uniform">Uniform Distribution</option>
+                                </select>
+                                <div class="input-help">How grades are typically distributed in your class</div>
+                            </div>
+                        </div>
+                        
+                        <div class="curve-info">
+                            <h5><i class="fas fa-info-circle"></i> Relative Grading Explanation</h5>
+                            <p>In relative grading, your final grade depends on your performance compared to classmates. The calculator estimates what score you need to achieve your target percentile ranking.</p>
+                        </div>
+                    </div>
+
+                    <!-- Calculate Button -->
+                    <button class="calculate-btn" onclick="calculateFinalScore()">
+                        <i class="fas fa-calculator"></i>
+                        Calculate Required Score
+                    </button>
+
+                    <!-- Actions -->
+                    <div class="actions-section">
+                        <button class="action-btn btn-clear" onclick="clearInputs()">
+                            <i class="fas fa-refresh"></i>
+                            Reset
+                        </button>
+                        <button class="action-btn btn-save" onclick="saveCalculation()">
+                            <i class="fas fa-save"></i>
+                            Save Results
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <div class="result-display">
+                        <div class="result-value" id="requiredScore">--</div>
+                        <div class="result-label">Required Final Exam Score</div>
+                        <div class="result-status" id="resultStatus">Enter your information to calculate</div>
+                    </div>
+
+                    <!-- Percentile Display (for relative grading) -->
+                    <div class="percentile-display" id="percentileDisplay" style="display: none;">
+                        <div class="percentile-value" id="currentPercentile">--</div>
+                        <div class="percentile-label">Current Percentile Ranking</div>
+                                            </div>
+
+                    <!-- Grade Scenarios -->
+                    <div class="grade-scenarios">
+                        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">
+                            <i class="fas fa-list"></i>
+                            Grade Scenarios
+                        </h4>
+                        <div class="scenarios-grid" id="scenariosGrid">
+                            <!-- Scenarios will be populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Study Tips -->
+                    <div class="study-tips">
+                        <h4>
+                            <i class="fas fa-lightbulb"></i>
+                            Study Recommendations
+                        </h4>
+                        <ul class="tips-list" id="studyTips">
+                            <li>Enter your current grade and final exam weight to get personalized tips</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h3>Final Exam Calculator Guide</h3>
+                <div class="info-tabs">
+                    <button class="info-tab active" data-tab="formulas">Formulas</button>
+                    <button class="info-tab" data-tab="grading">Grading Systems</button>
+                    <button class="info-tab" data-tab="relative">Relative Grading</button>
+                    <button class="info-tab" data-tab="tips">Study Tips</button>
+                    <button class="info-tab" data-tab="examples">Examples</button>
+                </div>
+
+                <div class="info-content active" id="formulas">
+                    <h4>Calculation Formulas</h4>
+                    
+                    <h5 style="margin-top: 1.5rem; color: var(--primary-color);">Absolute Grading Formula:</h5>
+                    <div class="formula-box">
+                        <code>Required Score = (Target Grade - Current Grade × (100 - Final Weight)) ÷ Final Weight</code>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                        This formula calculates the exact percentage you need on your final exam to achieve your target grade.
+                    </p>
+
+                    <h5 style="margin-top: 1.5rem; color: var(--primary-color);">Relative Grading Formula:</h5>
+                    <div class="formula-box">
+                        <code>Target Score = μ + (Z-score × σ)</code><br>
+                        <small style="color: var(--text-muted);">Where μ = class mean, σ = standard deviation, Z-score = percentile conversion</small>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        Relative grading uses statistical distributions to estimate the score needed to achieve your target percentile ranking.
+                    </p>
+
+                    <h5 style="margin-top: 1.5rem; color: var(--primary-color);">Current Percentile:</h5>
+                    <div class="formula-box">
+                        <code>Percentile = ((Total Students - Your Rank + 1) ÷ Total Students) × 100</code>
+                    </div>
+                </div>
+
+                <div class="info-content" id="grading">
+                    <h4>Grading System Comparison</h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                        <div style="background-color: var(--bg-secondary); padding: 1rem; border-radius: var(--radius);">
+                            <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Standard Grading</h5>
+                            <ul style="list-style: none; padding: 0; color: var(--text-secondary); font-size: 0.875rem;">
+                                <li>A: 90-100%</li>
+                                <li>B: 80-89%</li>
+                                <li>C: 70-79%</li>
+                                <li>D: 60-69%</li>
+                                <li>F: Below 60%</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background-color: var(--bg-secondary); padding: 1rem; border-radius: var(--radius);">
+                            <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Strict Grading</h5>
+                            <ul style="list-style: none; padding: 0; color: var(--text-secondary); font-size: 0.875rem;">
+                                <li>A: 93-100%</li>
+                                <li>B: 85-92%</li>
+                                <li>C: 77-84%</li>
+                                <li>D: 70-76%</li>
+                                <li>F: Below 70%</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="curve-info">
+                        <h5><i class="fas fa-chart-line"></i> Understanding Grade Curves</h5>
+                        <p>Some professors apply curves to adjust grades based on class performance. A curve can help if the class average is low, but it can also make grades more competitive if everyone performs well.</p>
+                    </div>
+                </div>
+
+                <div class="info-content" id="relative">
+                    <h4>Relative Grading Explained</h4>
+                    
+                    <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem;">
+                        Relative grading (also called "grading on a curve") means your grade depends on how you perform compared to your classmates, not just your raw score.
+                    </p>
+
+                    <h5 style="color: var(--primary-color); margin: 1rem 0 0.5rem 0;">Key Concepts:</h5>
+                    <ul style="color: var(--text-secondary); line-height: 1.6;">
+                        <li><strong>Percentile Ranking:</strong> Your position relative to other students (85th percentile = better than 85% of class)</li>
+                        <li><strong>Class Distribution:</strong> How grades are spread among students</li>
+                        <li><strong>Standard Deviation:</strong> Measure of how spread out the scores are</li>
+                        <li><strong>Z-Score:</strong> How many standard deviations you are from the mean</li>
+                    </ul>
+
+                    <h5 style="color: var(--primary-color); margin: 1rem 0 0.5rem 0;">Distribution Types:</h5>
+                    <div style="display: grid; gap: 0.75rem;">
+                        <div style="background-color: var(--bg-secondary); padding: 0.75rem; border-radius: var(--radius);">
+                            <strong style="color: var(--text-primary);">Normal Distribution:</strong>
+                            <span style="color: var(--text-secondary); font-size: 0.875rem;"> Most students score near the average, few at extremes</span>
+                        </div>
+                        <div style="background-color: var(--bg-secondary); padding: 0.75rem; border-radius: var(--radius);">
+                            <strong style="color: var(--text-primary);">Competitive:</strong>
+                            <span style="color: var(--text-secondary); font-size: 0.875rem;"> Many high achievers, harder to get top grades</span>
+                        </div>
+                        <div style="background-color: var(--bg-secondary); padding: 0.75rem; border-radius: var(--radius);">
+                            <strong style="color: var(--text-primary);">Lenient:</strong>
+                            <span style="color: var(--text-secondary); font-size: 0.875rem;"> More students struggle, easier to stand out</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-content" id="tips">
+                    <h4>Study Strategies by Required Score</h4>
+                    
+                    <div style="display: grid; gap: 1rem; margin: 1rem 0;">
+                        <div style="background-color: var(--success-color); color: white; padding: 1rem; border-radius: var(--radius);">
+                            <h5 style="margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> Need 0-60% (Very Achievable)</h5>
+                            <ul style="font-size: 0.875rem; line-height: 1.5; opacity: 0.9;">
+                                <li>Review key concepts and formulas</li>
+                                <li>Take practice tests to maintain confidence</li>
+                                <li>Don't get overconfident - consistent study is important</li>
+                                <li>Focus on areas where you've struggled before</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background-color: var(--warning-color); color: white; padding: 1rem; border-radius: var(--radius);">
+                            <h5 style="margin-bottom: 0.5rem;"><i class="fas fa-exclamation-triangle"></i> Need 60-85% (Challenging)</h5>
+                            <ul style="font-size: 0.875rem; line-height: 1.5; opacity: 0.9;">
+                                <li>Create a structured study schedule</li>
+                                <li>Focus on high-yield topics likely to be tested</li>
+                                <li>Form study groups with classmates</li>
+                                <li>Take timed practice exams</li>
+                                <li>Visit professor's office hours</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background-color: var(--error-color); color: white; padding: 1rem; border-radius: var(--radius);">
+                            <h5 style="margin-bottom: 0.5rem;"><i class="fas fa-times-circle"></i> Need 85%+ (Very Difficult)</h5>
+                            <ul style="font-size: 0.875rem; line-height: 1.5; opacity: 0.9;">
+                                <li>Intensive preparation required</li>
+                                <li>Consider getting a tutor</li>
+                                <li>Maximize study time in coming weeks</li>
+                                <li>Focus on understanding, not memorization</li>
+                                <li>Maintain proper sleep and nutrition</li>
+                                <li>Ask about extra credit opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h5 style="color: var(--primary-color); margin: 1.5rem 0 0.5rem 0;">General Study Tips:</h5>
+                    <ul style="color: var(--text-secondary); line-height: 1.6;">
+                        <li>Start studying early - cramming is less effective</li>
+                        <li>Use active recall instead of just re-reading notes</li>
+                        <li>Practice problems similar to what will be on the exam</li>
+                        <li>Teach concepts to someone else to test understanding</li>
+                        <li>Take breaks to avoid burnout</li>
+                        <li>Get enough sleep before the exam</li>
+                    </ul>
+                </div>
+
+                <div class="info-content" id="examples">
+                    <h4>Example Calculations</h4>
+                    
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Example 1: Absolute Grading</h5>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">
+                            <strong>Situation:</strong> Current grade is 85%, final exam is worth 30%, want to achieve A (90%)<br>
+                            <strong>Calculation:</strong> (90 - 85 × 0.70) ÷ 0.30 = (90 - 59.5) ÷ 0.30 = 101.7%<br>
+                            <strong>Result:</strong> You need 101.7% on the final (not possible without extra credit)
+                        </p>
+                    </div>
+
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Example 2: Relative Grading</h5>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">
+                            <strong>Situation:</strong> Currently ranked 15th out of 50 students (70th percentile), want to reach 85th percentile<br>
+                            <strong>Current Position:</strong> Better than 70% of class<br>
+                            <strong>Target:</strong> Need to be better than 85% of class (approximately top 7-8 students)<br>
+                            <strong>Strategy:</strong> Focus on outperforming 7-8 classmates on the final exam
+                        </p>
+                    </div>
+
+                    <div style="margin: 1rem 0; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Example 3: Maintaining Grade</h5>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5;">
+                            <strong>Situation:</strong> Current grade is 92%, final exam is worth 25%, want to maintain A (90%)<br>
+                            <strong>Calculation:</strong> (90 - 92 × 0.75) ÷ 0.25 = (90 - 69) ÷ 0.25 = 84%<br>
+                            <strong>Result:</strong> You only need 84% on the final to maintain your A grade
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcHub</span>
+                </div>
+                <p class="footer-text">Your ultimate destination for professional calculators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.theme = localStorage.getItem('theme') || 'light';
+                this.themeToggle = document.getElementById('themeToggle');
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.theme);
+                if (this.themeToggle) {
+                    this.themeToggle.addEventListener('click', () => this.toggleTheme());
+                }
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                this.updateThemeIcon();
+            }
+
+            toggleTheme() {
+                const newTheme = this.theme === 'light' ? 'dark' : 'light';
+                this.setTheme(newTheme);
+            }
+
+            updateThemeIcon() {
+                if (this.themeToggle) {
+                    const icon = this.themeToggle.querySelector('i');
+                    if (this.theme === 'dark') {
+                        icon.className = 'fas fa-sun';
+                    } else {
+                        icon.className = 'fas fa-moon';
+                    }
+                }
+            }
+        }
+
+        // Final Exam Calculator Logic
+        class FinalExamCalculator {
+            constructor() {
+                this.gradingMode = 'absolute';
+                this.gradingScales = {
+                    standard: {
+                        'A': 90, 'B': 80, 'C': 70, 'D': 60, 'F': 0
+                    },
+                    strict: {
+                        'A': 93, 'B': 85, 'C': 77, 'D': 70, 'F': 0
+                    }
+                };
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadSavedData();
+                this.startAutoSave();
+            }
+
+            setupEventListeners() {
+                // Mode tabs
+                document.querySelectorAll('.mode-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchGradingMode(e.target.closest('.mode-tab').dataset.mode);
+                    });
+                });
+
+                // Info tabs
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchInfoTab(e.target.dataset.tab);
+                    });
+                });
+
+                // Auto-calculate on input
+                ['currentGrade', 'finalWeight', 'targetGrade', 'currentRank', 'totalStudents', 'targetPercentile'].forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.addEventListener('input', () => {
+                            this.debouncedCalculate();
+                            this.autoSave();
+                        });
+                    }
+                });
+            }
+
+            switchGradingMode(mode) {
+                this.gradingMode = mode;
+                
+                // Update active tab
+                document.querySelectorAll('.mode-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+                
+                // Update mode info and show/hide sections
+                this.updateModeInfo();
+                this.toggleRelativeGradingSection();
+                this.calculateFinalScore();
+            }
+
+            updateModeInfo() {
+                const modeInfo = document.getElementById('modeInfo');
+                const percentileDisplay = document.getElementById('percentileDisplay');
+                
+                if (this.gradingMode === 'absolute') {
+                    modeInfo.innerHTML = `
+                        <h4>Absolute Grading Mode</h4>
+                        <p>Calculate based on fixed percentage thresholds (e.g., 90% = A, 80% = B). Your grade depends only on your raw score.</p>
+                    `;
+                    percentileDisplay.style.display = 'none';
+                } else {
+                    modeInfo.innerHTML = `
+                        <h4>Relative Grading Mode</h4>
+                        <p>Calculate based on your performance relative to classmates. Your grade depends on class ranking and percentile position.</p>
+                    `;
+                    percentileDisplay.style.display = 'block';
+                    this.updateCurrentPercentile();
+                }
+            }
+
+            toggleRelativeGradingSection() {
+                const relativeSection = document.getElementById('relativeGradingSection');
+                if (this.gradingMode === 'relative') {
+                    relativeSection.classList.add('active');
+                } else {
+                    relativeSection.classList.remove('active');
+                }
+            }
+
+            updateCurrentPercentile() {
+                const currentRank = parseFloat(document.getElementById('currentRank').value);
+                const totalStudents = parseFloat(document.getElementById('totalStudents').value);
+                
+                if (currentRank && totalStudents && currentRank <= totalStudents) {
+                    const percentile = ((totalStudents - currentRank + 1) / totalStudents) * 100;
+                    document.getElementById('currentPercentile').textContent = percentile.toFixed(1) + '%';
+                } else {
+                    document.getElementById('currentPercentile').textContent = '--';
+                }
+            }
+
+            switchInfoTab(tabName) {
+                // Update active tab
+                document.querySelectorAll('.info-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // Update active content
+                document.querySelectorAll('.info-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+            }
+
+            calculateFinalScore() {
+                if (this.gradingMode === 'absolute') {
+                    this.calculateAbsoluteGrade();
+                } else {
+                    this.calculateRelativeGrade();
+                }
+            }
+
+            calculateAbsoluteGrade() {
+                const currentGrade = parseFloat(document.getElementById('currentGrade').value);
+                const finalWeight = parseFloat(document.getElementById('finalWeight').value);
+                const targetGrade = parseFloat(document.getElementById('targetGrade').value);
+
+                if (!currentGrade || !finalWeight || !targetGrade) {
+                    this.resetDisplay();
+                    return;
+                }
+
+                // Validate inputs
+                if (finalWeight <= 0 || finalWeight > 100) {
+                    this.showToast('Final exam weight must be between 0 and 100%', 'error');
+                    return;
+                }
+
+                // Calculate required score
+                const currentWeight = (100 - finalWeight) / 100;
+                const finalWeightDecimal = finalWeight / 100;
+                const requiredScore = (targetGrade - (currentGrade * currentWeight)) / finalWeightDecimal;
+
+                // Update display
+                this.updateResultDisplay(requiredScore);
+                this.generateGradeScenarios();
+                this.generateStudyTips(requiredScore);
+            }
+
+            calculateRelativeGrade() {
+                const currentRank = parseFloat(document.getElementById('currentRank').value);
+                const totalStudents = parseFloat(document.getElementById('totalStudents').value);
+                const targetPercentile = parseFloat(document.getElementById('targetPercentile').value);
+                const distribution = document.getElementById('gradeDistribution').value;
+
+                if (!currentRank || !totalStudents || !targetPercentile) {
+                    this.resetDisplay();
+                    return;
+                }
+
+                // Calculate current percentile
+                const currentPercentile = ((totalStudents - currentRank + 1) / totalStudents) * 100;
+                this.updateCurrentPercentile();
+
+                // Estimate required performance based on distribution
+                const requiredImprovement = this.calculateRelativeImprovement(
+                    currentPercentile, targetPercentile, distribution
+                );
+
+                // Update display
+                this.updateResultDisplay(requiredImprovement, true);
+                this.generateRelativeScenarios();
+                this.generateRelativeStudyTips(currentPercentile, targetPercentile);
+            }
+
+            calculateRelativeImprovement(currentPercentile, targetPercentile, distribution) {
+                // Simplified model for relative grading estimation
+                const percentileGap = targetPercentile - currentPercentile;
+                
+                // Base difficulty multiplier based on distribution type
+                const difficultyMultipliers = {
+                    'normal': 1.0,
+                    'competitive': 1.3,
+                    'lenient': 0.8,
+                    'uniform': 1.1
+                };
+
+                const multiplier = difficultyMultipliers[distribution] || 1.0;
+                
+                // Estimate required score improvement (simplified)
+                // This is a rough estimation - real relative grading would need class statistics
+                let requiredImprovement;
+                
+                if (percentileGap <= 0) {
+                    requiredImprovement = 0; // Already at or above target
+                } else if (percentileGap <= 10) {
+                    requiredImprovement = 70 + (percentileGap * 2 * multiplier);
+                } else if (percentileGap <= 20) {
+                    requiredImprovement = 80 + (percentileGap * 1.5 * multiplier);
+                } else {
+                    requiredImprovement = 90 + (percentileGap * 1.2 * multiplier);
+                }
+
+                return Math.min(requiredImprovement, 100);
+            }
+
+            updateResultDisplay(score, isRelative = false) {
+                const scoreElement = document.getElementById('requiredScore');
+                const statusElement = document.getElementById('resultStatus');
+
+                if (isRelative) {
+                    scoreElement.textContent = score.toFixed(1) + '%';
+                    statusElement.textContent = 'Estimated score needed (relative grading)';
+                    statusElement.className = 'result-status status-achievable';
+                } else {
+                    scoreElement.textContent = score.toFixed(1) + '%';
+                    
+                    // Determine status and styling
+                    if (score < 0) {
+                        statusElement.textContent = 'Target already achieved!';
+                        statusElement.className = 'result-status status-excellent';
+                    } else if (score <= 60) {
+                        statusElement.textContent = 'Very achievable';
+                        statusElement.className = 'result-status status-achievable';
+                    } else if (score <= 85) {
+                        statusElement.textContent = 'Challenging but possible';
+                        statusElement.className = 'result-status status-challenging';
+                    } else if (score <= 100) {
+                        statusElement.textContent = 'Very difficult';
+                        statusElement.className = 'result-status status-challenging';
+                    } else {
+                        statusElement.textContent = 'Not achievable without extra credit';
+                        statusElement.className = 'result-status status-impossible';
+                    }
+                }
+            }
+
+            generateGradeScenarios() {
+                const currentGrade = parseFloat(document.getElementById('currentGrade').value);
+                const finalWeight = parseFloat(document.getElementById('finalWeight').value);
+                const gradingSystem = document.getElementById('gradingSystem').value;
+
+                if (!currentGrade || !finalWeight) return;
+
+                const scenarios = [];
+                const gradeScale = this.gradingScales[gradingSystem] || this.gradingScales.standard;
+
+                Object.entries(gradeScale).forEach(([letter, threshold]) => {
+                    if (threshold > 0) {
+                        const currentWeight = (100 - finalWeight) / 100;
+                        const finalWeightDecimal = finalWeight / 100;
+                        const requiredScore = (threshold - (currentGrade * currentWeight)) / finalWeightDecimal;
+                        
+                        let scoreClass = '';
+                        let scoreText = '';
+                        
+                        if (requiredScore < 0) {
+                            scoreClass = 'easy';
+                            scoreText = 'Already achieved';
+                        } else if (requiredScore > 100) {
+                            scoreClass = 'impossible';
+                            scoreText = 'Not possible';
+                        } else if (requiredScore <= 60) {
+                            scoreClass = 'easy';
+                            scoreText = requiredScore.toFixed(1) + '%';
+                        } else if (requiredScore <= 85) {
+                            scoreText = requiredScore.toFixed(1) + '%';
+                        } else {
+                            scoreClass = 'challenging';
+                            scoreText = requiredScore.toFixed(1) + '%';
+                        }
+
+                        scenarios.push({
+                            grade: `${letter} (${threshold}%)`,
+                            score: scoreText,
+                            class: scoreClass
+                        });
+                    }
+                });
+
+                this.renderScenarios(scenarios);
+            }
+
+            generateRelativeScenarios() {
+                const totalStudents = parseFloat(document.getElementById('totalStudents').value);
+                
+                if (!totalStudents) return;
+
+                const scenarios = [
+                    { percentile: 95, description: 'Top 5%' },
+                    { percentile: 90, description: 'Top 10%' },
+                    { percentile: 85, description: 'Top 15%' },
+                    { percentile: 80, description: 'Top 20%' },
+                    { percentile: 75, description: 'Top 25%' },
+                    { percentile: 70, description: 'Top 30%' }
+                ].map(scenario => {
+                    const requiredRank = Math.ceil(totalStudents * (1 - scenario.percentile / 100));
+                    const estimatedScore = this.calculateRelativeImprovement(
+                        0, scenario.percentile, document.getElementById('gradeDistribution').value
+                    );
+                    
+                    return {
+                        grade: `${scenario.description} (Rank ${requiredRank})`,
+                        score: estimatedScore.toFixed(1) + '%',
+                        class: estimatedScore > 90 ? 'challenging' : estimatedScore > 75 ? '' : 'easy'
+                    };
+                });
+
+                this.renderScenarios(scenarios);
+            }
+
+            renderScenarios(scenarios) {
+                const scenariosGrid = document.getElementById('scenariosGrid');
+                scenariosGrid.innerHTML = scenarios.map(scenario => `
+                    <div class="scenario-item">
+                        <span class="scenario-grade">${scenario.grade}</span>
+                        <span class="scenario-score ${scenario.class}">${scenario.score}</span>
+                    </div>
+                `).join('');
+            }
+
+            generateStudyTips(requiredScore) {
+                const tips = [];
+                
+                if (requiredScore < 0) {
+                    tips.push('You\'ve already achieved your target! Focus on maintaining your performance');
+                    tips.push('Review key concepts to stay sharp for the final exam');
+                    tips.push('Help classmates study - teaching reinforces your own knowledge');
+                } else if (requiredScore <= 60) {
+                    tips.push('Your target is very achievable with moderate preparation');
+                    tips.push('Review past assignments and identify weak areas');
+                    tips.push('Take practice tests to build confidence');
+                    tips.push('Don\'t get overconfident - consistent study is still important');
+                } else if (requiredScore <= 85) {
+                    tips.push('You need focused preparation to reach your goal');
+                    tips.push('Create a detailed study schedule for the remaining time');
+                    tips.push('Form study groups with high-performing classmates');
+                    tips.push('Visit your professor\'s office hours for clarification');
+                    tips.push('Focus on high-yield topics likely to be heavily tested');
+                } else if (requiredScore <= 100) {
+                    tips.push('This will require intensive preparation and dedication');
+                    tips.push('Consider getting a tutor or additional help');
+                    tips.push('Maximize your study time in the coming weeks');
+                    tips.push('Focus on understanding concepts, not just memorization');
+                                        tips.push('Maintain proper sleep and nutrition during intense study periods');
+                } else {
+                    tips.push('Your target may not be achievable with the final exam alone');
+                    tips.push('Ask your professor about extra credit opportunities');
+                    tips.push('Consider adjusting your target grade to be more realistic');
+                    tips.push('Focus on learning for future courses rather than just the grade');
+                    tips.push('Speak with an academic advisor about your options');
+                }
+
+                this.renderStudyTips(tips);
+            }
+
+            generateRelativeStudyTips(currentPercentile, targetPercentile) {
+                const tips = [];
+                const percentileGap = targetPercentile - currentPercentile;
+                
+                if (percentileGap <= 0) {
+                    tips.push('You\'re already at or above your target percentile!');
+                    tips.push('Focus on maintaining your relative position in the class');
+                    tips.push('Help others study - it reinforces your own knowledge');
+                } else if (percentileGap <= 10) {
+                    tips.push('You need to outperform a few classmates to reach your goal');
+                    tips.push('Focus on areas where you can gain an edge over peers');
+                    tips.push('Study the most challenging topics that others might skip');
+                    tips.push('Take practice exams under timed conditions');
+                } else if (percentileGap <= 20) {
+                    tips.push('Significant improvement needed to reach your target percentile');
+                    tips.push('Identify what top students are doing differently');
+                    tips.push('Form study groups with high-performing classmates');
+                    tips.push('Seek additional resources like tutoring or study guides');
+                    tips.push('Focus on mastering difficult concepts others struggle with');
+                } else {
+                    tips.push('Major improvement required - this will be very challenging');
+                    tips.push('Consider if your target percentile is realistic given the time remaining');
+                    tips.push('Get help from top students or teaching assistants');
+                    tips.push('Dedicate maximum time to studying for this exam');
+                    tips.push('Focus on fundamental concepts that form the basis of harder problems');
+                }
+
+                // Add general relative grading tips
+                tips.push('Remember: in relative grading, you need to outperform classmates, not just hit a score');
+                tips.push('Pay attention to what topics the class finds most difficult');
+                tips.push('Consider the study habits and preparation level of your peers');
+
+                this.renderStudyTips(tips);
+            }
+
+            renderStudyTips(tips) {
+                const studyTipsElement = document.getElementById('studyTips');
+                studyTipsElement.innerHTML = tips.map(tip => `<li>${tip}</li>`).join('');
+            }
+
+            resetDisplay() {
+                document.getElementById('requiredScore').textContent = '--';
+                document.getElementById('resultStatus').textContent = 'Enter your information to calculate';
+                document.getElementById('resultStatus').className = 'result-status';
+                document.getElementById('scenariosGrid').innerHTML = '';
+                document.getElementById('studyTips').innerHTML = '<li>Enter your current grade and final exam weight to get personalized tips</li>';
+            }
+
+            updateGradingSystem() {
+                this.calculateFinalScore();
+            }
+
+            clearInputs() {
+                ['currentGrade', 'finalWeight', 'targetGrade', 'currentRank', 'totalStudents', 'targetPercentile'].forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.value = '';
+                });
+                
+                document.getElementById('gradingSystem').value = 'standard';
+                document.getElementById('gradeDistribution').value = 'normal';
+                
+                this.resetDisplay();
+                this.showToast('All inputs cleared', 'info');
+            }
+
+            saveCalculation() {
+                const calculationData = {
+                    timestamp: new Date().toISOString(),
+                    gradingMode: this.gradingMode,
+                    currentGrade: document.getElementById('currentGrade').value,
+                    finalWeight: document.getElementById('finalWeight').value,
+                    targetGrade: document.getElementById('targetGrade').value,
+                    gradingSystem: document.getElementById('gradingSystem').value,
+                    currentRank: document.getElementById('currentRank').value,
+                    totalStudents: document.getElementById('totalStudents').value,
+                    targetPercentile: document.getElementById('targetPercentile').value,
+                    gradeDistribution: document.getElementById('gradeDistribution').value,
+                    requiredScore: document.getElementById('requiredScore').textContent
+                };
+
+                // Save to localStorage
+                localStorage.setItem('final-exam-calculator-data', JSON.stringify(calculationData));
+
+                // Create and download file
+                const dataStr = JSON.stringify(calculationData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `final-exam-calculation-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                this.showToast('Calculation saved successfully!', 'success');
+            }
+
+            loadSavedData() {
+                const savedData = localStorage.getItem('final-exam-calculator-data');
+                if (savedData) {
+                    try {
+                        const data = JSON.parse(savedData);
+                        
+                        // Restore form values
+                        Object.keys(data).forEach(key => {
+                            const element = document.getElementById(key);
+                            if (element && data[key] !== undefined && data[key] !== '') {
+                                element.value = data[key];
+                            }
+                        });
+
+                        // Restore grading mode
+                        if (data.gradingMode) {
+                            this.switchGradingMode(data.gradingMode);
+                        }
+
+                        // Recalculate with loaded data
+                        setTimeout(() => {
+                            this.calculateFinalScore();
+                            this.showToast('Previous calculation loaded', 'info');
+                        }, 500);
+                    } catch (e) {
+                        console.log('Could not load saved data');
+                    }
+                }
+            }
+
+            autoSave() {
+                const autoSaveData = {
+                    timestamp: new Date().toISOString(),
+                    gradingMode: this.gradingMode,
+                    currentGrade: document.getElementById('currentGrade').value,
+                    finalWeight: document.getElementById('finalWeight').value,
+                    targetGrade: document.getElementById('targetGrade').value,
+                    gradingSystem: document.getElementById('gradingSystem').value,
+                    currentRank: document.getElementById('currentRank').value,
+                    totalStudents: document.getElementById('totalStudents').value,
+                    targetPercentile: document.getElementById('targetPercentile').value,
+                    gradeDistribution: document.getElementById('gradeDistribution').value
+                };
+                
+                localStorage.setItem('final-exam-calculator-autosave', JSON.stringify(autoSaveData));
+            }
+
+            startAutoSave() {
+                setInterval(() => {
+                    this.autoSave();
+                }, 10000); // Auto-save every 10 seconds
+            }
+
+            debouncedCalculate() {
+                clearTimeout(this.calculateTimeout);
+                this.calculateTimeout = setTimeout(() => {
+                    this.calculateFinalScore();
+                }, 300);
+            }
+
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.textContent = message;
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--primary-color);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: var(--radius);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 1000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+
+                if (type === 'success') {
+                    toast.style.background = 'var(--success-color)';
+                } else if (type === 'error') {
+                    toast.style.background = 'var(--error-color)';
+                } else if (type === 'warning') {
+                    toast.style.background = 'var(--warning-color)';
+                }
+
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(0)';
+                }, 100);
+
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(toast)) {
+                            document.body.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Global functions for onclick handlers
+        function calculateFinalScore() {
+            finalExamCalculator.calculateFinalScore();
+        }
+
+        function updateGradingSystem() {
+            finalExamCalculator.updateGradingSystem();
+        }
+
+        function clearInputs() {
+            finalExamCalculator.clearInputs();
+        }
+
+        function saveCalculation() {
+            finalExamCalculator.saveCalculation();
+        }
+
+        // Initialize everything when DOM is loaded
+        let finalExamCalculator;
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            finalExamCalculator = new FinalExamCalculator();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveCalculation();
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        clearInputs();
+                        break;
+                    case '1':
+                        e.preventDefault();
+                        finalExamCalculator.switchGradingMode('absolute');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        finalExamCalculator.switchGradingMode('relative');
+                        break;
+                }
+            }
+        });
+
+        // Import functionality
+        function importCalculationData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            
+                            // Restore form values
+                            Object.keys(data).forEach(key => {
+                                const element = document.getElementById(key);
+                                if (element && data[key] !== undefined && data[key] !== '') {
+                                    element.value = data[key];
+                                }
+                            });
+
+                            // Restore grading mode
+                            if (data.gradingMode) {
+                                finalExamCalculator.switchGradingMode(data.gradingMode);
+                            }
+
+                            finalExamCalculator.calculateFinalScore();
+                            finalExamCalculator.showToast('Data imported successfully!', 'success');
+                        } catch (error) {
+                            finalExamCalculator.showToast('Error importing data!', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // Add import button functionality
+        window.addEventListener('load', () => {
+            const actionsSection = document.querySelector('.actions-section');
+            if (actionsSection) {
+                const importBtn = document.createElement('button');
+                importBtn.className = 'action-btn btn-save';
+                importBtn.innerHTML = '<i class="fas fa-upload"></i> Import';
+                importBtn.onclick = importCalculationData;
+                actionsSection.appendChild(importBtn);
+            }
+        });
+
+        // Input validation
+        function validateInputs() {
+            const currentGrade = parseFloat(document.getElementById('currentGrade').value);
+            const finalWeight = parseFloat(document.getElementById('finalWeight').value);
+            const targetGrade = parseFloat(document.getElementById('targetGrade').value);
+
+            if (currentGrade < 0 || currentGrade > 100) {
+                finalExamCalculator.showToast('Current grade must be between 0 and 100%', 'warning');
+            }
+            
+            if (finalWeight < 0 || finalWeight > 100) {
+                finalExamCalculator.showToast('Final exam weight must be between 0 and 100%', 'warning');
+            }
+            
+            if (targetGrade < 0 || targetGrade > 100) {
+                finalExamCalculator.showToast('Target grade must be between 0 and 100%', 'warning');
+            }
+
+            // Relative grading validations
+            if (finalExamCalculator.gradingMode === 'relative') {
+                const currentRank = parseFloat(document.getElementById('currentRank').value);
+                const totalStudents = parseFloat(document.getElementById('totalStudents').value);
+                
+                if (currentRank && totalStudents && currentRank > totalStudents) {
+                    finalExamCalculator.showToast('Current rank cannot be higher than total students', 'warning');
+                }
+            }
+        }
+
+        // Add validation on input changes
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('form-input')) {
+                setTimeout(validateInputs, 500);
+            }
+        });
+    </script>
+</body>
+</html>
+
+
