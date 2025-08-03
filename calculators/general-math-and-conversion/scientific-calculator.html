@@ -1,40 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" itemscope itemtype="https://schema.org/WebApplication">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scientific Calculator - CalcHub</title>
-    <meta name="description" content="Advanced scientific calculator with trigonometric functions, logarithms, exponentials, and more mathematical operations.">
+    
+    <!-- Enhanced Meta Tags -->
+    <title>Scientific Calculator Online | Advanced Math Functions - CalcHub</title>
+    <meta name="description" content="Free online scientific calculator with trigonometric functions, logarithms, exponentials, factorials, and angle conversion. Perfect for students and professionals.">
+    <meta name="keywords" content="scientific calculator, trigonometric functions, logarithms, exponentials, factorial, sin cos tan, math calculator, advanced calculator, online calculator">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calchub.com/calculators/general-math-and-conversion/scientific-calculator.html">
+    
+    <!-- Language and Region -->
+    <link rel="alternate" hreflang="en" href="https://calchub.com/calculators/general-math-and-conversion/scientific-calculator.html">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Scientific Calculator Online | Advanced Math Functions - CalcHub">
+    <meta property="og:description" content="Free online scientific calculator with trigonometric functions, logarithms, exponentials, and more. Perfect for complex mathematical calculations.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calchub.com/calculators/general-math-and-conversion/scientific-calculator.html">
+    <meta property="og:image" content="https://calchub.com/images/scientific-calculator-preview.png">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Scientific Calculator Online | Advanced Math Functions - CalcHub">
+    <meta name="twitter:description" content="Free online scientific calculator with trigonometric functions, logarithms, exponentials, and more mathematical operations.">
+    <meta name="twitter:image" content="https://calchub.com/images/scientific-calculator-preview.png">
+    <meta name="twitter:site" content="@CalcHub">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <!-- Preconnect to CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- External Resources -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Structured Data Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Scientific Calculator",
+        "description": "Advanced online scientific calculator with trigonometric functions, logarithms, exponentials, factorials, and angle conversion support.",
+        "url": "https://calchub.com/calculators/general-math-and-conversion/scientific-calculator.html",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "CalcHub",
+            "url": "https://calchub.com",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://calchub.com/images/logo.png"
+            }
+        },
+        "featureList": [
+            "Trigonometric functions (sin, cos, tan)",
+            "Inverse trigonometric functions (asin, acos, atan)",
+            "Hyperbolic functions (sinh, cosh, tanh)",
+            "Logarithmic functions (log, ln)",
+            "Exponential functions",
+            "Square root and power functions",
+            "Factorial calculations",
+            "Angle mode conversion (degrees, radians, gradians)",
+            "Mathematical constants (π, e)",
+            "Parentheses support",
+            "Memory functions"
+        ],
+        "softwareVersion": "1.0",
+        "browserRequirements": "HTML5, JavaScript"
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "CalcHub",
+        "url": "https://calchub.com",
+        "logo": "https://calchub.com/images/logo.png",
+        "description": "Your ultimate destination for professional online calculators",
+        "sameAs": [
+            "https://twitter.com/CalcHub",
+            "https://github.com/calchub"
+        ]
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "CalcHub",
+                "item": "https://calchub.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "General Math & Conversion",
+                "item": "https://calchub.com/categories/general-math-and-conversion"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Scientific Calculator",
+                "item": "https://calchub.com/calculators/general-math-and-conversion/scientific-calculator.html"
+            }
+        ]
+    }
+    </script>
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+            --radius: 0.5rem;
             --transition: all 0.2s ease-in-out;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.075);
+            --shadow-md: 0 0.5rem 1rem rgba(255, 255, 255, 0.15);
+            --shadow-lg: 0 1rem 3rem rgba(255, 255, 255, 0.175);
         }
 
         * {
@@ -230,13 +358,13 @@
 
         .angle-btn.active {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border-color: var(--primary-color);
         }
 
         .angle-btn:hover {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
         }
 
         .calculator-buttons {
@@ -263,7 +391,7 @@
 
         .btn:hover {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
@@ -278,45 +406,49 @@
         }
 
         .btn-operator {
-            background-color: #f59e0b;
-            color: white;
-            border-color: #f59e0b;
+            background-color: var(--warning-color);
+            color: var(--bg-primary);
+            border-color: var(--warning-color);
         }
 
         .btn-operator:hover {
-            background-color: #d97706;
+            background-color: var(--warning-color);
+            opacity: 0.8;
         }
 
         .btn-function {
-            background-color: #10b981;
-            color: white;
-            border-color: #10b981;
+            background-color: var(--success-color);
+            color: var(--bg-primary);
+            border-color: var(--success-color);
             font-size: 0.75rem;
         }
 
         .btn-function:hover {
-            background-color: #059669;
+            background-color: var(--success-color);
+            opacity: 0.8;
         }
 
         .btn-equals {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border-color: var(--primary-color);
             grid-column: span 2;
         }
 
         .btn-equals:hover {
             background-color: var(--primary-hover);
+            color: var(--bg-primary);
         }
 
         .btn-clear {
-            background-color: #ef4444;
-            color: white;
-            border-color: #ef4444;
+            background-color: var(--danger-color);
+            color: var(--bg-primary);
+            border-color: var(--danger-color);
         }
 
         .btn-clear:hover {
-            background-color: #dc2626;
+            background-color: var(--danger-color);
+            opacity: 0.8;
         }
 
         .btn-zero {
@@ -560,6 +692,90 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+
+            <!-- SEO Content Section -->
+            <div class="seo-content">
+                <section class="content-section">
+                    <h2>About the Scientific Calculator</h2>
+                    <p>Our advanced online scientific calculator provides comprehensive mathematical functionality for students, engineers, scientists, and professionals. This powerful tool supports complex calculations including trigonometric functions, logarithms, exponentials, and statistical operations.</p>
+                    
+                    <p>The calculator features angle mode conversion between degrees, radians, and gradians, making it perfect for trigonometry problems. With support for mathematical constants like π (pi) and e (Euler's number), you can perform precise scientific calculations without the need for external software.</p>
+                </section>
+
+                <section class="content-section">
+                    <h2>Key Features</h2>
+                    <ul class="feature-list">
+                        <li><strong>Trigonometric Functions:</strong> Calculate sine, cosine, tangent, and their inverse functions with precision</li>
+                        <li><strong>Logarithmic Operations:</strong> Support for natural logarithm (ln) and common logarithm (log base 10)</li>
+                        <li><strong>Exponential Functions:</strong> Compute exponential values and power operations</li>
+                        <li><strong>Hyperbolic Functions:</strong> Advanced hyperbolic sine, cosine, and tangent calculations</li>
+                        <li><strong>Factorial Calculations:</strong> Calculate factorials for statistical and combinatorial problems</li>
+                        <li><strong>Angle Conversion:</strong> Switch between degrees, radians, and gradians seamlessly</li>
+                        <li><strong>Mathematical Constants:</strong> Built-in support for π and e constants</li>
+                        <li><strong>Memory Functions:</strong> Store and recall values for complex calculations</li>
+                    </ul>
+                </section>
+
+                <section class="content-section">
+                    <h2>How to Use the Scientific Calculator</h2>
+                    <ol class="instruction-list">
+                        <li><strong>Basic Operations:</strong> Use the number pad for digits and basic arithmetic operations (+, -, ×, ÷)</li>
+                        <li><strong>Scientific Functions:</strong> Click on function buttons like sin, cos, tan, log, ln, or sqrt</li>
+                        <li><strong>Angle Mode:</strong> Select DEG, RAD, or GRAD depending on your calculation requirements</li>
+                        <li><strong>Constants:</strong> Use π and e buttons for mathematical constants</li>
+                        <li><strong>Parentheses:</strong> Group calculations using ( and ) for complex expressions</li>
+                        <li><strong>Clear Functions:</strong> Use C for clear all, CE for clear entry, or ⌫ for backspace</li>
+                    </ol>
+                </section>
+
+                <section class="faq-section">
+                    <h2>Frequently Asked Questions</h2>
+                    
+                    <div class="faq-item">
+                        <h3>What is the difference between DEG, RAD, and GRAD modes?</h3>
+                        <p>DEG (degrees) is the most common angle measurement where a full circle is 360°. RAD (radians) is used in advanced mathematics where a full circle is 2π radians. GRAD (gradians) is less common, with a full circle being 400 gradians.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>How do I calculate inverse trigonometric functions?</h3>
+                        <p>Use the asin, acos, and atan buttons to calculate arcsine, arccosine, and arctangent respectively. These functions return the angle whose trigonometric ratio equals the input value.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>What's the difference between log and ln?</h3>
+                        <p>Log refers to the common logarithm (base 10), while ln is the natural logarithm (base e ≈ 2.718). Natural logarithms are commonly used in calculus and exponential growth calculations.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>Can I use keyboard shortcuts with this calculator?</h3>
+                        <p>Yes! You can use number keys (0-9), operators (+, -, *, /), Enter for equals, Escape for clear, and Backspace for delete. Press 'p' for π and 'e' for Euler's number.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>How accurate are the calculations?</h3>
+                        <p>Our scientific calculator uses JavaScript's built-in mathematical functions, providing high precision for most scientific and engineering calculations. Results are accurate to approximately 15-17 significant digits.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>Is this calculator suitable for calculus problems?</h3>
+                        <p>Yes, this scientific calculator is excellent for calculus problems involving trigonometric functions, exponentials, logarithms, and other advanced mathematical operations commonly used in differential and integral calculus.</p>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Scientific Calculator Applications</h2>
+                    <p>This advanced calculator serves multiple educational and professional purposes:</p>
+                    
+                    <ul class="application-list">
+                        <li><strong>Education:</strong> Perfect for high school trigonometry, calculus, physics, and chemistry courses</li>
+                        <li><strong>Engineering:</strong> Essential for electrical, mechanical, and civil engineering calculations</li>
+                        <li><strong>Physics:</strong> Calculate wave functions, oscillations, and exponential decay</li>
+                        <li><strong>Statistics:</strong> Factorial calculations for permutations and combinations</li>
+                        <li><strong>Finance:</strong> Exponential functions for compound interest and growth calculations</li>
+                        <li><strong>Research:</strong> Scientific notation and precision calculations for laboratory work</li>
+                    </ul>
+                </section>
             </div>
         </div>
     </main>

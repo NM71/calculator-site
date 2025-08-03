@@ -1,43 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mortgage Calculator - CalcHub</title>
-    <meta name="description" content="Calculate monthly mortgage payments including principal, interest, taxes, insurance, and PMI. Get detailed payment breakdown and affordability analysis.">
+    
+    <!-- Enhanced Meta Tags -->
+    <title>Mortgage Calculator Online | Monthly Payment Calculator - CalcHub</title>
+    <meta name="description" content="Free mortgage calculator to calculate monthly payments, total interest, and affordability. Includes PMI, property tax, insurance, and HOA fees. Multi-currency support.">
+    <meta name="keywords" content="mortgage calculator, monthly payment calculator, home loan calculator, mortgage payment, interest rate calculator, PMI calculator, mortgage affordability, home buying calculator">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    
+    <!-- Language and Region -->
+    <meta name="language" content="en-US">
+    <meta name="geo.region" content="US">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calchub.com/calculators/finance-and-money/mortgage-calculator.html">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Mortgage Calculator Online | Monthly Payment Calculator - CalcHub">
+    <meta property="og:description" content="Free mortgage calculator to calculate monthly payments, total interest, and affordability. Includes PMI, property tax, insurance, and HOA fees. Multi-currency support.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calchub.com/calculators/finance-and-money/mortgage-calculator.html">
+    <meta property="og:image" content="https://calchub.com/images/mortgage-calculator-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="fb:app_id" content="123456789012345">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mortgage Calculator Online | Monthly Payment Calculator - CalcHub">
+    <meta name="twitter:description" content="Free mortgage calculator to calculate monthly payments, total interest, and affordability. Includes PMI, property tax, insurance, and HOA fees.">
+    <meta name="twitter:image" content="https://calchub.com/images/mortgage-calculator-preview.png">
+    <meta name="twitter:site" content="@CalcHub">
+    <meta name="twitter:creator" content="@CalcHub">
+    
+    <!-- Theme and Mobile -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preconnect to external CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- External Resources -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebApplication",
+                "@id": "https://calchub.com/calculators/finance-and-money/mortgage-calculator.html#webapp",
+                "name": "Mortgage Calculator",
+                "description": "Free online mortgage calculator for calculating monthly payments, total interest, PMI, property tax, insurance, and affordability analysis",
+                "url": "https://calchub.com/calculators/finance-and-money/mortgage-calculator.html",
+                "applicationCategory": "FinanceApplication",
+                "operatingSystem": "Any",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                "featureList": [
+                    "Calculate monthly mortgage payments",
+                    "Include PMI, property tax, and insurance",
+                    "Multi-currency support (USD, GBP, INR, PKR)",
+                    "Affordability analysis and breakdown",
+                    "Total interest and cost calculations",
+                    "PMI removal timeline"
+                ],
+                "browserRequirements": "Requires JavaScript",
+                "provider": {
+                    "@type": "Organization",
+                    "name": "CalcHub",
+                    "url": "https://calchub.com"
+                }
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://calchub.com/#organization",
+                "name": "CalcHub",
+                "url": "https://calchub.com",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://calchub.com/images/logo.png"
+                },
+                "description": "Professional online calculators for math, finance, health, and business calculations",
+                "sameAs": [
+                    "https://twitter.com/CalcHub",
+                    "https://facebook.com/CalcHub"
+                ]
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://calchub.com/calculators/finance-and-money/mortgage-calculator.html#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://calchub.com"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Finance Calculators",
+                        "item": "https://calchub.com/calculators/finance-and-money"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "Mortgage Calculator",
+                        "item": "https://calchub.com/calculators/finance-and-money/mortgage-calculator.html"
+                    }
+                ]
+            },
+            {
+                "@type": "FAQPage",
+                "@id": "https://calchub.com/calculators/finance-and-money/mortgage-calculator.html#faq",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How is monthly mortgage payment calculated?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Monthly mortgage payment is calculated using the loan amount, interest rate, and loan term. The formula includes principal and interest, plus additional costs like property tax, insurance, PMI, and HOA fees."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What is PMI and when is it required?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "PMI (Private Mortgage Insurance) is required when the down payment is less than 20% of the home price. It protects the lender and is typically removed when the loan balance reaches 80% of the original home value."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What factors affect mortgage affordability?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Mortgage affordability depends on your income, debt-to-income ratio, down payment amount, credit score, interest rates, and additional costs like property tax, insurance, and HOA fees."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            /* Light mode - Clean white with black text */
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --transition: all 0.2s ease-in-out;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.2s ease;
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --error-color: #ef4444;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            /* Dark mode - Clean black with white text */
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.1);
+            --shadow-md: 0 4px 6px rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 15px rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -117,24 +270,23 @@
         }
 
         .theme-toggle {
-            background: none;
-            border: 2px solid var(--border-color);
-            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             padding: 0.5rem;
             border-radius: var(--radius);
             cursor: pointer;
             transition: var(--transition);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
         }
 
         .theme-toggle:hover {
-            background-color: var(--bg-secondary);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
         }
 
         .main {
@@ -228,7 +380,7 @@
         .input-field:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
 
         .input-prefix {
@@ -276,7 +428,7 @@
         .calculate-btn {
             width: 100%;
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border: none;
             border-radius: var(--radius);
             padding: 1rem;
@@ -333,7 +485,7 @@
 
         .result-item.highlight {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
         }
 
         .result-label {
@@ -356,10 +508,10 @@
         }
 
         .result-item.highlight .result-value {
-            color: white;
+            color: var(--bg-primary);
         }
 
-        .breakdown-section {
+        .breakdown-section, .affordability-section {
             grid-column: 1 / -1;
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -369,7 +521,7 @@
             margin-top: 2rem;
         }
 
-        .breakdown-section h3 {
+        .breakdown-section h3, .affordability-section h3 {
             color: var(--text-primary);
             margin-bottom: 1.5rem;
             font-size: 1.25rem;
@@ -394,12 +546,12 @@
         .breakdown-card-icon {
             width: 3rem;
             height: 3rem;
-            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+            background: var(--primary-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--bg-primary);
             font-size: 1.25rem;
             margin: 0 auto 1rem auto;
         }
@@ -422,25 +574,6 @@
             color: var(--text-secondary);
         }
 
-        .affordability-section {
-            grid-column: 1 / -1;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: var(--shadow-lg);
-            margin-top: 2rem;
-        }
-
-        .affordability-section h3 {
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
         .affordability-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -460,7 +593,7 @@
             margin-bottom: 0.5rem;
         }
 
-                .affordability-item-value {
+        .affordability-item-value {
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--primary-color);
@@ -476,6 +609,145 @@
 
         .affordability-item.success .affordability-item-value {
             color: var(--success-color);
+        }
+
+        /* Related Calculators Section */
+        .related-calculators {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .related-calculators h2 {
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-item {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        .related-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .related-item h3 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-item p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* SEO Content Sections */
+        .content-section, .faq-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .content-section h2, .faq-section h2 {
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .content-section h3, .faq-section h3 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .content-section h4 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .content-section p, .faq-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .content-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section li {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .content-section li strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            border: 1px solid var(--border-color);
+        }
+
+        .faq-item h3 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .faq-item p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
         }
 
         .footer {
@@ -508,37 +780,21 @@
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
-            
+
             .calculator-title {
                 font-size: 2rem;
             }
-            
-            .nav {
-                padding: 0.75rem 1rem;
-            }
-            
-            .nav-brand {
-                font-size: 1.25rem;
-            }
-            
-            .breakdown-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .affordability-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
 
-        @media (max-width: 480px) {
-            .affordability-grid {
+            .content-section, .faq-section, .related-calculators {
+                padding: 1.5rem;
+            }
+
+            .related-grid, .faq-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .result-item {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.5rem;
+
+            .content-section h2, .faq-section h2 {
+                font-size: 1.5rem;
             }
         }
 
@@ -574,30 +830,42 @@
                     Mortgage Calculator
                 </h1>
                 <p class="calculator-description">
-                    Calculate monthly mortgage payments including principal, interest, taxes, insurance, and PMI. Get detailed payment breakdown and affordability analysis.
+                    Calculate monthly mortgage payments including principal, interest, taxes, insurance, and PMI. Get detailed payment breakdown and affordability analysis with multi-currency support.
                 </p>
             </div>
 
             <div class="calculator-container">
                 <div class="input-section">
                     <h3>
-                        <i class="fas fa-edit"></i>
-                        Mortgage Details
+                        <i class="fas fa-home"></i>
+                        Loan Details
                     </h3>
-                    
+
+                    <div class="input-group">
+                        <label for="currency">Currency</label>
+                        <div class="input-wrapper">
+                            <select id="currency" class="input-field">
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                                <option value="PKR">PKR - Pakistani Rupee</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="input-group">
                         <label for="homePrice">Home Price</label>
                         <div class="input-wrapper">
-                            <span class="input-prefix">$</span>
+                            <span class="input-prefix" id="homePriceSymbol">$</span>
                             <input type="number" id="homePrice" class="input-field has-prefix" 
-                                   placeholder="400000" min="1" step="1000" value="400000">
+                                   placeholder="400000" min="1000" step="1000" value="400000">
                         </div>
                     </div>
 
                     <div class="input-group">
                         <label for="downPayment">Down Payment</label>
                         <div class="input-wrapper">
-                            <span class="input-prefix">$</span>
+                            <span class="input-prefix" id="downPaymentSymbol">$</span>
                             <input type="number" id="downPayment" class="input-field has-prefix" 
                                    placeholder="80000" min="0" step="1000" value="80000">
                         </div>
@@ -631,7 +899,7 @@
                     <div class="input-group">
                         <label for="propertyTax">Property Tax (Annual)</label>
                         <div class="input-wrapper">
-                            <span class="input-prefix">$</span>
+                            <span class="input-prefix" id="propertyTaxSymbol">$</span>
                             <input type="number" id="propertyTax" class="input-field has-prefix" 
                                    placeholder="4800" min="0" step="100" value="4800">
                         </div>
@@ -640,7 +908,7 @@
                     <div class="input-group">
                         <label for="homeInsurance">Home Insurance (Annual)</label>
                         <div class="input-wrapper">
-                            <span class="input-prefix">$</span>
+                            <span class="input-prefix" id="homeInsuranceSymbol">$</span>
                             <input type="number" id="homeInsurance" class="input-field has-prefix" 
                                    placeholder="1200" min="0" step="100" value="1200">
                         </div>
@@ -658,7 +926,7 @@
                     <div class="input-group">
                         <label for="hoaFees">HOA Fees (Monthly)</label>
                         <div class="input-wrapper">
-                            <span class="input-prefix">$</span>
+                            <span class="input-prefix" id="hoaFeesSymbol">$</span>
                             <input type="number" id="hoaFees" class="input-field has-prefix" 
                                    placeholder="0" min="0" step="10" value="0">
                         </div>
@@ -791,6 +1059,88 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Related Calculators Section -->
+            <section class="related-calculators">
+                <h2>Related Financial Calculators</h2>
+                <div class="related-grid">
+                    <a href="loan-calculator.html" class="related-item">
+                        <h3><i class="fas fa-money-bill-wave"></i> Loan Calculator</h3>
+                        <p>Calculate monthly loan payments, total interest, and payment schedules for any type of loan.</p>
+                    </a>
+                    <a href="emi-calculator.html" class="related-item">
+                        <h3><i class="fas fa-calendar-alt"></i> EMI Calculator</h3>
+                        <p>Calculate Equated Monthly Installments (EMI) for loans with detailed payment breakdowns.</p>
+                    </a>
+                    <a href="interest-calculator.html" class="related-item">
+                        <h3><i class="fas fa-percentage"></i> Interest Calculator</h3>
+                        <p>Calculate simple and compound interest for savings, investments, and loans.</p>
+                    </a>
+                    <a href="currency-converter.html" class="related-item">
+                        <h3><i class="fas fa-exchange-alt"></i> Currency Converter</h3>
+                        <p>Convert between different currencies with real-time exchange rates.</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- SEO Content Section -->
+            <section class="content-section">
+                <h2>About Our Mortgage Calculator</h2>
+                <p>Our comprehensive mortgage calculator helps you estimate monthly mortgage payments, total interest costs, and affordability for your home purchase. With multi-currency support and detailed breakdown analysis, it's the perfect tool for home buyers, real estate professionals, and financial planners.</p>
+                
+                <h3>How to Use the Mortgage Calculator</h3>
+                <p>This mortgage payment calculator considers all major factors that affect your monthly payment:</p>
+                <ul>
+                    <li><strong>Home Price:</strong> The total purchase price of the property</li>
+                    <li><strong>Down Payment:</strong> The upfront payment you make (typically 10-20% of home price)</li>
+                    <li><strong>Interest Rate:</strong> The annual percentage rate (APR) offered by your lender</li>
+                    <li><strong>Loan Term:</strong> The number of years to repay the mortgage (typically 15 or 30 years)</li>
+                    <li><strong>Property Tax:</strong> Annual property taxes based on local rates</li>
+                    <li><strong>Home Insurance:</strong> Annual homeowner's insurance premium</li>
+                    <li><strong>PMI:</strong> Private Mortgage Insurance required when down payment is less than 20%</li>
+                    <li><strong>HOA Fees:</strong> Monthly homeowner association fees if applicable</li>
+                </ul>
+
+                <h3>Multi-Currency Support</h3>
+                <p>Our mortgage calculator supports multiple currencies including USD (US Dollar), GBP (British Pound), INR (Indian Rupee), and PKR (Pakistani Rupee). All calculations and formatting automatically adjust based on your selected currency, making it perfect for international home buyers and investors.</p>
+
+                <h4>Understanding Mortgage Payments</h4>
+                <p>Your total monthly mortgage payment consists of several components, often referred to as PITI (Principal, Interest, Tax, Insurance). Our calculator breaks down each component so you can understand exactly where your money goes each month.</p>
+
+                <h4>PMI and Down Payment Impact</h4>
+                <p>Private Mortgage Insurance (PMI) is typically required when your down payment is less than 20% of the home's value. Our calculator shows you exactly when PMI will be removed and how much you can save by putting down 20% or more.</p>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>How is monthly mortgage payment calculated?</h3>
+                        <p>Monthly mortgage payment is calculated using the loan amount, interest rate, and loan term. The formula includes principal and interest, plus additional costs like property tax, insurance, PMI, and HOA fees. Our calculator uses the standard amortization formula to ensure accuracy.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>What is PMI and when is it required?</h3>
+                        <p>PMI (Private Mortgage Insurance) is required when the down payment is less than 20% of the home price. It protects the lender and is typically removed when the loan balance reaches 80% of the original home value. Our calculator shows the PMI removal timeline.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>What factors affect mortgage affordability?</h3>
+                        <p>Mortgage affordability depends on your income, debt-to-income ratio, down payment amount, credit score, interest rates, and additional costs like property tax, insurance, and HOA fees. The 28% rule suggests your housing payment shouldn't exceed 28% of gross income.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How much should I put down on a house?</h3>
+                        <p>While 20% down payment eliminates PMI, many buyers put down less. FHA loans allow as little as 3.5% down. Consider your savings, monthly budget, and local market conditions when deciding on down payment amount.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>What's included in property taxes?</h3>
+                        <p>Property taxes fund local services like schools, roads, and emergency services. Rates vary by location and are typically 0.5-2% of home value annually. Our calculator helps you estimate monthly property tax payments.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How do I lower my mortgage payment?</h3>
+                        <p>You can lower mortgage payments by: increasing down payment, getting a lower interest rate, choosing a longer loan term, shopping for better insurance rates, or appealing property tax assessments. Each strategy has different trade-offs.</p>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
@@ -807,6 +1157,16 @@
     </footer>
 
     <script>
+        // Currency configuration
+        const currencies = {
+            USD: { symbol: '$', locale: 'en-US' },
+            GBP: { symbol: '£', locale: 'en-GB' },
+            INR: { symbol: '₹', locale: 'en-IN' },
+            PKR: { symbol: 'Rs', locale: 'en-PK' }
+        };
+
+        let currentCurrency = 'USD';
+
         // Theme Management
         class ThemeManager {
             constructor() {
@@ -842,21 +1202,31 @@
             }
         }
 
-        // Mortgage Calculator Logic
-        let mortgageData = null;
+        // Currency functions
+        function updateCurrencySymbols() {
+            const symbol = currencies[currentCurrency].symbol;
+            document.getElementById('homePriceSymbol').textContent = symbol;
+            document.getElementById('downPaymentSymbol').textContent = symbol;
+            document.getElementById('propertyTaxSymbol').textContent = symbol;
+            document.getElementById('homeInsuranceSymbol').textContent = symbol;
+            document.getElementById('hoaFeesSymbol').textContent = symbol;
+        }
 
-                function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', {
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat(currencies[currentCurrency].locale, {
                 style: 'currency',
-                currency: 'PKR',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                currency: currentCurrency,
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
             }).format(amount);
         }
 
         function formatNumber(num) {
-            return new Intl.NumberFormat('en-US').format(num);
+            return new Intl.NumberFormat(currencies[currentCurrency].locale).format(num);
         }
+
+        // Mortgage Calculator Logic
+        let mortgageData = null;
 
         function calculateMortgage() {
             const homePrice = parseFloat(document.getElementById('homePrice').value);
@@ -1095,6 +1465,17 @@
                     }
                 });
             });
+
+            // Currency change handler
+            document.getElementById('currency').addEventListener('change', function() {
+                currentCurrency = this.value;
+                updateCurrencySymbols();
+                if (mortgageData) {
+                    updateResults();
+                    updateBreakdown();
+                    updateAffordability();
+                }
+            });
         }
 
         // Keyboard shortcuts
@@ -1108,6 +1489,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             new ThemeManager();
             setupInputValidation();
+            updateCurrencySymbols();
             
             // Calculate with default values
             calculateMortgage();

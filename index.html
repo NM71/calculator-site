@@ -33,6 +33,20 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="floating-bg">
+            <i class="fas fa-calculator floating-icon" style="--x: 10%; --y: 20%;"></i>
+            <i class="fas fa-percent floating-icon" style="--x: 85%; --y: 15%;"></i>
+            <i class="fas fa-dollar-sign floating-icon" style="--x: 15%; --y: 80%;"></i>
+            <i class="fas fa-heartbeat floating-icon" style="--x: 80%; --y: 70%;"></i>
+            <i class="fas fa-graduation-cap floating-icon" style="--x: 25%; --y: 50%;"></i>
+            <i class="fas fa-hard-hat floating-icon" style="--x: 75%; --y: 30%;"></i>
+            <i class="fas fa-briefcase floating-icon" style="--x: 90%; --y: 60%;"></i>
+            <i class="fas fa-code floating-icon" style="--x: 5%; --y: 65%;"></i>
+            <i class="fas fa-plus floating-icon" style="--x: 50%; --y: 10%;"></i>
+            <i class="fas fa-equals floating-icon" style="--x: 30%; --y: 85%;"></i>
+            <i class="fas fa-divide floating-icon" style="--x: 70%; --y: 90%;"></i>
+            <i class="fas fa-times floating-icon" style="--x: 60%; --y: 25%;"></i>
+        </div>
         <div class="container">
             <div class="hero-content">
                 <h1 class="hero-title">Your Ultimate Calculator Hub</h1>
@@ -46,7 +60,12 @@
     </section>
 
     <!-- Calculator Categories -->
-    <main class="main container">
+    <main class="main container" id="main-content">
+        <section class="intro-section">
+            <h2 class="section-title">Professional Calculator Tools</h2>
+            <p class="section-description">Choose from our comprehensive collection of calculators designed for students, professionals, and everyday use. All tools are free, accurate, and work perfectly on any device.</p>
+        </section>
+        
         <div class="categories-grid">
             <!-- General Math & Conversion -->
             <div class="category-card" data-category="math">
@@ -269,6 +288,41 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="section-title">Why Choose CalcHub?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt" aria-hidden="true"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Instant calculations with optimized algorithms for quick results</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Perfect responsive design that works on all devices and screen sizes</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                    </div>
+                    <h3>100% Secure</h3>
+                    <p>All calculations are performed locally - your data never leaves your device</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                    </div>
+                    <h3>Educational</h3>
+                    <p>Step-by-step explanations help you understand the calculations</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->

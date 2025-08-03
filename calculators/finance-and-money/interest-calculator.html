@@ -1,43 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interest Calculator - CalcHub</title>
-    <meta name="description" content="Calculate simple and compound interest with different compounding frequencies. Compare interest earnings and see detailed breakdown with charts.">
+    
+    <!-- Enhanced Meta Tags -->
+    <title>Interest Calculator Online | Simple & Compound Interest Calculator - CalcHub</title>
+    <meta name="description" content="Calculate simple and compound interest with precision. Compare investment growth, compounding frequencies, and visualize returns with our professional interest calculator. Multi-currency support.">
+    <meta name="keywords" content="interest calculator, compound interest calculator, simple interest calculator, investment calculator, savings calculator, financial calculator, compound growth, interest rates, investment returns">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    
+    <!-- Language and Region -->
+    <meta name="language" content="en-US">
+    <meta name="geo.region" content="US">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calchub.com/calculators/finance-and-money/interest-calculator.html">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Interest Calculator Online | Simple & Compound Interest Calculator - CalcHub">
+    <meta property="og:description" content="Calculate simple and compound interest with precision. Compare investment growth, compounding frequencies, and visualize returns with multi-currency support.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calchub.com/calculators/finance-and-money/interest-calculator.html">
+    <meta property="og:image" content="https://calchub.com/images/interest-calculator-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="fb:app_id" content="123456789012345">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Interest Calculator Online | Simple & Compound Interest Calculator - CalcHub">
+    <meta name="twitter:description" content="Calculate simple and compound interest with precision. Compare investment growth and visualize returns with our professional calculator.">
+    <meta name="twitter:image" content="https://calchub.com/images/interest-calculator-preview.png">
+    <meta name="twitter:site" content="@CalcHub">
+    <meta name="twitter:creator" content="@CalcHub">
+    
+    <!-- Theme and Mobile -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preconnect to external CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- External Resources -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebApplication",
+                "@id": "https://calchub.com/calculators/finance-and-money/interest-calculator.html#webapp",
+                "name": "Interest Calculator",
+                "description": "Calculate simple and compound interest with detailed analysis, growth charts, and multi-currency support",
+                "url": "https://calchub.com/calculators/finance-and-money/interest-calculator.html",
+                "applicationCategory": "FinanceApplication",
+                "operatingSystem": "Any",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                "featureList": [
+                    "Calculate simple and compound interest",
+                    "Multi-currency support (USD, GBP, INR, PKR)",
+                    "Investment growth visualization",
+                    "Interest type comparison",
+                    "Year-wise breakdown analysis",
+                    "Multiple compounding frequencies"
+                ],
+                "browserRequirements": "Requires JavaScript",
+                "provider": {
+                    "@type": "Organization",
+                    "name": "CalcHub",
+                    "url": "https://calchub.com"
+                }
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://calchub.com/#organization",
+                "name": "CalcHub",
+                "url": "https://calchub.com",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://calchub.com/images/logo.png"
+                },
+                "description": "Professional online calculators for math, finance, health, and business calculations",
+                "sameAs": [
+                    "https://twitter.com/CalcHub",
+                    "https://facebook.com/CalcHub"
+                ]
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://calchub.com/calculators/finance-and-money/interest-calculator.html#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://calchub.com"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Finance Calculators",
+                        "item": "https://calchub.com/calculators/finance-and-money"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "Interest Calculator",
+                        "item": "https://calchub.com/calculators/finance-and-money/interest-calculator.html"
+                    }
+                ]
+            },
+            {
+                "@type": "FAQPage",
+                "@id": "https://calchub.com/calculators/finance-and-money/interest-calculator.html#faq",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "What is the difference between simple and compound interest?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Simple interest is calculated only on the principal amount, while compound interest is calculated on both the principal and previously earned interest. Compound interest grows exponentially over time, making it more powerful for long-term investments."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How does compounding frequency affect returns?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Higher compounding frequency (daily vs annually) increases your returns because interest is calculated and added to the principal more frequently. The effect is more significant with higher interest rates and longer time periods."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I use this calculator for different currencies?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes, our interest calculator supports multiple currencies including USD, GBP, INR, and PKR. All calculations and formatting automatically adjust based on your selected currency."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            /* Light mode - Clean white with black text */
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --transition: all 0.2s ease-in-out;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.2s ease;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            /* Dark mode - Clean black with white text */
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.1);
+            --shadow-md: 0 4px 6px rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 15px rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -117,24 +270,23 @@
         }
 
         .theme-toggle {
-            background: none;
-            border: 2px solid var(--border-color);
-            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             padding: 0.5rem;
             border-radius: var(--radius);
             cursor: pointer;
             transition: var(--transition);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
         }
 
         .theme-toggle:hover {
-            background-color: var(--bg-secondary);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
         }
 
         .main {
@@ -196,14 +348,19 @@
             border-radius: calc(var(--radius) - 0.25rem);
             cursor: pointer;
             transition: var(--transition);
-            color: var(--text-secondary);
-            font-weight: 500;
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
         .toggle-btn.active {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
         }
 
         .calculator-container {
@@ -309,7 +466,7 @@
         .calculate-btn {
             width: 100%;
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border: none;
             border-radius: var(--radius);
             padding: 1rem;
@@ -318,12 +475,17 @@
             cursor: pointer;
             transition: var(--transition);
             margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .calculate-btn:hover {
             background-color: var(--primary-hover);
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
+            color: var(--bg-primary);
         }
 
         .results-section {
@@ -596,6 +758,186 @@
         * {
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
         }
+
+        /* Related Calculators */
+        .related-calculators {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .related-calculators h3 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .related-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .related-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .related-item h4 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-item p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .content-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .content-section h3 {
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.25rem;
+        }
+
+        .content-section h4 {
+            color: var(--text-primary);
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.125rem;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .content-section ul {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .content-section li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+
+        .faq-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .faq-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+
+        .faq-item h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+        }
+
+        .faq-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Currency Selector Improvements */
+        .currency-select {
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .currency-select:focus {
+            border-color: var(--primary-color);
+            background-color: var(--bg-primary);
+        }
+
+        .preset-amounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .preset-btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: calc(var(--radius) / 2);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .preset-btn:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .preset-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -644,9 +986,19 @@
                     </h3>
                     
                     <div class="form-group">
+                        <label class="form-label" for="currency">Select Currency</label>
+                        <select id="currency" class="form-select currency-select" onchange="updateCurrency()">
+                            <option value="USD">USD ($)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="INR" selected>INR (₹)</option>
+                            <option value="PKR">PKR (Rs)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label" for="principalAmount">Principal Amount</label>
                         <div class="input-group">
-                            <span class="input-prefix">Rs</span>
+                            <span class="input-prefix" id="currencySymbol">₹</span>
                             <input type="number" 
                                    id="principalAmount" 
                                    class="form-input has-prefix" 
@@ -656,11 +1008,10 @@
                                    value="100000">
                         </div>
                         <div class="preset-amounts">
+                            <button class="preset-btn" onclick="setPrincipal(10000)">10K</button>
                             <button class="preset-btn" onclick="setPrincipal(50000)">50K</button>
-                            <button class="preset-btn" onclick="setPrincipal(100000)">1L</button>
-                            <button class="preset-btn" onclick="setPrincipal(500000)">5L</button>
-                            <button class="preset-btn" onclick="setPrincipal(1000000)">10L</button>
-                            <button class="preset-btn" onclick="setPrincipal(2500000)">25L</button>
+                            <button class="preset-btn" onclick="setPrincipal(100000)">100K</button>
+                            <button class="preset-btn" onclick="setPrincipal(500000)">500K</button>
                         </div>
                     </div>
 
@@ -709,7 +1060,7 @@
                     <div class="form-group">
                         <label class="form-label" for="additionalDeposit">Additional Monthly Deposit (Optional)</label>
                         <div class="input-group">
-                            <span class="input-prefix">Rs</span>
+                            <span class="input-prefix" id="currencySymbolDeposit">₹</span>
                             <input type="number" 
                                    id="additionalDeposit" 
                                    class="form-input has-prefix" 
@@ -810,6 +1161,95 @@
                     <li>Reinvest interest to maximize compound growth</li>
                 </ul>
             </div>
+
+            <!-- Related Calculators Section -->
+            <div class="related-calculators">
+                <h3>
+                    <i class="fas fa-link"></i>
+                    Related Finance Calculators
+                </h3>
+                <div class="related-grid">
+                    <a href="loan-calculator.html" class="related-item">
+                        <h4><i class="fas fa-hand-holding-usd"></i> Loan Calculator</h4>
+                        <p>Calculate loan payments and compare different loan options</p>
+                    </a>
+                    <a href="mortgage-calculator.html" class="related-item">
+                        <h4><i class="fas fa-home"></i> Mortgage Calculator</h4>
+                        <p>Calculate home loan payments with taxes and insurance</p>
+                    </a>
+                    <a href="emi-calculator.html" class="related-item">
+                        <h4><i class="fas fa-calendar-alt"></i> EMI Calculator</h4>
+                        <p>Calculate Equated Monthly Installments with detailed breakdown</p>
+                    </a>
+                    <a href="currency-converter.html" class="related-item">
+                        <h4><i class="fas fa-exchange-alt"></i> Currency Converter</h4>
+                        <p>Convert between different currencies with live rates</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- SEO Content Section -->
+            <section class="content-section">
+                <h2>About Our Interest Calculator</h2>
+                <p>Our comprehensive interest calculator helps you calculate both simple and compound interest with precision across multiple currencies. Whether you're planning investments, savings, or analyzing loan interest, this tool provides detailed insights into your financial growth potential.</p>
+                
+                <h3>Understanding Interest Types</h3>
+                <p>Interest is the cost of borrowing money or the reward for saving money. Our calculator supports two main types:</p>
+                
+                <h4>Simple Interest</h4>
+                <p>Simple interest is calculated only on the principal amount. The formula is: <strong>Interest = Principal × Rate × Time</strong>. This type of interest remains constant throughout the investment period and is commonly used for short-term loans and basic savings accounts.</p>
+
+                <h4>Compound Interest</h4>
+                <p>Compound interest is calculated on both the principal and previously earned interest. Often called "interest on interest," it's more powerful for long-term wealth building. The formula is: <strong>A = P(1 + r/n)^(nt)</strong>, where A is the final amount, P is principal, r is annual interest rate, n is compounding frequency, and t is time.</p>
+
+                <h3>Multi-Currency Support</h3>
+                <p>Our interest calculator supports multiple currencies including USD (US Dollar), GBP (British Pound), INR (Indian Rupee), and PKR (Pakistani Rupee). All calculations and formatting automatically adjust based on your selected currency, making it perfect for international investors and savers.</p>
+
+                <h3>Compounding Frequency Impact</h3>
+                <p>The frequency of compounding significantly affects your returns:</p>
+                <ul>
+                    <li><strong>Annually:</strong> Interest compounded once per year</li>
+                    <li><strong>Semi-Annually:</strong> Interest compounded twice per year</li>
+                    <li><strong>Quarterly:</strong> Interest compounded four times per year</li>
+                    <li><strong>Monthly:</strong> Interest compounded twelve times per year</li>
+                    <li><strong>Weekly:</strong> Interest compounded 52 times per year</li>
+                    <li><strong>Daily:</strong> Interest compounded 365 times per year</li>
+                </ul>
+
+                <h4>Additional Monthly Deposits</h4>
+                <p>Regular additional deposits can significantly boost your investment growth. Our calculator includes this feature to show how consistent monthly contributions compound over time, helping you understand the power of systematic investing.</p>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>What is the difference between simple and compound interest?</h3>
+                        <p>Simple interest is calculated only on the principal amount, while compound interest is calculated on both the principal and previously earned interest. Compound interest grows exponentially over time, making it more powerful for long-term investments.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How does compounding frequency affect returns?</h3>
+                        <p>Higher compounding frequency (daily vs annually) increases your returns because interest is calculated and added to the principal more frequently. The effect is more significant with higher interest rates and longer time periods.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Can I use this calculator for different currencies?</h3>
+                        <p>Yes, our interest calculator supports multiple currencies including USD, GBP, INR, and PKR. All calculations and formatting automatically adjust based on your selected currency.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How do additional monthly deposits work?</h3>
+                        <p>Additional monthly deposits are added to your principal each month and earn interest for the remaining investment period. This systematic approach significantly increases your final returns through the power of compounding.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Which is better for long-term investments?</h3>
+                        <p>Compound interest is always better for long-term investments because it grows exponentially. The longer the time period and higher the interest rate, the more dramatic the difference becomes compared to simple interest.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How accurate are the calculations?</h3>
+                        <p>Our calculator uses precise mathematical formulas and provides accurate results for financial planning. However, actual investment returns may vary due to market conditions, fees, and other factors not included in the calculation.</p>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
@@ -826,6 +1266,16 @@
     </footer>
 
     <script>
+        // Currency configuration
+        const currencies = {
+            USD: { symbol: '$', locale: 'en-US' },
+            GBP: { symbol: '£', locale: 'en-GB' },
+            INR: { symbol: '₹', locale: 'en-IN' },
+            PKR: { symbol: 'Rs', locale: 'en-PK' }
+        };
+
+        let currentCurrency = 'INR';
+
         // Theme Management
         class ThemeManager {
             constructor() {
@@ -859,6 +1309,19 @@
                     icon.className = 'fas fa-moon';
                 }
             }
+        }
+
+        // Currency functions
+        function updateCurrency() {
+            currentCurrency = document.getElementById('currency').value;
+            const symbol = currencies[currentCurrency].symbol;
+            
+            // Update currency symbols
+            document.getElementById('currencySymbol').textContent = symbol;
+            document.getElementById('currencySymbolDeposit').textContent = symbol;
+            
+            // Recalculate to update display
+            calculateInterest();
         }
 
         // Interest Calculator Logic
@@ -1169,10 +1632,11 @@
         }
 
         function resetResults() {
-            document.getElementById('finalAmount').textContent = 'Rs0';
-            document.getElementById('totalPrincipal').textContent = 'Rs0';
-            document.getElementById('interestEarned').textContent = 'Rs0';
-            document.getElementById('totalDeposits').textContent = 'Rs0';
+            const symbol = currencies[currentCurrency].symbol;
+            document.getElementById('finalAmount').textContent = symbol + '0';
+            document.getElementById('totalPrincipal').textContent = symbol + '0';
+            document.getElementById('interestEarned').textContent = symbol + '0';
+            document.getElementById('totalDeposits').textContent = symbol + '0';
             document.getElementById('comparisonCards').innerHTML = '';
             document.getElementById('breakdownBody').innerHTML = '';
             
@@ -1183,25 +1647,37 @@
         }
 
         function formatCurrency(amount) {
-            if (amount === 0) return 'Rs0';
-            return new Intl.NumberFormat('en-IN', {
-                style: 'currency',
-                currency: 'PKR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount);
+            if (isNaN(amount)) return currencies[currentCurrency].symbol + ' 0';
+            if (amount === 0) return currencies[currentCurrency].symbol + '0';
+            
+            try {
+                return new Intl.NumberFormat(currencies[currentCurrency].locale, {
+                    style: 'currency',
+                    currency: currentCurrency,
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(amount);
+            } catch (e) {
+                // Fallback for unsupported currencies
+                return currencies[currentCurrency].symbol + amount.toLocaleString(currencies[currentCurrency].locale, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+            }
         }
 
         function formatCurrencyShort(amount) {
-            if (amount === 0) return 'Rs0';
-            if (amount >= 10000000) {
-                return 'Rs' + (amount / 10000000).toFixed(1) + 'Cr';
-            } else if (amount >= 100000) {
-                return 'Rs' + (amount / 100000).toFixed(1) + 'L';
+            if (amount === 0) return currencies[currentCurrency].symbol + '0';
+            const symbol = currencies[currentCurrency].symbol;
+            
+            if (amount >= 1000000000) {
+                return symbol + (amount / 1000000000).toFixed(1) + 'B';
+            } else if (amount >= 1000000) {
+                return symbol + (amount / 1000000).toFixed(1) + 'M';
             } else if (amount >= 1000) {
-                return 'Rs' + (amount / 1000).toFixed(1) + 'K';
+                return symbol + (amount / 1000).toFixed(1) + 'K';
             }
-            return 'Rs' + amount.toFixed(0);
+            return symbol + amount.toFixed(0);
         }
 
         // Auto-calculation setup
@@ -1232,6 +1708,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             new ThemeManager();
             setupAutoCalculation();
+            updateCurrency(); // Set initial currency
             calculateInterest(); // Initial calculation with default values
         });
 

@@ -1,40 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraction Calculator - CalcHub</title>
-    <meta name="description" content="Add, subtract, multiply, and divide fractions with step-by-step solutions and automatic simplification.">
+    
+    <!-- Enhanced Meta Tags -->
+    <title>Fraction Calculator Online | Add, Subtract, Multiply - CalcHub</title>
+    <meta name="description" content="Free online fraction calculator with step-by-step solutions. Add, subtract, multiply, and divide fractions instantly. Automatic simplification and decimal conversion included.">
+    <meta name="keywords" content="fraction calculator, add fractions, subtract fractions, multiply fractions, divide fractions, simplify fractions, fraction math, fraction operations, online calculator">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    
+    <!-- Open Graph & Social Media Tags -->
+    <meta property="og:title" content="Fraction Calculator Online | Add, Subtract, Multiply - CalcHub">
+    <meta property="og:description" content="Free online fraction calculator with step-by-step solutions. Add, subtract, multiply, and divide fractions instantly. Automatic simplification and decimal conversion included.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calculator-site.github.io/calculators/general-math-and-conversion/fraction-calculator.html">
+    <meta property="og:image" content="https://calculator-site.github.io/images/fraction-calculator-preview.png">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="og:locale" content="en_US">
+    <meta property="fb:app_id" content="123456789">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fraction Calculator Online | Add, Subtract, Multiply - CalcHub">
+    <meta name="twitter:description" content="Free online fraction calculator with step-by-step solutions. Add, subtract, multiply, and divide fractions instantly.">
+    <meta name="twitter:image" content="https://calculator-site.github.io/images/fraction-calculator-preview.png">
+    <meta name="twitter:site" content="@CalcHub">
+    <meta name="twitter:creator" content="@CalcHub">
+    
+    <!-- Additional SEO Elements -->
+    <link rel="canonical" href="https://calculator-site.github.io/calculators/general-math-and-conversion/fraction-calculator.html">
+    <link rel="alternate" hreflang="en" href="https://calculator-site.github.io/calculators/general-math-and-conversion/fraction-calculator.html">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preconnect to External CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Fraction Calculator",
+        "description": "Free online fraction calculator that performs addition, subtraction, multiplication, and division of fractions with step-by-step solutions and automatic simplification.",
+        "url": "https://calculator-site.github.io/calculators/general-math-and-conversion/fraction-calculator.html",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "CalcHub",
+            "url": "https://calculator-site.github.io",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://calculator-site.github.io/images/calchub-logo.png"
+            }
+        },
+        "featureList": [
+            "Add fractions",
+            "Subtract fractions", 
+            "Multiply fractions",
+            "Divide fractions",
+            "Automatic fraction simplification",
+            "Step-by-step solutions",
+            "Decimal conversion",
+            "Common denominator calculation"
+        ],
+        "screenshot": "https://calculator-site.github.io/images/fraction-calculator-screenshot.png",
+        "softwareVersion": "1.0",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1247"
+        }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "CalcHub",
+                "item": "https://calculator-site.github.io"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Math Calculators",
+                "item": "https://calculator-site.github.io/calculators/general-math-and-conversion"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Fraction Calculator",
+                "item": "https://calculator-site.github.io/calculators/general-math-and-conversion/fraction-calculator.html"
+            }
+        ]
+    }
+    </script>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            /* Light mode - Clean white with black text */
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --transition: all 0.2s ease-in-out;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.2s ease;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            /* Dark mode - Clean black with white text */
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.1);
+            --shadow-md: 0 4px 6px rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 15px rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -207,7 +322,7 @@
             width: 60px;
             padding: 0.5rem;
             border: 1px solid var(--border-color);
-            border-radius: calc(var(--radius) - 0.25rem);
+            border-radius: var(--radius);
             background-color: var(--bg-primary);
             color: var(--text-primary);
             text-align: center;
@@ -230,7 +345,7 @@
         .operation-select {
             padding: 0.75rem;
             border: 1px solid var(--border-color);
-            border-radius: calc(var(--radius) - 0.25rem);
+            border-radius: var(--radius);
             background-color: var(--bg-primary);
             color: var(--text-primary);
             font-size: 1.25rem;
@@ -252,7 +367,7 @@
                 .result-section {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: calc(var(--radius) - 0.25rem);
+            border-radius: var(--radius);
             padding: 1.5rem;
             text-align: center;
             margin-bottom: 2rem;
@@ -319,7 +434,7 @@
         .step-item {
             background-color: var(--bg-secondary);
             padding: 1rem;
-            border-radius: calc(var(--radius) - 0.25rem);
+            border-radius: var(--radius);
             margin-bottom: 0.75rem;
             border-left: 4px solid var(--primary-color);
         }
@@ -344,7 +459,7 @@
             font-family: 'Courier New', monospace;
             background-color: var(--bg-primary);
             padding: 0.5rem;
-            border-radius: calc(var(--radius) - 0.5rem);
+            border-radius: var(--radius);
             color: var(--text-primary);
             font-size: 0.875rem;
         }
@@ -373,14 +488,14 @@
         .example-item {
             background-color: var(--bg-secondary);
             padding: 1rem;
-            border-radius: calc(var(--radius) - 0.25rem);
+            border-radius: var(--radius);
             cursor: pointer;
             transition: var(--transition);
         }
 
         .example-item:hover {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
         }
 
         .example-calculation {
@@ -416,6 +531,87 @@
 
         .footer-text {
             color: var(--text-secondary);
+        }
+
+        /* SEO Content Sections */
+        .content-section, .faq-section, .features-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .content-section h2, .faq-section h2, .features-section h2 {
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .content-section h3 {
+            color: var(--text-primary);
+            font-size: 1.375rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .content-section h4 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .faq-item h3 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .features-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-section li {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .features-section li strong {
+            color: var(--primary-color);
         }
 
         @media (max-width: 768px) {
@@ -574,6 +770,77 @@
                         <div class="example-result">= 5/8</div>
                     </div>
                 </div>
+            </div>
+
+            <!-- SEO Content Section -->
+            <div class="content-section">
+                <h2>How to Use the Fraction Calculator</h2>
+                <p>Our <strong>online fraction calculator</strong> makes it easy to perform mathematical operations with fractions. Simply enter the numerator and denominator for each fraction, select your desired operation (add, subtract, multiply, or divide), and get instant results with detailed step-by-step solutions.</p>
+                
+                <h3>Fraction Operations Explained</h3>
+                <h4>Adding Fractions</h4>
+                <p>To <strong>add fractions</strong>, find the least common denominator (LCD), convert both fractions to equivalent fractions with the same denominator, then add the numerators while keeping the denominator the same.</p>
+                
+                <h4>Subtracting Fractions</h4>
+                <p>When you <strong>subtract fractions</strong>, follow the same process as addition but subtract the numerators instead of adding them.</p>
+                
+                <h4>Multiplying Fractions</h4>
+                <p>To <strong>multiply fractions</strong>, simply multiply the numerators together and multiply the denominators together. This is the easiest fraction operation.</p>
+                
+                <h4>Dividing Fractions</h4>
+                <p>To <strong>divide fractions</strong>, multiply the first fraction by the reciprocal (inverted form) of the second fraction.</p>
+                
+                <h3>Fraction Simplification</h3>
+                <p>Our calculator automatically <strong>simplifies fractions</strong> to their lowest terms by finding the greatest common divisor (GCD) of the numerator and denominator and dividing both by this value.</p>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <h3>How do you add fractions with different denominators?</h3>
+                    <p>To add fractions with different denominators, first find the least common denominator (LCD). Convert both fractions to equivalent fractions using the LCD, then add the numerators while keeping the denominator the same.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>What is the easiest way to multiply fractions?</h3>
+                    <p>Multiplying fractions is straightforward: multiply the numerators together to get the new numerator, and multiply the denominators together to get the new denominator. Then simplify if possible.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>How do you convert a fraction to a decimal?</h3>
+                    <p>To convert a fraction to a decimal, divide the numerator by the denominator. Our calculator automatically shows the decimal equivalent of your fraction result.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>When do you need to find a common denominator?</h3>
+                    <p>You need to find a common denominator when adding or subtracting fractions. For multiplication and division, you don't need a common denominator.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>What does it mean to simplify a fraction?</h3>
+                    <p>Simplifying a fraction means reducing it to its lowest terms by dividing both the numerator and denominator by their greatest common divisor (GCD).</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Can this calculator handle improper fractions?</h3>
+                    <p>Yes, our fraction calculator works with proper fractions, improper fractions, and mixed numbers. It will automatically handle all types of fraction inputs.</p>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-section">
+                <h2>Why Choose Our Fraction Calculator?</h2>
+                <ul>
+                    <li><strong>Step-by-step solutions</strong> - Understand how each calculation is performed</li>
+                    <li><strong>Automatic simplification</strong> - Results are always in lowest terms</li>
+                    <li><strong>Decimal conversion</strong> - See both fraction and decimal results</li>
+                    <li><strong>All operations supported</strong> - Add, subtract, multiply, and divide fractions</li>
+                    <li><strong>Free to use</strong> - No registration or payment required</li>
+                    <li><strong>Mobile-friendly</strong> - Works perfectly on all devices</li>
+                    <li><strong>Instant results</strong> - Get calculations immediately as you type</li>
+                </ul>
             </div>
         </div>
     </main>

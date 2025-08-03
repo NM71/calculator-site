@@ -43,12 +43,14 @@ class SearchManager {
         this.searchInput = document.getElementById('searchInput');
         this.calculatorItems = document.querySelectorAll('.calculator-item');
         this.categoryCards = document.querySelectorAll('.category-card');
+        this.debouncedSearch = Utils.debounce((value) => this.handleSearch(value), 150);
         this.init();
     }
 
     init() {
         if (this.searchInput) {
-            this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+            // Debounced search for better performance
+            this.searchInput.addEventListener('input', (e) => this.debouncedSearch(e.target.value));
             this.searchInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     this.clearSearch();
@@ -62,8 +64,11 @@ class SearchManager {
         
         if (searchTerm === '') {
             this.showAllItems();
+            this.resetHeroSection();
             return;
         }
+
+        let hasResults = false;
 
         this.categoryCards.forEach(card => {
             const calculators = card.querySelectorAll('.calculator-item');
@@ -76,6 +81,7 @@ class SearchManager {
                 if (calculatorName.includes(searchTerm) || calculatorText.includes(searchTerm)) {
                     calculator.classList.remove('hidden');
                     hasVisibleCalculators = true;
+                    hasResults = true;
                 } else {
                     calculator.classList.add('hidden');
                 }
@@ -88,6 +94,47 @@ class SearchManager {
                 card.classList.add('hidden');
             }
         });
+
+        // Auto-scroll to results and collapse hero section when searching
+        if (hasResults && searchTerm.length > 0) {
+            this.collapseHeroSection();
+            this.scrollToResults();
+        }
+    }
+
+    collapseHeroSection() {
+        const hero = document.querySelector('.hero');
+        if (hero && !hero.classList.contains('collapsed')) {
+            hero.classList.add('collapsed');
+        }
+    }
+
+    resetHeroSection() {
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.classList.remove('collapsed');
+            // Scroll back to top when resetting
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    scrollToResults() {
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+
+        // Run after the min-height transition ends
+        const onEnd = () => {
+            const offset = hero.getBoundingClientRect().height - 50 + window.pageYOffset;
+            window.scrollTo({ top: offset, behavior: 'smooth' });
+            hero.removeEventListener('transitionend', onEnd);
+        };
+
+        // If the hero is already collapsed, the transition is over
+        if (hero.classList.contains('collapsed')) {
+            onEnd();
+        } else {
+            hero.addEventListener('transitionend', onEnd, { once: true });
+        }
     }
 
     showAllItems() {
@@ -99,6 +146,7 @@ class SearchManager {
         if (this.searchInput) {
             this.searchInput.value = '';
             this.showAllItems();
+            this.resetHeroSection();
             this.searchInput.blur();
         }
     }
@@ -156,6 +204,7 @@ class UIEnhancer {
         this.enhanceKeyboardNavigation();
         this.addScrollToTop();
         this.initializeAnimations();
+
         this.initializeAccessibility();
         // Remove the loading state functionality that was causing issues
     }
@@ -208,6 +257,8 @@ class UIEnhancer {
             observer.observe(card);
         });
     }
+
+
 
     initializeAccessibility() {
         // Add ARIA labels and roles

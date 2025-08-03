@@ -1,43 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Calculator - CalcHub</title>
-    <meta name="description" content="Calculate monthly loan payments, total interest, and amortization schedule for any loan amount, interest rate, and term.">
+    
+    <!-- Enhanced Meta Tags -->
+    <title>Loan Calculator Online | Calculate Monthly Payments & Interest - CalcHub</title>
+    <meta name="description" content="Free online loan calculator. Calculate monthly loan payments, total interest, and amortization schedule for mortgages, auto loans, and personal loans. Multi-currency support.">
+    <meta name="keywords" content="loan calculator, mortgage calculator, auto loan calculator, personal loan calculator, monthly payment calculator, loan interest calculator, amortization schedule, loan payment">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    
+    <!-- Language and Region -->
+    <meta name="language" content="en-US">
+    <meta name="geo.region" content="US">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calchub.com/calculators/finance-and-money/loan-calculator.html">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Loan Calculator Online | Calculate Monthly Payments & Interest - CalcHub">
+    <meta property="og:description" content="Free online loan calculator. Calculate monthly loan payments, total interest, and amortization schedule for mortgages, auto loans, and personal loans. Multi-currency support.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calchub.com/calculators/finance-and-money/loan-calculator.html">
+    <meta property="og:image" content="https://calchub.com/images/loan-calculator-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="fb:app_id" content="123456789012345">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Loan Calculator Online | Calculate Monthly Payments & Interest - CalcHub">
+    <meta name="twitter:description" content="Free online loan calculator. Calculate monthly loan payments, total interest, and amortization schedule for mortgages, auto loans, and personal loans.">
+    <meta name="twitter:image" content="https://calchub.com/images/loan-calculator-preview.png">
+    <meta name="twitter:site" content="@CalcHub">
+    <meta name="twitter:creator" content="@CalcHub">
+    
+    <!-- Theme and Mobile -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preconnect to external CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- External Resources -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebApplication",
+                "@id": "https://calchub.com/calculators/finance-and-money/loan-calculator.html#webapp",
+                "name": "Loan Calculator",
+                "description": "Free online loan calculator for calculating monthly payments, total interest, and amortization schedules for mortgages, auto loans, and personal loans",
+                "url": "https://calchub.com/calculators/finance-and-money/loan-calculator.html",
+                "applicationCategory": "FinanceApplication",
+                "operatingSystem": "Any",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                "featureList": [
+                    "Calculate monthly loan payments",
+                    "Calculate total loan interest",
+                    "Generate amortization schedule",
+                    "Multi-currency support (USD, GBP, INR, PKR)",
+                    "Monthly and yearly payment breakdowns"
+                ],
+                "browserRequirements": "Requires JavaScript",
+                "provider": {
+                    "@type": "Organization",
+                    "name": "CalcHub",
+                    "url": "https://calchub.com"
+                }
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://calchub.com/#organization",
+                "name": "CalcHub",
+                "url": "https://calchub.com",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://calchub.com/images/logo.png"
+                },
+                "description": "Professional online calculators for math, finance, health, and business calculations",
+                "sameAs": [
+                    "https://twitter.com/CalcHub",
+                    "https://facebook.com/CalcHub"
+                ]
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://calchub.com/calculators/finance-and-money/loan-calculator.html#breadcrumb",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://calchub.com"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Finance Calculators",
+                        "item": "https://calchub.com/calculators/finance-and-money"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": "Loan Calculator",
+                        "item": "https://calchub.com/calculators/finance-and-money/loan-calculator.html"
+                    }
+                ]
+            },
+            {
+                "@type": "FAQPage",
+                "@id": "https://calchub.com/calculators/finance-and-money/loan-calculator.html#faq",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How is my monthly loan payment calculated?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Your monthly loan payment is calculated using the loan amount, interest rate, and loan term. The formula considers the principal and interest to determine a fixed monthly payment that will pay off the loan completely by the end of the term."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What is an amortization schedule?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "An amortization schedule is a table showing each loan payment over the life of the loan. It breaks down each payment into principal and interest portions, showing how much of your payment goes toward reducing the loan balance versus paying interest."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How does loan term affect my payments?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "A longer loan term results in lower monthly payments but higher total interest paid. A shorter term means higher monthly payments but less total interest. Our calculator shows both scenarios to help you choose the best option."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            /* Light mode - Clean white with black text */
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --transition: all 0.2s ease-in-out;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.2s ease;
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --error-color: #ef4444;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            /* Dark mode - Clean black with white text */
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.1);
+            --shadow-md: 0 4px 6px rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 15px rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -117,24 +269,23 @@
         }
 
         .theme-toggle {
-            background: none;
-            border: 2px solid var(--border-color);
-            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             padding: 0.5rem;
             border-radius: var(--radius);
             cursor: pointer;
             transition: var(--transition);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
         }
 
         .theme-toggle:hover {
-            background-color: var(--bg-secondary);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
         }
 
         .main {
@@ -187,7 +338,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 2rem;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-sm);
         }
 
         .input-section h3 {
@@ -214,21 +365,21 @@
             position: relative;
         }
 
-        .input-field {
+        .input-field, .select-field {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid var(--border-color);
-            border-radius: var(--radius);
+            border-radius: calc(var(--radius) - 0.25rem);
             background-color: var(--bg-primary);
             color: var(--text-primary);
             font-size: 1rem;
             transition: var(--transition);
         }
 
-        .input-field:focus {
+        .input-field:focus, .select-field:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
 
         .input-prefix {
@@ -260,9 +411,9 @@
         .calculate-btn {
             width: 100%;
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border: none;
-            border-radius: var(--radius);
+            border-radius: calc(var(--radius) - 0.25rem);
             padding: 1rem;
             font-size: 1.125rem;
             font-weight: 600;
@@ -289,7 +440,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 2rem;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-sm);
         }
 
         .results-section h3 {
@@ -344,7 +495,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 2rem;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-sm);
             margin-top: 2rem;
         }
 
@@ -367,7 +518,7 @@
         .toggle-btn {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius);
+            border-radius: calc(var(--radius) - 0.25rem);
             padding: 0.5rem 1rem;
             cursor: pointer;
             transition: var(--transition);
@@ -376,13 +527,13 @@
 
         .toggle-btn.active {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border-color: var(--primary-color);
         }
 
         .toggle-btn:hover {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
         }
 
         .amortization-table {
@@ -427,7 +578,7 @@
         .summary-card {
             background-color: var(--bg-secondary);
             padding: 1.5rem;
-            border-radius: var(--radius);
+            border-radius: calc(var(--radius) - 0.25rem);
             text-align: center;
         }
 
@@ -441,6 +592,144 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
+        }
+
+        /* Related Calculators Section */
+        .related-calculators {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .related-calculators h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-item {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        .related-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .related-item h4 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* SEO Content Sections */
+        .content-section, .faq-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .content-section h2, .faq-section h2 {
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .content-section h3, .faq-section h3 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .content-section h4 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .content-section p, .faq-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .content-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section li {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .content-section li strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .applications-grid, .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .application-item, .faq-item {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: calc(var(--radius) - 0.25rem);
+            border: 1px solid var(--border-color);
+        }
+
+        .faq-item h3 {
+            color: var(--primary-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .faq-item p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
         }
 
         .footer {
@@ -468,7 +757,7 @@
             color: var(--text-secondary);
         }
 
-                @media (max-width: 768px) {
+        @media (max-width: 768px) {
             .calculator-container {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -498,6 +787,18 @@
             .amortization-table th,
             .amortization-table td {
                 padding: 0.5rem;
+            }
+
+            .content-section, .faq-section {
+                padding: 1.5rem;
+            }
+
+            .applications-grid, .faq-grid, .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-section h2, .faq-section h2 {
+                font-size: 1.5rem;
             }
         }
 
@@ -545,7 +846,7 @@
                     Loan Calculator
                 </h1>
                 <p class="calculator-description">
-                    Calculate monthly loan payments, total interest, and view detailed amortization schedule for any loan amount, interest rate, and term.
+                    Calculate monthly loan payments, total interest, and view detailed amortization schedule for any loan amount, interest rate, and term with multi-currency support.
                 </p>
             </div>
 
@@ -557,9 +858,19 @@
                     </h3>
                     
                     <div class="input-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency" class="select-field" onchange="updateCurrency()">
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="INR">INR - Indian Rupee</option>
+                            <option value="PKR">PKR - Pakistani Rupee</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
                         <label for="loanAmount">Loan Amount</label>
                         <div class="input-wrapper">
-                            <span class="input-prefix">$</span>
+                            <span class="input-prefix" id="currencySymbol">$</span>
                             <input type="number" id="loanAmount" class="input-field has-prefix" 
                                    placeholder="250000" min="1" step="1000" value="250000">
                         </div>
@@ -666,6 +977,97 @@
                     </div>
                 </div>
             </div>
+
+            <!-- SEO Content Section -->
+            <section class="content-section">
+                <h2>About Our Loan Calculator</h2>
+                <p>Our advanced loan calculator helps you understand the true cost of borrowing money. Whether you're considering a mortgage, auto loan, personal loan, or business loan, this calculator provides detailed insights into your monthly payments, total interest costs, and complete amortization schedule.</p>
+                
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Multi-Currency Support:</strong> Calculate loans in USD, GBP, INR, and PKR with proper formatting and symbols.</li>
+                    <li><strong>Detailed Amortization:</strong> View month-by-month and year-by-year payment breakdowns showing principal vs. interest.</li>
+                    <li><strong>Total Cost Analysis:</strong> Understand the total amount you'll pay over the life of the loan, including all interest.</li>
+                    <li><strong>Interactive Calculations:</strong> Instantly see how changes in loan amount, interest rate, or term affect your payments.</li>
+                </ul>
+
+                <h3>How Loan Calculations Work</h3>
+                <p>Loan payments are calculated using a mathematical formula that considers the principal amount, interest rate, and loan term. The formula ensures that your fixed monthly payment will completely pay off the loan by the end of the term, with early payments consisting mostly of interest and later payments primarily reducing the principal balance.</p>
+
+                <h3>Common Loan Applications</h3>
+                <div class="applications-grid">
+                    <div class="application-item">
+                        <h4>Mortgage Loans</h4>
+                        <p>Calculate monthly mortgage payments for home purchases, including the impact of different down payment amounts and interest rates on your total cost.</p>
+                    </div>
+                    <div class="application-item">
+                        <h4>Auto Loans</h4>
+                        <p>Determine car loan payments and compare financing options from different lenders to find the best deal for your vehicle purchase.</p>
+                    </div>
+                    <div class="application-item">
+                        <h4>Personal Loans</h4>
+                        <p>Calculate payments for debt consolidation, home improvements, or major purchases using our personal loan calculator.</p>
+                    </div>
+                    <div class="application-item">
+                        <h4>Business Loans</h4>
+                        <p>Plan business expansion or equipment purchases by calculating commercial loan payments and total financing costs.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>How is my monthly loan payment calculated?</h3>
+                        <p>Your monthly payment is calculated using the loan amount, interest rate, and loan term. The formula ensures you pay the same amount each month, with the payment split between principal and interest.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>What is an amortization schedule?</h3>
+                        <p>An amortization schedule shows each loan payment over time, breaking down how much goes toward principal versus interest. Early payments are mostly interest, while later payments are mostly principal.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How does loan term affect my payments?</h3>
+                        <p>Longer loan terms result in lower monthly payments but higher total interest paid. Shorter terms mean higher monthly payments but less total interest cost over the life of the loan.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Can I pay extra principal to save on interest?</h3>
+                        <p>Yes, making extra principal payments reduces the loan balance faster, resulting in less total interest paid and a shorter loan term. Even small extra payments can save thousands in interest.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How accurate are these calculations?</h3>
+                        <p>Our calculator uses standard loan calculation formulas and provides accurate results for educational purposes. Actual loan terms may vary based on lender-specific fees and conditions.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>What's the difference between APR and interest rate?</h3>
+                        <p>The interest rate is the cost of borrowing the principal amount. APR (Annual Percentage Rate) includes the interest rate plus other loan costs like fees, giving you the total cost of the loan.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Calculators Section -->
+            <section class="related-calculators">
+                <h3>Related Finance Calculators</h3>
+                <div class="related-grid">
+                    <a href="mortgage-calculator.html" class="related-item">
+                        <h4><i class="fas fa-home"></i> Mortgage Calculator</h4>
+                        <p>Calculate mortgage payments with taxes, insurance, and PMI for comprehensive home buying analysis.</p>
+                    </a>
+                    <a href="compound-interest-calculator.html" class="related-item">
+                        <h4><i class="fas fa-chart-area"></i> Compound Interest Calculator</h4>
+                        <p>Calculate compound interest growth for investments and savings with different compounding frequencies.</p>
+                    </a>
+                    <a href="investment-calculator.html" class="related-item">
+                        <h4><i class="fas fa-chart-line"></i> Investment Calculator</h4>
+                        <p>Plan your investment strategy and calculate potential returns with our comprehensive investment tools.</p>
+                    </a>
+                    <a href="savings-calculator.html" class="related-item">
+                        <h4><i class="fas fa-piggy-bank"></i> Savings Calculator</h4>
+                        <p>Calculate how much you need to save monthly to reach your financial goals by a target date.</p>
+                    </a>
+                </div>
+            </section>
         </div>
     </main>
 
@@ -682,6 +1084,16 @@
     </footer>
 
     <script>
+        // Currency configurations
+        const currencyConfig = {
+            USD: { symbol: '$', locale: 'en-US' },
+            GBP: { symbol: '£', locale: 'en-GB' },
+            INR: { symbol: '₹', locale: 'en-IN' },
+            PKR: { symbol: '₨', locale: 'en-PK' }
+        };
+
+        let currentCurrency = 'USD';
+
         // Theme Management
         class ThemeManager {
             constructor() {
@@ -717,22 +1129,36 @@
             }
         }
 
-        // Loan Calculator Logic
-        let loanData = null;
-        let currentView = 'monthly';
+        // Currency Management
+        function updateCurrency() {
+            currentCurrency = document.getElementById('currency').value;
+            const config = currencyConfig[currentCurrency];
+            document.getElementById('currencySymbol').textContent = config.symbol;
+            
+            // Recalculate if there's existing data
+            if (loanData) {
+                updateDisplayValues();
+            }
+        }
 
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', {
+            const config = currencyConfig[currentCurrency];
+            return new Intl.NumberFormat(config.locale, {
                 style: 'currency',
-                currency: 'USD',
+                currency: currentCurrency,
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }).format(amount);
         }
 
         function formatNumber(num) {
-            return new Intl.NumberFormat('en-US').format(num);
+            const config = currencyConfig[currentCurrency];
+            return new Intl.NumberFormat(config.locale).format(num);
         }
+
+        // Loan Calculator Logic
+        let loanData = null;
+        let currentView = 'monthly';
 
         function calculateLoan() {
             const loanAmount = parseFloat(document.getElementById('loanAmount').value);
@@ -781,6 +1207,16 @@
                 annualRate
             };
 
+            updateDisplayValues();
+            generateAmortizationSchedule();
+        }
+
+        function updateDisplayValues() {
+            if (!loanData) return;
+
+            const { loanAmount, monthlyPayment, totalAmount, totalInterest, annualRate, numberOfPayments } = loanData;
+            const interestPercentage = (totalInterest / loanAmount) * 100;
+
             // Update results display
             document.getElementById('monthlyPayment').textContent = formatCurrency(monthlyPayment);
             document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
@@ -795,9 +1231,6 @@
             document.getElementById('totalPrincipal').textContent = formatCurrency(loanAmount);
             document.getElementById('totalInterestPaid').textContent = formatCurrency(totalInterest);
             document.getElementById('displayRate').textContent = annualRate.toFixed(2) + '%';
-
-            // Generate amortization schedule
-            generateAmortizationSchedule();
         }
 
         function generateAmortizationSchedule() {
@@ -868,7 +1301,7 @@
                     const totalInterest = yearPayments.reduce((sum, p) => sum + p.interestPayment, 0);
                     const endBalance = yearPayments[yearPayments.length - 1].remainingBalance;
                     
-                                        yearlyData.push({
+                    yearlyData.push({
                         year: year,
                         totalPayment: totalPayment,
                         totalPrincipal: totalPrincipal,
@@ -942,6 +1375,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             new ThemeManager();
             setupInputValidation();
+            updateCurrency(); // Initialize currency display
             
             // Calculate with default values
             calculateLoan();
@@ -949,4 +1383,3 @@
     </script>
 </body>
 </html>
-

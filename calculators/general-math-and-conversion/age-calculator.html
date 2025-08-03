@@ -1,27 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" itemscope itemtype="https://schema.org/WebApplication">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Age Calculator - CalcHub</title>
-    <meta name="description" content="Calculate your exact age in years, months, days, hours, minutes, and seconds. Find age difference between two dates and upcoming birthday countdown.">
+
+    <!-- Enhanced Meta Tags -->
+    <title>Age Calculator Online | Calculate Your Exact Age - CalcHub</title>
+    <meta name="description"
+        content="Free online age calculator. Calculate your exact age in years, months, days, hours & minutes. Find age difference between dates & birthday countdown. Instant results!">
+    <meta name="keywords"
+        content="age calculator, calculate age, age finder, birthday calculator, age difference, how old am I, date calculator, years calculator, online age tool">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Canonical and Language -->
+    <link rel="canonical"
+        href="https://calchub.com/calculators/general-math-and-conversion/age-calculator.html">
+    <meta name="language" content="English">
+    <meta name="geo.region" content="US">
+    <meta name="geo.placename" content="United States">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url"
+        content="https://calchub.com/calculators/general-math-and-conversion/age-calculator.html">
+    <meta property="og:title" content="Age Calculator Online | Calculate Your Exact Age - CalcHub">
+    <meta property="og:description"
+        content="Free online age calculator. Calculate your exact age in years, months, days, hours & minutes. Find age difference between dates & birthday countdown. Instant results!">
+    <meta property="og:image" content="https://calchub.netlify.app/images/age-calculator-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="fb:app_id" content="your-facebook-app-id">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url"
+        content="https://calchub.com/calculators/general-math-and-conversion/age-calculator.html">
+    <meta name="twitter:title" content="Age Calculator Online | Calculate Your Exact Age - CalcHub">
+    <meta name="twitter:description"
+        content="Free online age calculator. Calculate your exact age in years, months, days, hours & minutes. Find age difference between dates & birthday countdown. Instant results!">
+    <meta name="twitter:image" content="https://calchub.netlify.app/images/age-calculator-preview.jpg">
+    <meta name="twitter:creator" content="@CalcHub">
+    <meta name="twitter:site" content="@CalcHub">
+
+    <!-- Mobile App Tags -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="application-name" content="CalcHub Age Calculator">
+    <meta name="apple-mobile-web-app-title" content="Age Calculator">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Age Calculator Online",
+        "description": "Free online age calculator to calculate your exact age in years, months, days, hours, minutes, and seconds. Find age difference between two dates and upcoming birthday countdown.",
+        "url": "https://calchub.com/calculators/general-math-and-conversion/age-calculator.html",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "provider": {
+            "@type": "Organization",
+            "name": "CalcHub",
+            "url": "https://calchub.com",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://calchub.netlify.app/images/logo.png"
+            }
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "CalcHub"
+        },
+        "keywords": "age calculator, calculate age, age finder, birthday calculator, age difference, how old am I, date calculator",
+        "featureList": [
+            "Calculate exact age in multiple units",
+            "Age difference between two dates",
+            "Birthday countdown timer",
+            "Live age counter",
+            "Zodiac sign calculator",
+            "Life statistics calculator"
+        ],
+        "screenshot": "https://calchub.netlify.app/images/age-calculator-screenshot.jpg"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://calchub.netlify.app/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Math Calculators",
+                "item": "https://calchub.netlify.app/calculators/general-math-and-conversion/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Age Calculator",
+                "item": "https://calchub.netlify.app/calculators/general-math-and-conversion/age-calculator.html"
+            }
+        ]
+    }
+    </script>
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            /* Light mode - Clean white with black text */
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --transition: all 0.2s ease-in-out;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.2s ease;
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --error-color: #ef4444;
@@ -29,16 +152,19 @@
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            /* Dark mode - Clean black with white text */
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.1);
+            --shadow-md: 0 4px 6px rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 15px rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -118,24 +244,23 @@
         }
 
         .theme-toggle {
-            background: none;
-            border: 2px solid var(--border-color);
-            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             padding: 0.5rem;
             border-radius: var(--radius);
             cursor: pointer;
             transition: var(--transition);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
         }
 
         .theme-toggle:hover {
-            background-color: var(--bg-secondary);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
         }
 
         .main {
@@ -204,7 +329,7 @@
 
         .mode-btn.active {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             box-shadow: var(--shadow-sm);
         }
 
@@ -286,14 +411,14 @@
 
         .quick-btn:hover {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border-color: var(--primary-color);
         }
 
         .calculate-btn {
             width: 100%;
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border: none;
             border-radius: var(--radius);
             padding: 1rem;
@@ -439,8 +564,8 @@
         }
 
         .birthday-countdown {
-            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: var(--bg-primary);
             border-radius: var(--radius);
             padding: 2rem;
             text-align: center;
@@ -464,6 +589,7 @@
             background: rgba(255, 255, 255, 0.2);
             border-radius: calc(var(--radius) - 0.25rem);
             padding: 1rem;
+            color: var(--bg-primary);
         }
 
         .countdown-value {
@@ -557,31 +683,31 @@
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
-            
+
             .calculator-title {
                 font-size: 2rem;
             }
-            
+
             .nav {
                 padding: 0.75rem 1rem;
             }
-            
+
             .nav-brand {
                 font-size: 1.25rem;
             }
-            
+
             .age-breakdown {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
+
             .main-age {
                 font-size: 2rem;
             }
-            
+
             .mode-container {
                 flex-direction: column;
             }
-            
+
             .mode-btn {
                 padding: 0.5rem 1rem;
             }
@@ -591,18 +717,22 @@
             .date-inputs {
                 grid-template-columns: 1fr;
             }
-            
+
             .quick-dates {
                 grid-template-columns: 1fr;
             }
-            
+
             .age-breakdown {
                 grid-template-columns: 1fr;
             }
-            
+
             .countdown-display {
                 grid-template-columns: repeat(2, 1fr);
             }
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         * {
@@ -610,6 +740,7 @@
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <nav class="nav container">
@@ -637,7 +768,8 @@
                     Age Calculator
                 </h1>
                 <p class="calculator-description">
-                    Calculate your exact age in years, months, days, hours, minutes, and seconds. Find age difference between two dates and upcoming birthday countdown.
+                    Calculate your exact age in years, months, days, hours, minutes, and seconds. Find age difference
+                    between two dates and upcoming birthday countdown.
                 </p>
             </div>
 
@@ -656,7 +788,7 @@
                         <i class="fas fa-calendar-alt"></i>
                         Enter Your Birth Date
                     </h3>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Birth Date</label>
                         <input type="date" id="birthDate" class="form-input">
@@ -669,6 +801,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label">Birth Time (Optional) <span style="font-size: 0.8em; color: var(--text-muted);">For precise calculations</span></label>
+                        <input type="time" id="birthTime" class="form-input" 
+                               title="Enter your birth time for more precise age calculation">
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label">Calculate Age As Of (Optional)</label>
                         <input type="date" id="asOfDate" class="form-input">
                     </div>
@@ -677,6 +815,11 @@
                         <i class="fas fa-calculator"></i>
                         Calculate My Age
                     </button>
+                    
+                    <button class="calculate-btn" onclick="toggleLiveCounter()" style="margin-top: 0.5rem; background-color: var(--success-color);">
+                        <i class="fas fa-play"></i>
+                        <span id="liveCounterToggleText">Start Live Counter</span>
+                    </button>
                 </div>
 
                 <div class="results-section">
@@ -684,7 +827,7 @@
                         <i class="fas fa-chart-pie"></i>
                         Your Age
                     </h3>
-                    
+
                     <div class="age-display">
                         <div class="main-age" id="mainAge">0 Years</div>
                         <div class="age-subtitle" id="ageSubtitle">Enter your birth date to calculate</div>
@@ -726,7 +869,7 @@
                         <i class="fas fa-users"></i>
                         Compare Two Ages
                     </h3>
-                    
+
                     <div class="form-group">
                         <label class="form-label">First Person's Birth Date</label>
                         <input type="date" id="firstBirthDate" class="form-input">
@@ -748,7 +891,7 @@
                         <i class="fas fa-balance-scale"></i>
                         Age Difference
                     </h3>
-                    
+
                     <div class="age-display">
                         <div class="main-age" id="ageDifference">0 Years</div>
                         <div class="age-subtitle" id="differenceSubtitle">Enter both birth dates</div>
@@ -778,7 +921,7 @@
                         <i class="fas fa-gift"></i>
                         Birthday Information
                     </h3>
-                    
+
                     <div class="form-group">
                         <label class="form-label">Your Birth Date</label>
                         <input type="date" id="birthdayDate" class="form-input">
@@ -795,7 +938,7 @@
                         <i class="fas fa-calendar-check"></i>
                         Birthday Details
                     </h3>
-                    
+
                     <div id="birthdayResults">
                         <div class="age-display">
                             <div class="main-age" id="nextBirthdayAge">Next Birthday</div>
@@ -864,7 +1007,7 @@
             </div>
 
             <!-- Live Age Counter -->
-            <div class="live-age" id="liveAge" style="display: none;">
+            <div class="live-age" id="liveAge">
                 <h3>
                     <i class="fas fa-clock"></i>
                     Live Age Counter
@@ -889,6 +1032,129 @@
                 </div>
             </div>
         </div>
+
+        <!-- Related Calculators Section -->
+        <section style="background-color: var(--bg-secondary); padding: 3rem 0; margin-top: 3rem;">
+            <div class="container">
+                <h2 style="text-align: center; color: var(--text-primary); margin-bottom: 2rem; font-size: 2rem;">Related Calculators</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto;">
+                    
+                    <a href="basic-calculator.html" style="display: block; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; text-decoration: none; transition: var(--transition); box-shadow: var(--shadow-sm);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="width: 50px; height: 50px; background-color: var(--primary-color); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--bg-primary);">
+                                <i class="fas fa-calculator" style="font-size: 1.2rem;"></i>
+                            </div>
+                            <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Basic Calculator</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">Simple and fast calculator for basic arithmetic operations like addition, subtraction, multiplication, and division.</p>
+                    </a>
+
+                    <a href="percentage-calculator.html" style="display: block; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; text-decoration: none; transition: var(--transition); box-shadow: var(--shadow-sm);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="width: 50px; height: 50px; background-color: var(--primary-color); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--bg-primary);">
+                                <i class="fas fa-percentage" style="font-size: 1.2rem;"></i>
+                            </div>
+                            <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Percentage Calculator</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">Calculate percentages, percentage increases, decreases, and find what percentage one number is of another.</p>
+                    </a>
+
+                    <a href="unit-converter.html" style="display: block; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; text-decoration: none; transition: var(--transition); box-shadow: var(--shadow-sm);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="width: 50px; height: 50px; background-color: var(--primary-color); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--bg-primary);">
+                                <i class="fas fa-exchange-alt" style="font-size: 1.2rem;"></i>
+                            </div>
+                            <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Unit Converter</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">Convert between different units of length, weight, temperature, volume, and more with instant results.</p>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- SEO Content Section -->
+            <section class="seo-content" style="margin: 4rem 0 0 0;">
+                <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow-lg);">
+                    <h2 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.75rem;">Advanced Age Calculator: Complete Guide</h2>
+                    
+                    <div style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 2rem;">
+                        <p style="margin-bottom: 1rem;">Our comprehensive age calculator is the most accurate and feature-rich tool available online. Calculate your exact age in years, months, days, hours, minutes, and seconds with precision. Whether you need age verification, planning special events, determining program eligibility, or exploring fascinating life statistics, our calculator delivers instant and reliable results.</p>
+                        
+                        <p style="margin-bottom: 1rem;">Beyond basic age calculation, discover your zodiac sign, Chinese zodiac animal, birthstone, life path number, and estimated life statistics including heartbeats, breaths taken, and hours slept. Our live age counter shows your age increasing in real-time, making it perfect for educational purposes or simply satisfying curiosity about the passage of time.</p>
+                        
+                        <p style="margin-bottom: 1rem;">Perfect for students, researchers, genealogists, event planners, HR professionals, and anyone needing accurate age calculations. The tool works entirely in your browser, ensuring complete privacy with no data storage or sharing.</p>
+                    </div>
+                    
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.25rem;">🚀 Advanced Features</h3>
+                    <ul style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 2rem; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.5rem;"><strong>Multi-Unit Age Calculation:</strong> Years, months, days, hours, minutes, and seconds</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Age Difference Calculator:</strong> Compare ages between two people or dates</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Birthday Countdown Timer:</strong> Real-time countdown to your next birthday</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Live Age Counter:</strong> Watch your age increase in real-time (seconds, minutes, hours, days)</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Zodiac & Astrology:</strong> Western zodiac sign and Chinese zodiac animal</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Birthstone & Numerology:</strong> Your birthstone and life path number</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Life Statistics:</strong> Estimated heartbeats, breaths taken, and sleep hours</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Copy & Share:</strong> Export your age information for sharing</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Mobile Responsive:</strong> Works perfectly on all devices</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Dark/Light Mode:</strong> Theme switching for comfortable viewing</li>
+                    </ul>
+                    
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.25rem;">📖 How to Use</h3>
+                    <div style="background-color: var(--bg-secondary); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem;">
+                        <ol style="color: var(--text-secondary); line-height: 1.7; padding-left: 1.5rem; margin: 0;">
+                            <li style="margin-bottom: 0.5rem;"><strong>Age Calculator Mode:</strong> Enter your birth date and optionally specify a calculation date</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Age Difference Mode:</strong> Enter two birth dates to find the exact age gap</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Birthday Countdown:</strong> Enter your birth date to see countdown to next birthday</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Live Counter:</strong> Click "Start Live Counter" to see your age increasing in real-time</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>View Results:</strong> See detailed breakdown, zodiac info, and life statistics</li>
+                        </ol>
+                    </div>
+                    
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.25rem;">🎯 Common Use Cases</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div style="background-color: var(--bg-secondary); border-radius: var(--radius); padding: 1rem;">
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Personal Use</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Birthday planning, age verification, curiosity about time lived</p>
+                        </div>
+                        <div style="background-color: var(--bg-secondary); border-radius: var(--radius); padding: 1rem;">
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Educational</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Teaching time concepts, mathematics, calendar systems</p>
+                        </div>
+                        <div style="background-color: var(--bg-secondary); border-radius: var(--radius); padding: 1rem;">
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Professional</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">HR applications, legal documentation, eligibility verification</p>
+                        </div>
+                        <div style="background-color: var(--bg-secondary); border-radius: var(--radius); padding: 1rem;">
+                            <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Research</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Genealogy, historical analysis, demographic studies</p>
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.25rem;">❓ Frequently Asked Questions</h3>
+                    <div>
+                        <details style="margin-bottom: 1rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                            <summary style="color: var(--text-primary); font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">How accurate is this age calculator?</summary>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">Our calculator is extremely accurate, accounting for leap years, varying month lengths, and precise time calculations down to the second. It uses JavaScript's native Date object for maximum precision.</p>
+                        </details>
+                        
+                        <details style="margin-bottom: 1rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                            <summary style="color: var(--text-primary); font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">What makes the live age counter special?</summary>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">The live counter updates every second, showing your age in real-time as it increases. Watch your seconds, minutes, hours, and days lived grow before your eyes - perfect for educational demonstrations or personal fascination with time.</p>
+                        </details>
+                        
+                        <details style="margin-bottom: 1rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                            <summary style="color: var(--text-primary); font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">How is the zodiac information calculated?</summary>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">We calculate both Western zodiac signs (based on birth month/day) and Chinese zodiac animals (based on birth year). The birthstone is determined by birth month, and the life path number uses numerological calculation on your birth date.</p>
+                        </details>
+                        
+                        <details style="margin-bottom: 1rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+                            <summary style="color: var(--text-primary); font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">Is my birth date information saved?</summary>
+                            <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">No! All calculations happen locally in your browser. We don't store, save, or transmit any personal information. Your privacy is completely protected.</p>
+                        </details>
+                    </div>
+                </div>
+            </section>
+        </section>
     </main>
 
     <footer class="footer">
@@ -947,18 +1213,21 @@
 
         function setMode(mode) {
             currentMode = mode;
-            
+
             // Update mode buttons
-            document.querySelectorAll('.mode-btn').forEach(btn => {
+            document.querySelectorAll('.mode-btn').forEach((btn, index) => {
                 btn.classList.remove('active');
+                const modes = ['age', 'difference', 'birthday'];
+                if (modes[index] === mode) {
+                    btn.classList.add('active');
+                }
             });
-            event.target.classList.add('active');
-            
+
             // Show/hide mode sections
             document.getElementById('ageMode').classList.toggle('hidden', mode !== 'age');
             document.getElementById('differenceMode').classList.toggle('hidden', mode !== 'difference');
             document.getElementById('birthdayMode').classList.toggle('hidden', mode !== 'birthday');
-            
+
             // Clear intervals
             if (countdownInterval) {
                 clearInterval(countdownInterval);
@@ -968,7 +1237,7 @@
                 clearInterval(liveCounterInterval);
                 liveCounterInterval = null;
             }
-            
+
             // Hide countdown and live counter
             document.getElementById('birthdayCountdown').style.display = 'none';
             document.getElementById('liveAge').style.display = 'none';
@@ -977,7 +1246,7 @@
         function setQuickDate(type) {
             const today = new Date();
             let targetDate = new Date(today);
-            
+
             switch (type) {
                 case 'today':
                     break;
@@ -991,63 +1260,70 @@
                     targetDate.setMonth(today.getMonth() - 1);
                     break;
             }
-            
+
             document.getElementById('birthDate').value = targetDate.toISOString().split('T')[0];
             calculateAge();
         }
 
         function calculateAge() {
             const birthDateInput = document.getElementById('birthDate').value;
+            const birthTimeInput = document.getElementById('birthTime').value;
             const asOfDateInput = document.getElementById('asOfDate').value;
-            
+
             if (!birthDateInput) {
                 resetAgeDisplay();
                 return;
             }
-            
+
+            // Create birth date with optional time
             birthDate = new Date(birthDateInput);
+            if (birthTimeInput) {
+                const [hours, minutes] = birthTimeInput.split(':');
+                birthDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+            }
+
             const asOfDate = asOfDateInput ? new Date(asOfDateInput) : new Date();
-            
+
             if (birthDate > asOfDate) {
                 alert('Birth date cannot be in the future!');
                 return;
             }
-            
+
             const ageData = calculateDetailedAge(birthDate, asOfDate);
-            updateAgeDisplay(ageData);
+            updateAgeDisplay(ageData, birthTimeInput);
             updateDetailedInfo(birthDate, asOfDate);
-            startLiveCounter();
+            updateEnhancedDetailedInfo(birthDate, asOfDate);
             startBirthdayCountdown();
         }
 
         function calculateAgeDifference() {
             const firstDate = document.getElementById('firstBirthDate').value;
             const secondDate = document.getElementById('secondBirthDate').value;
-            
+
             if (!firstDate || !secondDate) {
                 resetDifferenceDisplay();
                 return;
             }
-            
+
             const date1 = new Date(firstDate);
             const date2 = new Date(secondDate);
-            
+
             // Calculate difference (always positive)
             const olderDate = date1 < date2 ? date1 : date2;
             const youngerDate = date1 < date2 ? date2 : date1;
-            
+
             const ageData = calculateDetailedAge(olderDate, youngerDate);
             updateDifferenceDisplay(ageData, date1 < date2);
         }
 
         function calculateBirthday() {
             const birthdayDateInput = document.getElementById('birthdayDate').value;
-            
+
             if (!birthdayDateInput) {
                 resetBirthdayDisplay();
                 return;
             }
-            
+
             birthDate = new Date(birthdayDateInput);
             updateBirthdayDisplay();
             startBirthdayCountdown();
@@ -1055,34 +1331,48 @@
 
         function calculateDetailedAge(fromDate, toDate) {
             const totalMs = toDate.getTime() - fromDate.getTime();
-            
+
             // Calculate exact age
             let years = toDate.getFullYear() - fromDate.getFullYear();
             let months = toDate.getMonth() - fromDate.getMonth();
             let days = toDate.getDate() - fromDate.getDate();
-            
+            let hours = toDate.getHours() - fromDate.getHours();
+            let minutes = toDate.getMinutes() - fromDate.getMinutes();
+
+            if (minutes < 0) {
+                hours--;
+                minutes += 60;
+            }
+
+            if (hours < 0) {
+                days--;
+                hours += 24;
+            }
+
             if (days < 0) {
                 months--;
                 const lastMonth = new Date(toDate.getFullYear(), toDate.getMonth(), 0);
                 days += lastMonth.getDate();
             }
-            
+
             if (months < 0) {
                 years--;
                 months += 12;
             }
-            
+
             // Calculate totals
             const totalDays = Math.floor(totalMs / (1000 * 60 * 60 * 24));
             const totalHours = Math.floor(totalMs / (1000 * 60 * 60));
             const totalMinutes = Math.floor(totalMs / (1000 * 60));
             const totalSeconds = Math.floor(totalMs / 1000);
             const totalMonths = years * 12 + months;
-            
+
             return {
                 years,
                 months,
                 days,
+                hours,
+                minutes,
                 totalYears: years,
                 totalMonths,
                 totalDays,
@@ -1092,11 +1382,18 @@
             };
         }
 
-        function updateAgeDisplay(ageData) {
+        function updateAgeDisplay(ageData, hasTime) {
             document.getElementById('mainAge').textContent = `${ageData.years} Years`;
-            document.getElementById('ageSubtitle').textContent = 
-                `${ageData.years} years, ${ageData.months} months, and ${ageData.days} days old`;
             
+            // Show more precise subtitle when time is provided
+            if (hasTime) {
+                document.getElementById('ageSubtitle').textContent =
+                    `${ageData.years} years, ${ageData.months} months, ${ageData.days} days, ${ageData.hours} hours, and ${ageData.minutes} minutes old`;
+            } else {
+                document.getElementById('ageSubtitle').textContent =
+                    `${ageData.years} years, ${ageData.months} months, and ${ageData.days} days old`;
+            }
+
             document.getElementById('totalYears').textContent = formatNumber(ageData.totalYears);
             document.getElementById('totalMonths').textContent = formatNumber(ageData.totalMonths);
             document.getElementById('totalDays').textContent = formatNumber(ageData.totalDays);
@@ -1107,9 +1404,9 @@
 
         function updateDifferenceDisplay(ageData, firstIsOlder) {
             document.getElementById('ageDifference').textContent = `${ageData.years} Years`;
-            document.getElementById('differenceSubtitle').textContent = 
+            document.getElementById('differenceSubtitle').textContent =
                 `${ageData.years} years, ${ageData.months} months, and ${ageData.days} days difference`;
-            
+
             document.getElementById('diffYears').textContent = formatNumber(ageData.years);
             document.getElementById('diffMonths').textContent = formatNumber(ageData.totalMonths);
             document.getElementById('diffDays').textContent = formatNumber(ageData.totalDays);
@@ -1119,16 +1416,16 @@
             const today = new Date();
             const currentYear = today.getFullYear();
             let nextBirthday = new Date(currentYear, birthDate.getMonth(), birthDate.getDate());
-            
+
             if (nextBirthday < today) {
                 nextBirthday.setFullYear(currentYear + 1);
             }
-            
+
             const nextAge = nextBirthday.getFullYear() - birthDate.getFullYear();
             const dayOfWeek = birthDate.toLocaleDateString('en-US', { weekday: 'long' });
-            
+
             document.getElementById('nextBirthdayAge').textContent = `Turning ${nextAge}`;
-            document.getElementById('birthdaySubtitle').textContent = 
+            document.getElementById('birthdaySubtitle').textContent =
                 `Next birthday: ${nextBirthday.toLocaleDateString()} (${dayOfWeek})`;
         }
 
@@ -1136,13 +1433,13 @@
             const dayOfWeek = birthDate.toLocaleDateString('en-US', { weekday: 'long' });
             const totalDays = Math.floor((asOfDate - birthDate) / (1000 * 60 * 60 * 24));
             const totalWeeks = Math.floor(totalDays / 7);
-            
+
             // Life statistics (approximate)
             const heartbeats = Math.floor(totalDays * 24 * 60 * 70); // ~70 bpm average
             const breaths = Math.floor(totalDays * 24 * 60 * 15); // ~15 breaths per minute
             const hoursSlept = Math.floor(totalDays * 8); // ~8 hours sleep per day
             const mealsEaten = Math.floor(totalDays * 3); // ~3 meals per day
-            
+
             // Update date info
             const dateInfoList = document.getElementById('dateInfo');
             dateInfoList.innerHTML = `
@@ -1151,7 +1448,7 @@
                 <li><span class="label">Days Lived:</span> <span class="value">${formatNumber(totalDays)}</span></li>
                 <li><span class="label">Weeks Lived:</span> <span class="value">${formatNumber(totalWeeks)}</span></li>
             `;
-            
+
             // Update life stats
             const lifeStatsList = document.getElementById('lifeStats');
             lifeStatsList.innerHTML = `
@@ -1164,48 +1461,48 @@
 
         function startBirthdayCountdown() {
             if (!birthDate) return;
-            
+
             document.getElementById('birthdayCountdown').style.display = 'block';
-            
+
             if (countdownInterval) {
                 clearInterval(countdownInterval);
             }
-            
+
             countdownInterval = setInterval(() => {
                 const now = new Date();
                 const currentYear = now.getFullYear();
                 let nextBirthday = new Date(currentYear, birthDate.getMonth(), birthDate.getDate());
-                
+
                 if (nextBirthday < now) {
                     nextBirthday.setFullYear(currentYear + 1);
                 }
-                
+
                 const timeLeft = nextBirthday - now;
-                
+
                 if (timeLeft <= 0) {
                     // It's the birthday!
-                    document.getElementById('birthdayMessage').innerHTML = 
+                    document.getElementById('birthdayMessage').innerHTML =
                         '🎉 Happy Birthday! 🎂 Hope you have a wonderful day! 🎉';
                     return;
                 }
-                
+
                 const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                
+
                 document.getElementById('countdownDays').textContent = days;
                 document.getElementById('countdownHours').textContent = hours;
                 document.getElementById('countdownMinutes').textContent = minutes;
                 document.getElementById('countdownSeconds').textContent = seconds;
-                
+
                 // Check if birthday is today
                 const today = new Date();
-                const isBirthday = today.getDate() === birthDate.getDate() && 
-                                 today.getMonth() === birthDate.getMonth();
-                
+                const isBirthday = today.getDate() === birthDate.getDate() &&
+                    today.getMonth() === birthDate.getMonth();
+
                 if (isBirthday) {
-                    document.getElementById('birthdayMessage').innerHTML = 
+                    document.getElementById('birthdayMessage').innerHTML =
                         '🎉 Happy Birthday! 🎂 Hope you have a wonderful day! 🎉';
                 } else {
                     document.getElementById('birthdayMessage').innerHTML = '';
@@ -1213,19 +1510,41 @@
             }, 1000);
         }
 
+        let liveCounterActive = false;
+
+        function toggleLiveCounter() {
+            const toggleBtn = document.getElementById('liveCounterToggleText');
+            const icon = toggleBtn.previousElementSibling;
+            
+            if (!birthDate) {
+                alert('Please calculate your age first!');
+                return;
+            }
+
+            if (liveCounterActive) {
+                stopLiveCounter();
+                toggleBtn.textContent = 'Start Live Counter';
+                icon.className = 'fas fa-play';
+                liveCounterActive = false;
+            } else {
+                startLiveCounter();
+                toggleBtn.textContent = 'Stop Live Counter';
+                icon.className = 'fas fa-stop';
+                liveCounterActive = true;
+            }
+        }
+
         function startLiveCounter() {
             if (!birthDate) return;
-            
-            document.getElementById('liveAge').style.display = 'block';
-            
+
             if (liveCounterInterval) {
                 clearInterval(liveCounterInterval);
             }
-            
+
             liveCounterInterval = setInterval(() => {
                 const now = new Date();
                 const ageData = calculateDetailedAge(birthDate, now);
-                
+
                 document.getElementById('liveSeconds').textContent = formatNumber(ageData.totalSeconds);
                 document.getElementById('liveMinutes').textContent = formatNumber(ageData.totalMinutes);
                 document.getElementById('liveHours').textContent = formatNumber(ageData.totalHours);
@@ -1233,17 +1552,24 @@
             }, 1000);
         }
 
+        function stopLiveCounter() {
+            if (liveCounterInterval) {
+                clearInterval(liveCounterInterval);
+                liveCounterInterval = null;
+            }
+        }
+
         function resetAgeDisplay() {
             document.getElementById('mainAge').textContent = '0 Years';
             document.getElementById('ageSubtitle').textContent = 'Enter your birth date to calculate';
-            
+
             document.getElementById('totalYears').textContent = '0';
             document.getElementById('totalMonths').textContent = '0';
             document.getElementById('totalDays').textContent = '0';
             document.getElementById('totalHours').textContent = '0';
             document.getElementById('totalMinutes').textContent = '0';
             document.getElementById('totalSeconds').textContent = '0';
-            
+
             // Reset detailed info
             document.getElementById('dateInfo').innerHTML = `
                 <li><span class="label">Birth Date:</span> <span class="value">-</span></li>
@@ -1251,18 +1577,32 @@
                 <li><span class="label">Days Lived:</span> <span class="value">-</span></li>
                 <li><span class="label">Weeks Lived:</span> <span class="value">-</span></li>
             `;
-            
+
             document.getElementById('lifeStats').innerHTML = `
                 <li><span class="label">Heartbeats:</span> <span class="value">-</span></li>
                 <li><span class="label">Breaths Taken:</span> <span class="value">-</span></li>
                 <li><span class="label">Hours Slept:</span> <span class="value">-</span></li>
                 <li><span class="label">Meals Eaten:</span> <span class="value">-</span></li>
             `;
-            
-            // Hide countdown and live counter
+
+            // Hide countdown and reset live counter
             document.getElementById('birthdayCountdown').style.display = 'none';
-            document.getElementById('liveAge').style.display = 'none';
             
+            // Reset live counter
+            document.getElementById('liveSeconds').textContent = '0';
+            document.getElementById('liveMinutes').textContent = '0';
+            document.getElementById('liveHours').textContent = '0';
+            document.getElementById('liveDays').textContent = '0';
+            
+            // Reset live counter button
+            const toggleBtn = document.getElementById('liveCounterToggleText');
+            if (toggleBtn) {
+                const icon = toggleBtn.previousElementSibling;
+                toggleBtn.textContent = 'Start Live Counter';
+                icon.className = 'fas fa-play';
+                liveCounterActive = false;
+            }
+
             // Clear intervals
             if (countdownInterval) {
                 clearInterval(countdownInterval);
@@ -1272,12 +1612,21 @@
                 clearInterval(liveCounterInterval);
                 liveCounterInterval = null;
             }
+            
+            // Remove additional info
+            const existingAdditionalInfo = document.getElementById('additionalInfo');
+            if (existingAdditionalInfo) {
+                existingAdditionalInfo.remove();
+            }
+            
+            // Reset birthDate variable
+            birthDate = null;
         }
 
         function resetDifferenceDisplay() {
             document.getElementById('ageDifference').textContent = '0 Years';
             document.getElementById('differenceSubtitle').textContent = 'Enter both birth dates';
-            
+
             document.getElementById('diffYears').textContent = '0';
             document.getElementById('diffMonths').textContent = '0';
             document.getElementById('diffDays').textContent = '0';
@@ -1286,9 +1635,9 @@
         function resetBirthdayDisplay() {
             document.getElementById('nextBirthdayAge').textContent = 'Next Birthday';
             document.getElementById('birthdaySubtitle').textContent = 'Enter your birth date';
-            
+
             document.getElementById('birthdayCountdown').style.display = 'none';
-            
+
             if (countdownInterval) {
                 clearInterval(countdownInterval);
                 countdownInterval = null;
@@ -1299,18 +1648,42 @@
             return new Intl.NumberFormat().format(num);
         }
 
-        // Auto-calculation setup
+        // Auto-calculation setup with debouncing for better performance
         function setupAutoCalculation() {
-            // Age mode
-            document.getElementById('birthDate').addEventListener('change', calculateAge);
-            document.getElementById('asOfDate').addEventListener('change', calculateAge);
+            let debounceTimer;
+
+            // Debounced calculation function
+            function debounceCalculation(calcFunction) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(calcFunction, 300); // 300ms delay
+            }
+
+            // Age mode - auto-calculate when birth time changes if birth date is set
+            document.getElementById('birthTime').addEventListener('change', () => {
+                if (document.getElementById('birthDate').value) {
+                    debounceCalculation(calculateAge);
+                }
+            });
             
-            // Difference mode
-            document.getElementById('firstBirthDate').addEventListener('change', calculateAgeDifference);
-            document.getElementById('secondBirthDate').addEventListener('change', calculateAgeDifference);
-            
-            // Birthday mode
-            document.getElementById('birthdayDate').addEventListener('change', calculateBirthday);
+            // Age mode - only auto-calculate for "as of" date, not birth date
+            document.getElementById('asOfDate').addEventListener('change', () => {
+                if (document.getElementById('birthDate').value) {
+                    debounceCalculation(calculateAge);
+                }
+            });
+
+            // Difference mode - debounced
+            document.getElementById('firstBirthDate').addEventListener('change', () => {
+                debounceCalculation(calculateAgeDifference);
+            });
+            document.getElementById('secondBirthDate').addEventListener('change', () => {
+                debounceCalculation(calculateAgeDifference);
+            });
+
+            // Birthday mode - debounced
+            document.getElementById('birthdayDate').addEventListener('change', () => {
+                debounceCalculation(calculateBirthday);
+            });
         }
 
         // Keyboard shortcuts
@@ -1343,7 +1716,7 @@
         function getZodiacSign(birthDate) {
             const month = birthDate.getMonth() + 1;
             const day = birthDate.getDate();
-            
+
             const signs = [
                 { name: 'Capricorn', start: [12, 22], end: [1, 19] },
                 { name: 'Aquarius', start: [1, 20], end: [2, 18] },
@@ -1358,7 +1731,7 @@
                 { name: 'Scorpio', start: [10, 23], end: [11, 21] },
                 { name: 'Sagittarius', start: [11, 22], end: [12, 21] }
             ];
-            
+
             for (const sign of signs) {
                 if (sign.name === 'Capricorn') {
                     if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) {
@@ -1367,14 +1740,14 @@
                 } else {
                     const [startMonth, startDay] = sign.start;
                     const [endMonth, endDay] = sign.end;
-                    
-                    if ((month === startMonth && day >= startDay) || 
+
+                    if ((month === startMonth && day >= startDay) ||
                         (month === endMonth && day <= endDay)) {
                         return sign.name;
                     }
                 }
             }
-            
+
             return 'Unknown';
         }
 
@@ -1383,7 +1756,7 @@
                 'Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake',
                 'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'
             ];
-            
+
             return animals[(year - 1900) % 12];
         }
 
@@ -1392,51 +1765,49 @@
                 'Garnet', 'Amethyst', 'Aquamarine', 'Diamond', 'Emerald', 'Pearl',
                 'Ruby', 'Peridot', 'Sapphire', 'Opal', 'Topaz', 'Turquoise'
             ];
-            
+
             return birthstones[month - 1];
         }
 
         function getLifePathNumber(birthDate) {
             const dateStr = birthDate.toISOString().split('T')[0].replace(/-/g, '');
             let sum = 0;
-            
+
             for (let digit of dateStr) {
                 sum += parseInt(digit);
             }
-            
+
             while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
                 sum = sum.toString().split('').reduce((a, b) => parseInt(a) + parseInt(b), 0);
             }
-            
+
             return sum;
         }
 
         // Enhanced detailed info with additional features
         function updateEnhancedDetailedInfo(birthDate, asOfDate) {
-            updateDetailedInfo(birthDate, asOfDate);
-            
             // Add zodiac and additional info
             const zodiacSign = getZodiacSign(birthDate);
             const chineseZodiac = getChineseZodiac(birthDate.getFullYear());
             const birthstone = getBirthstone(birthDate.getMonth() + 1);
             const lifePathNumber = getLifePathNumber(birthDate);
-            
+
             // Create additional info card
             const infoGrid = document.querySelector('.info-grid');
-            
+
             // Remove existing additional info if present
             const existingAdditionalInfo = document.getElementById('additionalInfo');
             if (existingAdditionalInfo) {
                 existingAdditionalInfo.remove();
             }
-            
+
             const additionalInfoCard = document.createElement('div');
             additionalInfoCard.className = 'info-card';
             additionalInfoCard.id = 'additionalInfo';
             additionalInfoCard.innerHTML = `
                 <div class="info-title">
                     <i class="fas fa-star"></i>
-                    Additional Info
+                    Zodiac & Astrology
                 </div>
                 <ul class="info-list">
                     <li><span class="label">Zodiac Sign:</span> <span class="value">${zodiacSign}</span></li>
@@ -1445,30 +1816,21 @@
                     <li><span class="label">Life Path Number:</span> <span class="value">${lifePathNumber}</span></li>
                 </ul>
             `;
-            
+
             infoGrid.appendChild(additionalInfoCard);
         }
 
-        // Override the original updateDetailedInfo function
-        const originalUpdateDetailedInfo = updateDetailedInfo;
-        updateDetailedInfo = function(birthDate, asOfDate) {
-            originalUpdateDetailedInfo(birthDate, asOfDate);
-            updateEnhancedDetailedInfo(birthDate, asOfDate);
-        };
-
-        // Set default date to today for quick testing
+        // Set default date to today
         function setDefaultDates() {
             const today = new Date();
-            const thirtyYearsAgo = new Date(today.getFullYear() - 30, today.getMonth(), today.getDate());
-            
-            // Set default birth date to 30 years ago for demonstration
-            document.getElementById('birthDate').value = thirtyYearsAgo.toISOString().split('T')[0];
-            document.getElementById('birthdayDate').value = thirtyYearsAgo.toISOString().split('T')[0];
-            
-            // Set default dates for age difference
-            const twentyFiveYearsAgo = new Date(today.getFullYear() - 25, today.getMonth(), today.getDate());
-            document.getElementById('firstBirthDate').value = thirtyYearsAgo.toISOString().split('T')[0];
-            document.getElementById('secondBirthDate').value = twentyFiveYearsAgo.toISOString().split('T')[0];
+
+            // Set default birth date to today
+            document.getElementById('birthDate').value = today.toISOString().split('T')[0];
+            document.getElementById('birthdayDate').value = today.toISOString().split('T')[0];
+
+            // Set default dates for age difference (leave empty for user input)
+            document.getElementById('firstBirthDate').value = '';
+            document.getElementById('secondBirthDate').value = '';
         }
 
         // Initialize
@@ -1476,7 +1838,7 @@
             new ThemeManager();
             setupAutoCalculation();
             setDefaultDates();
-            calculateAge(); // Initial calculation with default values
+            // Don't auto-calculate with today's date (would show 0 age)
         });
 
         // Cleanup intervals when page is unloaded
@@ -1518,10 +1880,10 @@
                 alert('Please calculate your age first!');
                 return;
             }
-            
+
             const now = new Date();
             const ageData = calculateDetailedAge(birthDate, now);
-            
+
             const ageInfo = `
 🎂 My Age Information:
 📅 Born: ${birthDate.toLocaleDateString()}
@@ -1533,7 +1895,7 @@
 
 Calculated with CalcHub Age Calculator
             `.trim();
-            
+
             navigator.clipboard.writeText(ageInfo).then(() => {
                 alert('Age information copied to clipboard!');
             }).catch(() => {
@@ -1558,7 +1920,5 @@ Calculated with CalcHub Age Calculator
         });
     </script>
 </body>
+
 </html>
-
-
-

@@ -1,40 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Calculator - CalcHub</title>
-    <meta name="description" content="Free online basic calculator for addition, subtraction, multiplication, and division. Clean and easy to use.">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Enhanced Meta Tags -->
+    <title>Free Basic Calculator Online | Addition, Subtraction & More - CalcHub</title>
+    <meta name="description" content="Use our free online basic calculator for quick arithmetic operations. Features addition, subtraction, multiplication, division with keyboard support. No download required.">
+    <meta name="keywords" content="basic calculator, online calculator, arithmetic calculator, math calculator, addition, subtraction, multiplication, division, free calculator, web calculator">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calchub.dev/calculators/general-math-and-conversion/basic-calculator.html">
+    
+    <!-- Language and Region -->
+    <meta name="language" content="English">
+    <meta name="geo.region" content="US">
+    <meta name="geo.placename" content="United States">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Free Basic Calculator Online | Addition, Subtraction & More - CalcHub">
+    <meta property="og:description" content="Use our free online basic calculator for quick arithmetic operations. Features addition, subtraction, multiplication, division with keyboard support. No download required.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calchub.dev/calculators/general-math-and-conversion/basic-calculator.html">
+    <meta property="og:image" content="https://calchub.dev/images/basic-calculator-preview.png">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="og:locale" content="en_US">
+    <meta property="fb:app_id" content="your_facebook_app_id">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Basic Calculator Online | Addition, Subtraction & More - CalcHub">
+    <meta name="twitter:description" content="Use our free online basic calculator for quick arithmetic operations. Features addition, subtraction, multiplication, division with keyboard support.">
+    <meta name="twitter:image" content="https://calchub.dev/images/basic-calculator-preview.png">
+    <meta name="twitter:site" content="@CalcHub">
+    <meta name="twitter:creator" content="@CalcHub">
+    
+    <!-- Theme Color for Mobile -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <!-- Preconnect to External CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebApplication",
+        "name": "Basic Calculator",
+        "alternateName": "Online Basic Calculator",
+        "description": "Free online basic calculator for performing arithmetic operations including addition, subtraction, multiplication, and division.",
+        "url": "https://calchub.dev/calculators/general-math-and-conversion/basic-calculator.html",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web Browser",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "CalcHub",
+            "url": "https://calchub.dev",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://calchub.dev/images/logo.png"
+            }
+        },
+        "featureList": [
+            "Basic arithmetic operations",
+            "Addition, subtraction, multiplication, division",
+            "Keyboard shortcuts support",
+            "Clear and delete functions",
+            "Decimal number support",
+            "Responsive design",
+            "Dark/light theme toggle"
+        ],
+        "screenshot": "https://calchub.dev/images/basic-calculator-screenshot.png"
+    }
+    </script>
+    
+    <!-- Breadcrumb Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                    "@id": "https://calchub.dev",
+                    "name": "CalcHub Home"
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                    "@id": "https://calchub.dev/calculators/general-math-and-conversion",
+                    "name": "General Math & Conversion"
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                    "@id": "https://calchub.dev/calculators/general-math-and-conversion/basic-calculator.html",
+                    "name": "Basic Calculator"
+                }
+            }
+        ]
+    }
+    </script>
+    
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"></noscript>
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --transition: all 0.2s ease-in-out;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --warning-color: #f59e0b;
+            --error-color: #dc3545;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+            --radius: 0.5rem;
+            --transition: all 0.15s ease-in-out;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1);
+            --shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 1rem 3rem rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -239,9 +362,9 @@
 
         .btn:hover {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow);
         }
 
         .btn:active {
@@ -253,34 +376,37 @@
         }
 
         .btn-operator {
-            background-color: #f59e0b;
-            color: white;
-            border-color: #f59e0b;
+            background-color: var(--warning-color);
+            color: var(--bg-primary);
+            border-color: var(--warning-color);
         }
 
         .btn-operator:hover {
-            background-color: #d97706;
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
         }
 
         .btn-equals {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border-color: var(--primary-color);
             grid-column: span 2;
         }
 
         .btn-equals:hover {
             background-color: var(--primary-hover);
+            color: var(--bg-primary);
         }
 
         .btn-clear {
-            background-color: #ef4444;
-            color: white;
-            border-color: #ef4444;
+            background-color: var(--error-color);
+            color: var(--bg-primary);
+            border-color: var(--error-color);
         }
 
         .btn-clear:hover {
-            background-color: #dc2626;
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
         }
 
         .btn-zero {
@@ -496,6 +622,118 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- SEO Content Section -->
+            <section class="seo-content">
+                <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; margin-top: 3rem; box-shadow: var(--shadow-sm);">
+                    <h2 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.75rem;">About Our Free Online Basic Calculator</h2>
+                    
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                        Our basic calculator is a powerful, free online tool designed for quick and accurate arithmetic calculations. Whether you're a student working on homework, a professional needing quick calculations, or anyone requiring basic math operations, this calculator provides instant results with a clean, intuitive interface.
+                    </p>
+                    
+                    <h3 style="color: var(--text-primary); margin: 2rem 0 1rem 0; font-size: 1.5rem;">Key Features</h3>
+                    <ul style="color: var(--text-secondary); margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.5rem;">Instant arithmetic calculations: addition, subtraction, multiplication, and division</li>
+                        <li style="margin-bottom: 0.5rem;">Full keyboard support for faster input and calculation</li>
+                        <li style="margin-bottom: 0.5rem;">Clear display with calculation history tracking</li>
+                        <li style="margin-bottom: 0.5rem;">Responsive design that works on desktop, tablet, and mobile devices</li>
+                        <li style="margin-bottom: 0.5rem;">Dark and light theme options for comfortable viewing</li>
+                        <li style="margin-bottom: 0.5rem;">No installation required - works directly in your web browser</li>
+                        <li style="margin-bottom: 0.5rem;">Decimal number support for precise calculations</li>
+                    </ul>
+                    
+                    <h3 style="color: var(--text-primary); margin: 2rem 0 1rem 0; font-size: 1.5rem;">Perfect for Students and Professionals</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                        This online calculator is ideal for students learning basic arithmetic, professionals needing quick calculations, shoppers computing totals, and anyone requiring reliable math operations. The calculator handles both simple and complex arithmetic operations with precision and speed.
+                    </p>
+                </div>
+                
+                <!-- FAQ Section -->
+                <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; margin-top: 2rem; box-shadow: var(--shadow-sm);">
+                    <h2 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.75rem;">Frequently Asked Questions</h2>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.25rem;">How do I use the basic calculator?</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Simply click the number buttons to input values, select an operation (+, -, ×, ÷), enter the second number, and press equals (=) to get your result. You can also use your keyboard for faster input.</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.25rem;">Does this calculator work on mobile devices?</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Yes! Our calculator is fully responsive and optimized for smartphones and tablets. The buttons are touch-friendly and the interface adapts to different screen sizes.</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.25rem;">What keyboard shortcuts are available?</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Use number keys (0-9) for digits, +/- for addition/subtraction, * for multiplication, / for division, Enter for equals, Escape to clear, and Backspace to delete the last digit.</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.25rem;">Is this calculator free to use?</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Absolutely! Our basic calculator is completely free with no hidden costs, registration requirements, or download needed. Access it anytime through your web browser.</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.25rem;">Can I perform calculations with decimal numbers?</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">Yes, the calculator supports decimal numbers. Click the decimal point (.) button or press the period key on your keyboard to input decimal values for precise calculations.</p>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.25rem;">What's the difference between C and CE buttons?</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">C (Clear) resets the entire calculator, clearing all numbers and operations. CE (Clear Entry) only clears the current number being displayed, allowing you to correct mistakes without starting over.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Calculators Section -->
+            <section style="background-color: var(--bg-secondary); padding: 3rem 0; margin-top: 3rem;">
+                <div class="container">
+                    <h2 style="text-align: center; color: var(--text-primary); margin-bottom: 2rem; font-size: 2rem;">Related Calculators</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto;">
+                        
+                        <a href="scientific-calculator.html" style="display: block; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; text-decoration: none; transition: var(--transition); box-shadow: var(--shadow-sm);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="width: 50px; height: 50px; background-color: var(--primary-color); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--bg-primary);">
+                                    <i class="fas fa-calculator" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Scientific Calculator</h3>
+                            </div>
+                            <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">Advanced calculator with trigonometric, logarithmic, and exponential functions for complex mathematical operations.</p>
+                        </a>
+
+                        <a href="percentage-calculator.html" style="display: block; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; text-decoration: none; transition: var(--transition); box-shadow: var(--shadow-sm);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="width: 50px; height: 50px; background-color: var(--primary-color); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--bg-primary);">
+                                    <i class="fas fa-percentage" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Percentage Calculator</h3>
+                            </div>
+                            <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">Calculate percentages, percentage increases, decreases, and find what percentage one number is of another.</p>
+                        </a>
+
+                        <a href="fraction-calculator.html" style="display: block; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; text-decoration: none; transition: var(--transition); box-shadow: var(--shadow-sm);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="width: 50px; height: 50px; background-color: var(--primary-color); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--bg-primary);">
+                                    <i class="fas fa-divide" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Fraction Calculator</h3>
+                            </div>
+                            <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">Add, subtract, multiply, and divide fractions with step-by-step solutions and automatic simplification.</p>
+                        </a>
+
+                        <a href="unit-converter.html" style="display: block; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; text-decoration: none; transition: var(--transition); box-shadow: var(--shadow-sm);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="width: 50px; height: 50px; background-color: var(--primary-color); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--bg-primary);">
+                                    <i class="fas fa-exchange-alt" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Unit Converter</h3>
+                            </div>
+                            <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">Convert between different units of length, weight, temperature, volume, and more with instant results.</p>
+                        </a>
+
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 

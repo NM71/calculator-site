@@ -3,38 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit Converter - CalcHub</title>
-    <meta name="description" content="Convert between different units of measurement including length, weight, temperature, volume, and more.">
+    
+    <!-- Enhanced Meta Tags -->
+    <title>Unit Converter Online | Length, Weight, Temperature - CalcHub</title>
+    <meta name="description" content="Free online unit converter for length, weight, temperature, volume, area, speed & time. Convert meters to feet, kilograms to pounds, Celsius to Fahrenheit & more instantly.">
+    <meta name="keywords" content="unit converter, convert units, length converter, weight converter, temperature converter, volume converter, metric converter, imperial converter, meters to feet, kg to pounds, celsius to fahrenheit">
+    <meta name="author" content="CalcHub">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://calchub.github.io/calculators/general-math-and-conversion/unit-converter.html">
+    
+    <!-- Language and Region -->
+    <meta name="language" content="en">
+    <meta name="geo.region" content="US">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://calchub.github.io/calculators/general-math-and-conversion/unit-converter.html">
+    <meta property="og:title" content="Unit Converter Online | Length, Weight, Temperature - CalcHub">
+    <meta property="og:description" content="Free online unit converter for length, weight, temperature, volume, area, speed & time. Convert meters to feet, kilograms to pounds, Celsius to Fahrenheit & more instantly.">
+    <meta property="og:image" content="https://calchub.github.io/images/unit-converter-preview.png">
+    <meta property="og:site_name" content="CalcHub">
+    <meta property="fb:app_id" content="123456789012345">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://calchub.github.io/calculators/general-math-and-conversion/unit-converter.html">
+    <meta property="twitter:title" content="Unit Converter Online | Length, Weight, Temperature - CalcHub">
+    <meta property="twitter:description" content="Free online unit converter for length, weight, temperature, volume, area, speed & time. Convert meters to feet, kilograms to pounds, Celsius to Fahrenheit & more instantly.">
+    <meta property="twitter:image" content="https://calchub.github.io/images/unit-converter-preview.png">
+    
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#000000">
+    <meta name="msapplication-navbutton-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <!-- Preconnect to External CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Unit Converter",
+        "alternateName": "Online Unit Converter",
+        "description": "Free online unit converter for length, weight, temperature, volume, area, speed and time conversions. Convert between metric and imperial units instantly.",
+        "url": "https://calchub.github.io/calculators/general-math-and-conversion/unit-converter.html",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "provider": {
+            "@type": "Organization",
+            "name": "CalcHub",
+            "url": "https://calchub.github.io",
+            "logo": "https://calchub.github.io/images/logo.png"
+        },
+        "featureList": [
+            "Length conversion (meters, feet, inches, kilometers, miles)",
+            "Weight conversion (kilograms, pounds, ounces, grams)",
+            "Temperature conversion (Celsius, Fahrenheit, Kelvin)",
+            "Volume conversion (liters, gallons, quarts, cups)",
+            "Area conversion (square meters, square feet, acres)",
+            "Speed conversion (mph, km/h, m/s, knots)",
+            "Time conversion (seconds, minutes, hours, days)"
+        ],
+        "audience": {
+            "@type": "Audience",
+            "audienceType": "Students, Engineers, Scientists, General Public"
+        }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "CalcHub",
+                "item": "https://calchub.github.io"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "General Math & Conversion",
+                "item": "https://calchub.github.io/calculators/general-math-and-conversion"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Unit Converter",
+                "item": "https://calchub.github.io/calculators/general-math-and-conversion/unit-converter.html"
+            }
+        ]
+    }
+    </script>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #5855eb;
+            /* Light mode - Clean white with black text */
+            --primary-color: #000000;
+            --primary-hover: #333333;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
+            --bg-secondary: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --transition: all 0.2s ease-in-out;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.2s ease;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: #475569;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            /* Dark mode - Clean black with white text */
+            --primary-color: #ffffff;
+            --primary-hover: #e0e0e0;
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.1);
+            --shadow-md: 0 4px 6px rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 15px rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -114,24 +222,23 @@
         }
 
         .theme-toggle {
-            background: none;
-            border: 2px solid var(--border-color);
-            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             padding: 0.5rem;
             border-radius: var(--radius);
             cursor: pointer;
             transition: var(--transition);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
         }
 
         .theme-toggle:hover {
-            background-color: var(--bg-secondary);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
         }
 
         .main {
@@ -201,13 +308,13 @@
 
         .tab-btn.active {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             border-color: var(--primary-color);
         }
 
         .tab-btn:hover:not(.active) {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--bg-primary);
             opacity: 0.8;
         }
 
@@ -251,7 +358,7 @@
         .input-group input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
 
         .input-group select {
@@ -267,7 +374,7 @@
         .input-group select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
 
         .swap-btn {
@@ -276,7 +383,7 @@
             border-radius: 50%;
             width: 2.5rem;
             height: 2.5rem;
-            color: white;
+            color: var(--bg-primary);
             cursor: pointer;
             transition: var(--transition);
             display: flex;
@@ -469,6 +576,33 @@
                                 <option value="in">Inches</option>
                                 <option value="yd">Yards</option>
                                 <option value="mi">Miles</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Temperature Conversion -->
+                <div id="temperature" class="converter-section">
+                    <div class="conversion-row">
+                        <div class="input-group">
+                            <label for="tempFrom">From</label>
+                            <input type="number" id="tempFromValue" placeholder="Enter value" oninput="convertTemperature('from')">
+                            <select id="tempFromUnit" onchange="convertTemperature('from')">
+                                <option value="c">Celsius (°C)</option>
+                                <option value="f">Fahrenheit (°F)</option>
+                                <option value="k">Kelvin (K)</option>
+                            </select>
+                        </div>
+                        <button class="swap-btn" onclick="swapUnits('temperature')">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                        <div class="input-group">
+                            <label for="tempTo">To</label>
+                            <input type="number" id="tempToValue" placeholder="Result" oninput="convertTemperature('to')">
+                            <select id="tempToUnit" onchange="convertTemperature('from')">
+                                <option value="f">Fahrenheit (°F)</option>
+                                <option value="c">Celsius (°C)</option>
+                                <option value="k">Kelvin (K)</option>
                             </select>
                         </div>
                     </div>
@@ -690,6 +824,62 @@
                     <div class="conversion-item">1 gallon = 4 quarts</div>
                 </div>
             </div>
+
+            <!-- SEO Content Section -->
+            <section class="seo-content" style="margin-top: 3rem; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow-sm);">
+                <h2 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.5rem;">About Our Unit Converter Tool</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                    Our comprehensive unit converter makes it easy to convert between different measurement systems including metric and imperial units. Whether you're a student, engineer, scientist, or just need quick conversions for everyday tasks, this tool provides accurate results for length, weight, temperature, volume, area, speed, and time conversions.
+                </p>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                    The converter supports popular unit conversions like meters to feet, kilograms to pounds, Celsius to Fahrenheit, liters to gallons, and many more. All calculations are performed instantly as you type, making it the fastest way to convert units online.
+                </p>
+
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 1.25rem;">Supported Unit Types</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background-color: var(--bg-secondary); padding: 1rem; border-radius: calc(var(--radius) - 0.25rem);">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Length Conversions</h4>
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">Meters, feet, inches, kilometers, miles, centimeters, millimeters, yards</p>
+                    </div>
+                    <div style="background-color: var(--bg-secondary); padding: 1rem; border-radius: calc(var(--radius) - 0.25rem);">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Weight Conversions</h4>
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">Kilograms, pounds, ounces, grams, tonnes, stones</p>
+                    </div>
+                    <div style="background-color: var(--bg-secondary); padding: 1rem; border-radius: calc(var(--radius) - 0.25rem);">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Temperature Conversions</h4>
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">Celsius, Fahrenheit, Kelvin</p>
+                    </div>
+                    <div style="background-color: var(--bg-secondary); padding: 1rem; border-radius: calc(var(--radius) - 0.25rem);">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Volume Conversions</h4>
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">Liters, gallons, quarts, pints, cups, fluid ounces, tablespoons, teaspoons</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="faq-section" style="margin-top: 2rem; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow-sm);">
+                <h2 style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 1.5rem;">Frequently Asked Questions</h2>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.125rem;">How accurate are the unit conversions?</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">Our unit converter uses precise conversion factors and provides results accurate to 6 decimal places for most conversions, ensuring professional-grade accuracy for all your conversion needs.</p>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.125rem;">Can I convert between metric and imperial units?</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">Yes! Our converter supports both metric and imperial unit systems. You can easily convert between systems, such as meters to feet, kilograms to pounds, or Celsius to Fahrenheit.</p>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.125rem;">Is this unit converter free to use?</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">Absolutely! Our online unit converter is completely free to use with no registration required. Access all conversion tools instantly from any device with an internet connection.</p>
+                </div>
+                
+                <div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.125rem;">What types of units can I convert?</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">Our converter supports 7 main categories: length, weight/mass, temperature, volume, area, speed, and time. Each category includes the most commonly used units in both metric and imperial systems.</p>
+                </div>
+            </section>
         </div>
     </main>
 
